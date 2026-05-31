@@ -194,10 +194,10 @@ export const FuturisticFooter = () => {
   }, []);
 
   const socials = [
-    { name: 'LinkedIn', handle: '@parthbulbule', icon: <Linkedin size={14} />, href: 'https://linkedin.com' },
-    { name: 'GitHub', handle: '@parthbulbule', icon: <Github size={14} />, href: 'https://github.com' },
-    { name: 'Instagram', handle: '@parth.dev', icon: <Instagram size={14} />, href: 'https://instagram.com' },
-    { name: 'Twitter/X', handle: '@parth_coder', icon: <Twitter size={14} />, href: 'https://twitter.com' },
+    { name: 'LinkedIn', handle: '@parth-bulbule', icon: <Linkedin size={14} />, href: 'https://www.linkedin.com/in/parth-bulbule/' },
+    { name: 'GitHub', handle: '@Parthbo7', icon: <Github size={14} />, href: 'https://github.com/Parthbo7' },
+    { name: 'Instagram', handle: '@parthb_o7', icon: <Instagram size={14} />, href: 'https://www.instagram.com/parthb_o7' },
+    { name: 'Twitter/X', handle: '@BulbuleParth', icon: <Twitter size={14} />, href: 'https://x.com/BulbuleParth' },
     { name: 'Discord', handle: 'parth#404', icon: <Disc size={14} />, href: 'https://discord.com' },
     { name: 'Gmail', handle: 'contact@parth.dev', icon: <Mail size={14} />, href: 'mailto:contact@parth.dev' },
   ];

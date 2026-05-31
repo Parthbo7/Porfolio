@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
-import { X, ArrowUpRight, Github, Linkedin, Mail, Twitter, ChevronRight, Activity } from 'lucide-react';
+import { X, ArrowUpRight, Github, Linkedin, Mail, Twitter, ChevronRight, Activity, Instagram } from 'lucide-react';
 
 // Dynamic synthesize audio click
 const playTick = (freq = 1500, dur = 0.035) => {
@@ -330,9 +330,10 @@ export const MinimalUI = () => {
               {/* Animated Social Channels */}
               <div className="flex gap-3">
                 {[
-                  { icon: <Github size={15} />, href: 'https://github.com' },
-                  { icon: <Linkedin size={15} />, href: 'https://linkedin.com' },
-                  { icon: <Twitter size={15} />, href: 'https://twitter.com' },
+                  { icon: <Github size={15} />, href: 'https://github.com/Parthbo7' },
+                  { icon: <Linkedin size={15} />, href: 'https://www.linkedin.com/in/parth-bulbule/' },
+                  { icon: <Instagram size={15} />, href: 'https://www.instagram.com/parthb_o7' },
+                  { icon: <Twitter size={15} />, href: 'https://x.com/BulbuleParth' },
                   { icon: <Mail size={15} />, href: 'mailto:contact@parth.dev' }
                 ].map((soc, i) => (
                   <motion.a
