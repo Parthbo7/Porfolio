@@ -368,35 +368,49 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
       {/* Film grain layer */}
       <div className="grain-overlay" />
       
-      {/* Top right HUD bar */}
+      {/* Top HUD bar with top-left ← EXIT VAULT navigation node */}
       <div className="absolute top-6 sm:top-8 left-6 sm:left-12 right-6 sm:right-12 flex justify-between items-center z-40">
-        <div className="flex items-center gap-2">
-          <Cpu className="text-[#00FF66] animate-pulse" size={14} />
-          <span className="font-mono text-[9px] tracking-widest text-[#00FF66] font-bold">
-            SECURE_VAULT_NODE_07
+        <motion.button 
+          onClick={() => {
+            playClickTick(600, 0.1);
+            stopAmbientHum();
+            onClose();
+          }}
+          onMouseEnter={() => playClickTick(1500, 0.01)}
+          className="flex flex-col items-start gap-1 select-none text-left interactive-hover cursor-pointer pointer-events-auto"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          {/* Visual futuristic glass capsule button with dark aesthetic & fuchsia borders */}
+          <motion.div 
+            className="flex items-center gap-2 px-3 py-1.5 bg-black/60 backdrop-blur-md border border-fuchsia-500/30 rounded-sm shadow-[0_4px_12px_rgba(0,0,0,0.5),2px_2px_0px_rgba(240,119,252,0.15)] text-white hover:border-fuchsia-500 hover:shadow-[0_0_12px_rgba(240,119,252,0.25)] transition-all duration-300 transform-gpu will-change-transform font-mono text-[10px] sm:text-xs font-black uppercase tracking-widest"
+            whileHover={{ scale: 1.05, x: 2 }}
+            whileTap={{ scale: 0.95 }}
+            style={{ transform: 'translate3d(0,0,0)' }}
+          >
+            <span className="text-fuchsia-400">←</span> EXIT VAULT
+            <span className="w-1.5 h-1.5 bg-fuchsia-500 rounded-full animate-pulse ml-0.5" />
+          </motion.div>
+          
+          {/* Subtle tilted terminal-style metadata */}
+          <span className="font-mono text-[7px] text-[#f077fc]/50 tracking-widest uppercase pl-1 sm:block hidden select-none">
+            Leaving restricted layer…
           </span>
-        </div>
+        </motion.button>
         
         <div className="flex items-center gap-4">
+          {/* Diagnostic badge */}
+          <div className="hidden sm:flex items-center gap-2 border border-white/5 bg-white/[0.01] px-3 py-1 rounded-full font-mono text-[8px] text-white/40 tracking-wider select-none">
+            <Cpu size={10} className="text-[#00FF66] animate-pulse" />
+            <span>SECURE_VAULT_NODE_07</span>
+          </div>
+
           {/* Mute button */}
           <button 
             onClick={toggleMute}
-            className="p-1.5 rounded-full border border-white/10 bg-white/[0.02] hover:border-yellow-400 hover:text-yellow-400 transition-colors text-white/50 cursor-pointer"
+            className="p-1.5 rounded-full border border-white/10 bg-white/[0.02] hover:border-yellow-400 hover:text-yellow-400 transition-colors text-white/50 cursor-pointer pointer-events-auto"
           >
             {isAudioMuted ? <VolumeX size={12} /> : <Volume2 size={12} />}
-          </button>
-          
-          {/* Exit trigger */}
-          <button 
-            onClick={() => {
-              playClickTick(600, 0.1);
-              stopAmbientHum();
-              onClose();
-            }}
-            className="p-1.5 px-3 rounded-full border border-white/10 bg-white/[0.02] hover:border-red-500 hover:text-red-500 hover:bg-red-500/5 transition-all cursor-pointer flex items-center gap-1.5 font-mono text-[9px] tracking-widest font-bold text-white/60"
-          >
-            <X size={10} />
-            <span>LEAVE_VAULT</span>
           </button>
         </div>
       </div>

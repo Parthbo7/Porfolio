@@ -28,10 +28,15 @@ const playTick = (freq = 1500, dur = 0.035) => {
   } catch (e) {}
 };
 
-export const MinimalUI = () => {
+interface MinimalUIProps {
+  activeSection: 'hero' | 'experiments' | 'footer' | 'profile' | 'connect';
+}
+
+export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [time, setTime] = useState('');
+  const isExperimentsActive = activeSection !== 'hero';
   const menuBtnRef = useRef<HTMLButtonElement>(null);
 
   // Magnetic Button Effect for Menu button
@@ -97,6 +102,7 @@ export const MinimalUI = () => {
     return () => clearInterval(interval);
   }, []);
 
+
   const handleMenuClick = () => {
     playTick(isOpen ? 900 : 1800, 0.05);
     setIsOpen(!isOpen);
@@ -132,17 +138,56 @@ export const MinimalUI = () => {
   return (
     <>
       {/* FRAME CONTROLS */}
-      {/* TOP LEFT: TITLE */}
-      <div 
-        id="ui-top-left"
-        className="fixed top-6 left-6 sm:top-10 sm:left-10 text-left font-mono text-[9px] sm:text-xs tracking-widest text-black/60 z-30 select-none pointer-events-none uppercase"
-      >
-        <div>CREATIVE DEVELOPER</div>
-        <div className="flex items-center gap-1.5 mt-0.5 text-emerald-600 font-bold">
-          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
-          AVAILABLE FULL-TIME
-        </div>
-      </div>
+      {/* TOP LEFT: TITLE OR NAVIGATION NODE */}
+      <AnimatePresence mode="wait">
+        {!isExperimentsActive ? (
+          <motion.div 
+            key="title-hud"
+            id="ui-top-left"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-6 left-6 sm:top-10 sm:left-10 text-left font-mono text-[9px] sm:text-xs tracking-widest z-30 select-none pointer-events-none uppercase text-black/60"
+          >
+            <div>CREATIVE DEVELOPER</div>
+            <div className="flex items-center gap-1.5 mt-0.5 text-emerald-600 font-bold">
+              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
+              AVAILABLE FULL-TIME
+            </div>
+          </motion.div>
+        ) : (
+          <motion.button
+            key="home-button"
+            onClick={() => {
+              playTick(900, 0.08);
+              window.location.hash = '#';
+            }}
+            onMouseEnter={() => playTick(1500, 0.01)}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="fixed top-6 left-6 sm:top-10 sm:left-10 z-50 pointer-events-auto flex flex-col items-start gap-1 select-none text-left interactive-hover cursor-pointer"
+          >
+            {/* Visual futuristic glass capsule button with thin green border */}
+            <motion.div 
+              className="flex items-center gap-2 px-3 py-1.5 bg-[#EFE5E0]/80 backdrop-blur-md border border-[#00FF66]/30 rounded-sm shadow-[0_4px_12px_rgba(0,0,0,0.03),2px_2px_0px_rgba(0,255,102,0.15)] text-black hover:border-[#00FF66] hover:shadow-[0_0_12px_rgba(0,255,102,0.25)] transition-all duration-300 transform-gpu will-change-transform font-mono text-[10px] sm:text-xs font-black uppercase tracking-widest"
+              whileHover={{ scale: 1.05, x: 2 }}
+              whileTap={{ scale: 0.95 }}
+              style={{ transform: 'translate3d(0,0,0)' }}
+            >
+              <span className="text-[#00CC52]">←</span> HOME
+              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse ml-0.5" />
+            </motion.div>
+            
+            {/* Subtle tilted terminal-style metadata */}
+            <span className="font-mono text-[7px] text-zinc-400 tracking-widest uppercase pl-1 sm:block hidden select-none">
+              EXIT_TO_ROOT // NOM_07
+            </span>
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* TOP CENTER: MONOGRAM SECURE NODE STATUS (HIDDEN VAULT LAUNCHER) */}
       <div 
@@ -151,7 +196,9 @@ export const MinimalUI = () => {
           window.dispatchEvent(new Event('trigger-vault-decryption'));
         }}
         onMouseEnter={() => playTick(1500, 0.01)}
-        className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 font-mono text-[8px] sm:text-[10px] tracking-widest text-black/40 flex items-center gap-2 border border-black/10 px-3 py-1 rounded-full bg-black/[0.01] hover:bg-black/[0.04] hover:text-black hover:border-black/30 transition-all duration-300 cursor-pointer interactive-hover"
+        className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 font-mono text-[8px] sm:text-[10px] tracking-widest text-black/40 flex items-center gap-2 border border-black/10 px-3 py-1 rounded-full bg-black/[0.01] hover:bg-black/[0.04] hover:text-black hover:border-black/30 transition-all duration-300 cursor-pointer interactive-hover ${
+          isExperimentsActive ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
       >
         <span>SYSTEM_OS</span>
         <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse" />
@@ -163,7 +210,11 @@ export const MinimalUI = () => {
         <button
           ref={menuBtnRef}
           onClick={handleMenuClick}
-          className="interactive-hover magnetic flex flex-col items-end gap-1.5 p-3 text-right bg-black text-white hover:bg-[#00FF66] hover:text-black border border-black/10 rounded-sm font-mono text-[10px] sm:text-xs font-bold leading-none tracking-widest transition-colors duration-300 shadow-[3px_3px_0px_0px_rgba(0,255,102,0.4)] active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+          className={`interactive-hover magnetic flex flex-col items-end gap-1.5 p-3 text-right font-mono text-[10px] sm:text-xs font-bold leading-none tracking-widest transition-all duration-300 rounded-sm active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] ${
+            isExperimentsActive && !isOpen
+              ? 'bg-transparent text-[#FF3E6C] hover:text-black border border-transparent shadow-none p-0 mt-2 sm:mt-0 font-extrabold text-[12px]'
+              : 'bg-black text-white hover:bg-[#00FF66] hover:text-black border border-black/10 shadow-[3px_3px_0px_0px_rgba(0,255,102,0.4)]'
+          }`}
         >
           {isOpen ? (
             <span className="flex items-center gap-1">
@@ -171,28 +222,49 @@ export const MinimalUI = () => {
             </span>
           ) : (
             <div className="flex flex-col items-end">
-              <span>ME</span>
-              <span className="mt-0.5">NU</span>
+              {isExperimentsActive ? (
+                <span className="font-extrabold tracking-widest text-xs">MENU</span>
+              ) : (
+                <>
+                  <span>ME</span>
+                  <span className="mt-0.5">NU</span>
+                </>
+              )}
             </div>
           )}
         </button>
       </div>
 
-      {/* BOTTOM LEFT: CREDIT */}
-      <div 
-        id="ui-bottom-left"
-        className="fixed bottom-6 left-6 sm:bottom-10 sm:left-10 text-left font-mono text-[9px] sm:text-xs tracking-widest text-black/50 z-30 select-none pointer-events-none uppercase"
-      >
-        PARTH BULBULE — 2026
-      </div>
+      {/* BOTTOM LEFT & RIGHT HUD LABELS */}
+      <AnimatePresence>
+        {activeSection !== 'hero' && (
+          <>
+            {/* BOTTOM LEFT: CREDIT */}
+            <motion.div 
+              id="ui-bottom-left"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed bottom-6 left-6 sm:bottom-10 sm:left-10 text-left font-mono text-[9px] sm:text-xs tracking-widest text-black/50 z-30 select-none pointer-events-none uppercase"
+            >
+              PARTH BULBULE — 2026
+            </motion.div>
 
-      {/* BOTTOM RIGHT: REGION */}
-      <div 
-        id="ui-bottom-right"
-        className="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 text-right font-mono text-[9px] sm:text-xs tracking-widest text-black/50 z-30 select-none pointer-events-none uppercase"
-      >
-        BASED IN INDIA
-      </div>
+            {/* BOTTOM RIGHT: REGION */}
+            <motion.div 
+              id="ui-bottom-right"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed bottom-6 right-6 sm:bottom-10 sm:left-10 text-right font-mono text-[9px] sm:text-xs tracking-widest text-black/50 z-30 select-none pointer-events-none uppercase"
+            >
+              BASED IN INDIA
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* FULL-SCREEN NAVIGATION PANEL */}
       <AnimatePresence>

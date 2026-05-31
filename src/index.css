@@ -134,3 +134,21 @@ body {
   scrollbar-width: none !important;  /* Firefox */
 }
 
+/* Cinematic Telemetry Scanline Animation */
+@keyframes scanline-anim {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(100vh);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-scanline {
+  animation: scanline-anim 6s linear infinite;
+}
+
+
