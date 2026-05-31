@@ -291,7 +291,7 @@ export const FuturisticFooter = () => {
             // DYNAMIC_INSPECT: {categories[activeTab].name}
           </span>
           
-          <div className="h-[42vh] overflow-y-auto no-scrollbar pr-2 flex flex-col justify-center gap-2">
+          <div className="h-[42vh] overflow-y-auto no-scrollbar pr-2 flex flex-col justify-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
@@ -299,16 +299,16 @@ export const FuturisticFooter = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
                 transition={{ duration: 0.25, ease: 'easeOut' }}
-                className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 sm:gap-y-2"
+                className="flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5"
               >
                 {categories[activeTab].skills.map((skill) => (
                   <div 
                     key={skill}
                     onMouseEnter={() => playHapticTick(1600, 0.015)}
-                    className="group flex items-center gap-2 interactive-hover py-0.5 cursor-pointer"
+                    className="group flex items-center gap-2.5 interactive-hover py-0.5 cursor-pointer"
                   >
-                    <ChevronRight size={10} className="text-[#00FF66] opacity-30 group-hover:opacity-100 transition-opacity duration-300" />
-                    <span className="font-display font-extrabold text-xs sm:text-[13px] lg:text-[14.5px] text-zinc-400 group-hover:text-white uppercase tracking-tighter transition-all duration-300 group-hover:translate-x-1.5 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.25)] whitespace-nowrap">
+                    <ChevronRight size={11} className="text-[#00FF66] opacity-30 group-hover:opacity-100 transition-opacity duration-300" />
+                    <span className="font-display font-extrabold text-[13px] sm:text-[16px] lg:text-[18px] text-zinc-400 group-hover:text-white uppercase tracking-tighter transition-all duration-300 group-hover:translate-x-2 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.3)] whitespace-nowrap">
                       {skill}
                     </span>
                   </div>
