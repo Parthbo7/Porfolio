@@ -74,7 +74,7 @@ export const FloatingStickers = () => {
     { id: 'st-20', text: 'CREATIVE LEAD', highlightLetter: 'L', x: '68%', y: '72%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: -8, scale: 0.88, parallaxSpeed: 0.02, zIndex: 32 },
     
     // --- SECURE VAULT GATEWAY STICKER (EASTER EGG) ---
-    { id: 'st-vault', text: '🔒 LOCKBOX_07', highlightLetter: '0', x: '45%', y: '75%', bgColor: 'bg-[#050505]', borderColor: 'border-[#D4AF37]', textColor: 'text-[#D4AF37]', rotate: 12, scale: 1.08, parallaxSpeed: 0.04, zIndex: 38 },
+    { id: 'st-vault', text: '🔒 LOCKBOX_07', highlightLetter: '0', x: '84%', y: '16%', bgColor: 'bg-[#050505]', borderColor: 'border-[#D4AF37]', textColor: 'text-[#D4AF37]', rotate: 12, scale: 1.3, parallaxSpeed: 0.04, zIndex: 38 },
   ];
 
   useEffect(() => {

@@ -393,9 +393,10 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
               stopAmbientHum();
               onClose();
             }}
-            className="p-1.5 rounded-full border border-white/10 bg-white/[0.02] hover:border-red-500 hover:text-red-500 transition-all cursor-pointer flex items-center justify-center"
+            className="p-1.5 px-3 rounded-full border border-white/10 bg-white/[0.02] hover:border-red-500 hover:text-red-500 hover:bg-red-500/5 transition-all cursor-pointer flex items-center gap-1.5 font-mono text-[9px] tracking-widest font-bold text-white/60"
           >
-            <X size={12} />
+            <X size={10} />
+            <span>LEAVE_VAULT</span>
           </button>
         </div>
       </div>
@@ -510,7 +511,19 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
               <div className="absolute inset-[-2px] border border-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded" />
             </motion.button>
 
-            <span className="font-mono text-[7.5px] text-white/20 tracking-wider uppercase mt-8 block">
+            {/* Back to Homepage Button */}
+            <button
+              onClick={() => {
+                playClickTick(600, 0.05);
+                stopAmbientHum();
+                onClose();
+              }}
+              className="mt-4 font-mono text-[9px] sm:text-[10px] tracking-widest text-zinc-500 hover:text-white transition-colors duration-300 uppercase underline cursor-pointer"
+            >
+              ← BACK TO PORTFOLIO
+            </button>
+
+            <span className="font-mono text-[7.5px] text-white/20 tracking-wider uppercase mt-6 block">
               ACCESS GATEWAY // SECURE PROTOCOL LAYER 07
             </span>
 
