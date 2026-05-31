@@ -144,6 +144,20 @@ export const MinimalUI = () => {
         </div>
       </div>
 
+      {/* TOP CENTER: MONOGRAM SECURE NODE STATUS (HIDDEN VAULT LAUNCHER) */}
+      <div 
+        onClick={() => {
+          playTick(2000, 0.08);
+          window.dispatchEvent(new Event('trigger-vault-decryption'));
+        }}
+        onMouseEnter={() => playTick(1500, 0.01)}
+        className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 font-mono text-[8px] sm:text-[10px] tracking-widest text-black/40 flex items-center gap-2 border border-black/10 px-3 py-1 rounded-full bg-black/[0.01] hover:bg-black/[0.04] hover:text-black hover:border-black/30 transition-all duration-300 cursor-pointer interactive-hover"
+      >
+        <span>SYSTEM_OS</span>
+        <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse" />
+        <span>[ P / B ]</span>
+      </div>
+
       {/* TOP RIGHT: ME NU TOGGLE */}
       <div className="fixed top-6 right-6 sm:top-10 sm:right-10 z-50">
         <button

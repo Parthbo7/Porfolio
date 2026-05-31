@@ -72,6 +72,9 @@ export const FloatingStickers = () => {
     { id: 'st-18', text: 'CAMPUSCONNECT', highlightLetter: 'C', x: '81%', y: '65%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: 9, scale: 1.04, parallaxSpeed: 0.04, zIndex: 33 },
     { id: 'st-19', text: 'LINKEDIN HANDLER', highlightLetter: 'L', x: '14%', y: '13%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: -5, scale: 0.95, parallaxSpeed: -0.03, zIndex: 32 },
     { id: 'st-20', text: 'CREATIVE LEAD', highlightLetter: 'L', x: '68%', y: '72%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: -8, scale: 0.88, parallaxSpeed: 0.02, zIndex: 32 },
+    
+    // --- SECURE VAULT GATEWAY STICKER (EASTER EGG) ---
+    { id: 'st-vault', text: '🔒 LOCKBOX_07', highlightLetter: '0', x: '45%', y: '75%', bgColor: 'bg-[#050505]', borderColor: 'border-[#D4AF37]', textColor: 'text-[#D4AF37]', rotate: 12, scale: 1.08, parallaxSpeed: 0.04, zIndex: 38 },
   ];
 
   useEffect(() => {
@@ -210,6 +213,12 @@ export const FloatingStickers = () => {
           whileTap={{ scale: (isMobile ? st.scale * 0.62 : st.scale) * 0.95 }}
           onHoverStart={() => playTick(1600)}
           onDragStart={() => playTick(1000)}
+          onTap={() => {
+            if (st.id === 'st-vault') {
+              playTick(2000);
+              window.dispatchEvent(new Event('trigger-vault-decryption'));
+            }
+          }}
         >
           <div className="inner-drift w-fit h-fit origin-center">
             <div 

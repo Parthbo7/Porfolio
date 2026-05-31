@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 import { CustomCursor } from './components/CustomCursor';
@@ -8,9 +8,11 @@ import { FloatingStickers } from './components/FloatingStickers';
 import { HeroTypography } from './components/HeroTypography';
 import { MinimalUI } from './components/MinimalUI';
 import { FuturisticFooter } from './components/FuturisticFooter';
+import { VaultPortal } from './components/VaultPortal';
 
 function App() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isVaultOpen, setIsVaultOpen] = useState(false);
 
   useEffect(() => {
     // Reveal main interface elements smoothly on load
@@ -20,6 +22,36 @@ function App() {
         { opacity: 1, duration: 1.2, ease: "power2.out" }
       );
     }
+  }, []);
+
+  // Set up mysterious keyboard key sequence listener & custom window event listener
+  useEffect(() => {
+    let keyBuffer: string[] = [];
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      keyBuffer.push(e.key.toLowerCase());
+      if (keyBuffer.length > 12) {
+        keyBuffer.shift();
+      }
+      
+      const keystrokeSequence = keyBuffer.join('');
+      if (keystrokeSequence.includes('vault') || keystrokeSequence.includes('secret')) {
+        setIsVaultOpen(true);
+        keyBuffer = []; // reset key logs buffer
+      }
+    };
+
+    const handleEventTrigger = () => {
+      setIsVaultOpen(true);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('trigger-vault-decryption', handleEventTrigger);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('trigger-vault-decryption', handleEventTrigger);
+    };
   }, []);
 
   return (
@@ -53,7 +85,7 @@ function App() {
           
           {/* Minimalist Editorial Corner Frame Navigation OS Menu */}
           <MinimalUI />
-
+ 
           {/* Dynamic Drag Prompt Indicator */}
           <div className="absolute bottom-6 sm:bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-40 z-30 select-none pointer-events-none">
             <span className="font-mono text-[9px] tracking-[0.22em] text-black uppercase font-semibold">
@@ -64,13 +96,16 @@ function App() {
               <span className="w-1 h-1 bg-black rounded-full animate-bounce" />
             </div>
           </div>
-
+ 
         </section>
-
+ 
         {/* SCREEN 2: THE FUTURISTIC SKILLS MATRIX FOOTER (100vh, snapped) */}
         <FuturisticFooter />
-
+ 
       </div>
+
+      {/* Atmospheric Password-Protected Secret Archive Vault */}
+      <VaultPortal isOpen={isVaultOpen} onClose={() => setIsVaultOpen(false)} />
     </>
   );
 }
