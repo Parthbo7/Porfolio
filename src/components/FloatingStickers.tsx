@@ -50,28 +50,28 @@ export const FloatingStickers = () => {
     // --- TECH STACK STICKERS ---
     { id: 'st-1', text: 'PYTHON DEV', highlightLetter: 'P', x: '12%', y: '16%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: -8, scale: 0.9, parallaxSpeed: 0.04, zIndex: 35 },
     { id: 'st-2', text: 'FULL STACK', highlightLetter: 'S', x: '14%', y: '30%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: 10, scale: 1.05, parallaxSpeed: -0.03, zIndex: 36 },
-    { id: 'st-3', text: 'AI ENTHUSIAST', highlightLetter: 'A', x: '22%', y: '76%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: -6, scale: 1.1, parallaxSpeed: 0.035, zIndex: 34 },
+    { id: 'st-3', text: 'AI ENTHUSIAST', highlightLetter: 'A', x: '22%', y: '73%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: -6, scale: 1.1, parallaxSpeed: 0.035, zIndex: 34 },
     { id: 'st-4', text: 'CREATIVE CODER', highlightLetter: 'C', x: '82%', y: '24%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: 12, scale: 1.0, parallaxSpeed: -0.02, zIndex: 35 },
     { id: 'st-5', text: 'WEB DESIGNER', highlightLetter: 'D', x: '76%', y: '16%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: -10, scale: 0.85, parallaxSpeed: 0.045, zIndex: 36 },
     { id: 'st-6', text: 'APP BUILDER', highlightLetter: 'B', x: '84%', y: '42%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: 7, scale: 1.05, parallaxSpeed: -0.03, zIndex: 33 },
-    { id: 'st-7', text: 'HACKATHON MODE', highlightLetter: 'H', x: '10%', y: '65%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: -9, scale: 1.1, parallaxSpeed: 0.035, zIndex: 35 },
-    { id: 'st-8', text: 'TERMINAL ADDICT', highlightLetter: 'T', x: '78%', y: '75%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: 14, scale: 0.95, parallaxSpeed: -0.04, zIndex: 37 },
+    { id: 'st-7', text: 'HACKATHON MODE', highlightLetter: 'H', x: '10%', y: '61%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: -9, scale: 1.1, parallaxSpeed: 0.035, zIndex: 35 },
+    { id: 'st-8', text: 'TERMINAL ADDICT', highlightLetter: 'T', x: '78%', y: '70%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: 14, scale: 0.95, parallaxSpeed: -0.04, zIndex: 37 },
 
     // --- PERSONALITY STICKERS ---
     { id: 'st-9', text: 'FRIENDLY', highlightLetter: 'F', x: '7%', y: '24%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: -15, scale: 0.8, parallaxSpeed: 0.025, zIndex: 32 },
-    { id: 'st-10', text: 'ACTIVE', highlightLetter: 'A', x: '50%', y: '80%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: 8, scale: 0.85, parallaxSpeed: 0.03, zIndex: 32 },
-    { id: 'st-11', text: 'CHAOTIC', highlightLetter: 'C', x: '28%', y: '72%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: -12, scale: 1.0, parallaxSpeed: -0.035, zIndex: 32 },
+    { id: 'st-10', text: 'ACTIVE', highlightLetter: 'A', x: '50%', y: '75%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: 8, scale: 0.85, parallaxSpeed: 0.03, zIndex: 32 },
+    { id: 'st-11', text: 'CHAOTIC', highlightLetter: 'C', x: '28%', y: '67%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: -12, scale: 1.0, parallaxSpeed: -0.035, zIndex: 32 },
     { id: 'st-12', text: 'OVERTHINKER', highlightLetter: 'O', x: '7%', y: '52%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: -8, scale: 0.9, parallaxSpeed: 0.04, zIndex: 32 },
-    { id: 'st-13', text: 'BUILT DIFFERENT', highlightLetter: 'D', x: '42%', y: '70%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: 12, scale: 1.15, parallaxSpeed: -0.02, zIndex: 33 },
-    { id: 'st-14', text: 'MUSIC = THERAPY', highlightLetter: 'M', x: '64%', y: '80%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: -6, scale: 1.0, parallaxSpeed: 0.035, zIndex: 33 },
+    { id: 'st-13', text: 'BUILT DIFFERENT', highlightLetter: 'D', x: '42%', y: '65%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: 12, scale: 1.15, parallaxSpeed: -0.02, zIndex: 33 },
+    { id: 'st-14', text: 'MUSIC = THERAPY', highlightLetter: 'M', x: '64%', y: '74%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: -6, scale: 1.0, parallaxSpeed: 0.035, zIndex: 33 },
     { id: 'st-15', text: 'LOWKEY GENIUS', highlightLetter: 'G', x: '70%', y: '25%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: 10, scale: 0.95, parallaxSpeed: -0.04, zIndex: 32 },
 
     // --- COMMUNITY STICKERS ---
     { id: 'st-16', text: 'GDG COORDINATOR', highlightLetter: 'G', x: '32%', y: '14%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: -7, scale: 1.1, parallaxSpeed: 0.03, zIndex: 33 },
     { id: 'st-17', text: 'GDG DESIGN COORDINATOR', highlightLetter: 'D', x: '58%', y: '13%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: 6, scale: 1.02, parallaxSpeed: -0.025, zIndex: 32 },
-    { id: 'st-18', text: 'CAMPUSCONNECT', highlightLetter: 'C', x: '81%', y: '65%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: 9, scale: 1.04, parallaxSpeed: 0.04, zIndex: 33 },
+    { id: 'st-18', text: 'CAMPUSCONNECT', highlightLetter: 'C', x: '81%', y: '60%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: 9, scale: 1.04, parallaxSpeed: 0.04, zIndex: 33 },
     { id: 'st-19', text: 'LINKEDIN HANDLER', highlightLetter: 'L', x: '14%', y: '13%', bgColor: 'bg-black', borderColor: 'border-white', textColor: 'text-white', rotate: -5, scale: 0.95, parallaxSpeed: -0.03, zIndex: 32 },
-    { id: 'st-20', text: 'CREATIVE LEAD', highlightLetter: 'L', x: '68%', y: '72%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: -8, scale: 0.88, parallaxSpeed: 0.02, zIndex: 32 },
+    { id: 'st-20', text: 'CREATIVE LEAD', highlightLetter: 'L', x: '68%', y: '67%', bgColor: 'bg-white', borderColor: 'border-black', textColor: 'text-black', rotate: -8, scale: 0.88, parallaxSpeed: 0.02, zIndex: 32 },
     
     // --- SECURE VAULT GATEWAY STICKER (EASTER EGG) ---
     { id: 'st-vault', text: '🔒 LOCKBOX_07', highlightLetter: '0', x: '84%', y: '16%', bgColor: 'bg-[#050505]', borderColor: 'border-[#D4AF37]', textColor: 'text-[#D4AF37]', rotate: 12, scale: 1.3, parallaxSpeed: 0.04, zIndex: 38 },

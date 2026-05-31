@@ -37,6 +37,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [time, setTime] = useState('');
   const isExperimentsActive = activeSection !== 'hero';
+  const isFooterSection = activeSection === 'footer';
   const menuBtnRef = useRef<HTMLButtonElement>(null);
 
   // Magnetic Button Effect for Menu button
@@ -102,6 +103,16 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const openNavigationMenu = () => {
+      playTick(1800, 0.05);
+      setIsOpen(true);
+    };
+
+    window.addEventListener('open-navigation-menu', openNavigationMenu);
+    return () => window.removeEventListener('open-navigation-menu', openNavigationMenu);
+  }, []);
+
 
   const handleMenuClick = () => {
     playTick(isOpen ? 900 : 1800, 0.05);
@@ -117,9 +128,9 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
     },
     { 
       num: '02', 
-      name: 'EXPERIENCE', 
+      name: 'SKILL STACK',
       href: '#stack',
-      tags: ['GDG COORDINATOR', 'GDG DESIGN COORDINATOR', 'TPO LINKEDIN HANDLER', 'EVENT ORGANIZING', 'COMPETITIONS', 'TECH COMMUNITIES']
+      tags: ['PYTHON', 'REACT', 'THREE.JS', 'TYPESCRIPT', 'GSAP', 'PROMPT ENGINEERING']
     },
     { 
       num: '03', 
@@ -140,7 +151,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
       {/* FRAME CONTROLS */}
       {/* TOP LEFT: TITLE OR NAVIGATION NODE */}
       <AnimatePresence mode="wait">
-        {!isExperimentsActive ? (
+        {isFooterSection ? null : !isExperimentsActive ? (
           <motion.div 
             key="title-hud"
             id="ui-top-left"
@@ -186,7 +197,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
               EXIT_TO_ROOT // NOM_07
             </span>
           </motion.button>
-        )}
+          )}
       </AnimatePresence>
 
       {/* TOP CENTER: MONOGRAM SECURE NODE STATUS (HIDDEN VAULT LAUNCHER) */}
@@ -206,7 +217,9 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
       </div>
 
       {/* TOP RIGHT: ME NU TOGGLE */}
-      <div className="fixed top-6 right-6 sm:top-10 sm:right-10 z-50">
+      <div className={`fixed top-6 right-6 sm:top-10 sm:right-10 z-50 transition-opacity duration-300 ${
+        isFooterSection && !isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
+      }`}>
         <button
           ref={menuBtnRef}
           onClick={handleMenuClick}
@@ -237,7 +250,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
 
       {/* BOTTOM LEFT & RIGHT HUD LABELS */}
       <AnimatePresence>
-        {activeSection !== 'hero' && (
+        {activeSection !== 'hero' && !isFooterSection && (
           <>
             {/* BOTTOM LEFT: CREDIT */}
             <motion.div 

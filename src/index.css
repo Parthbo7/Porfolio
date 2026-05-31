@@ -105,6 +105,158 @@ body {
     linear-gradient(to bottom, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
 }
 
+/* Compact premium landing composition */
+.landing-scroll-shell {
+  scroll-padding-bottom: 2rem;
+}
+
+.landing-hero-stage {
+  height: clamp(31rem, 72svh, 42rem);
+}
+
+.landing-scroll-prompt {
+  bottom: clamp(0.6rem, 1.4svh, 0.95rem);
+  opacity: 0.34;
+}
+
+.landing-telemetry-divider {
+  margin-top: clamp(-0.55rem, -0.8svh, -0.25rem);
+  margin-bottom: clamp(0.45rem, 1svh, 0.75rem);
+  opacity: 0.36;
+  animation: telemetry-glow 5.8s ease-in-out infinite;
+}
+
+.landing-footer-row {
+  padding-top: clamp(1.3rem, 2.7svh, 1.9rem);
+  padding-bottom: clamp(2rem, 4.4svh, 3rem);
+}
+
+/* Futuristic skill-stack footer */
+.footer-portal {
+  --footer-glow-x: 50%;
+  --footer-glow-y: 50%;
+  isolation: isolate;
+}
+
+.footer-grid-lines {
+  opacity: 0.36;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.065) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 255, 102, 0.035) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px;
+  mask-image: radial-gradient(circle at 50% 48%, black 0%, black 58%, transparent 100%);
+}
+
+.footer-noise {
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMS4yIiBudW1PY3RhdmVzPSI0IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIyMDAlIiBoZWlnaHQ9IjIwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC44Ii8+PC9zdmc+');
+  animation: footer-noise-shift 7s steps(8) infinite;
+}
+
+.footer-cursor-glow {
+  z-index: 0;
+  opacity: 0.72;
+  background:
+    radial-gradient(circle at var(--footer-glow-x) var(--footer-glow-y), rgba(0, 255, 102, 0.16), rgba(0, 255, 102, 0.04) 16rem, transparent 28rem),
+    linear-gradient(135deg, rgba(255, 62, 108, 0.07), transparent 34%),
+    linear-gradient(315deg, rgba(212, 175, 55, 0.06), transparent 38%);
+  transition: opacity 220ms ease;
+}
+
+.footer-skill-row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--skill-accent) 18%, transparent), transparent 48%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent);
+  transform: translateX(-12%);
+  transition: opacity 260ms ease, transform 360ms ease;
+}
+
+.footer-skill-row:hover::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-height: 560px) {
+  .footer-portal {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .footer-portal > .relative {
+    min-height: calc(100vh - 2rem);
+    gap: 0.75rem;
+  }
+
+  .footer-portal header {
+    padding-bottom: 0.65rem;
+  }
+
+  .footer-skill-row {
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+  }
+
+  .footer-skill-label {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .footer-bottom-row {
+    gap: 0.6rem;
+    padding-top: 0.65rem;
+  }
+
+  .footer-social-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+}
+
+@keyframes footer-noise-shift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  12% { transform: translate3d(-2%, -3%, 0); }
+  25% { transform: translate3d(3%, 2%, 0); }
+  37% { transform: translate3d(-4%, 1%, 0); }
+  50% { transform: translate3d(2%, -2%, 0); }
+  62% { transform: translate3d(-1%, 3%, 0); }
+  75% { transform: translate3d(4%, -1%, 0); }
+  87% { transform: translate3d(-3%, 2%, 0); }
+}
+
+@keyframes telemetry-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 0 rgba(255, 62, 108, 0));
+    opacity: 0.3;
+  }
+  50% {
+    filter: drop-shadow(0 0 7px rgba(255, 62, 108, 0.18));
+    opacity: 0.44;
+  }
+}
+
+@media (max-width: 767px) {
+  .landing-hero-stage {
+    height: clamp(30rem, 72svh, 38rem);
+  }
+
+  .landing-telemetry-divider {
+    margin-top: -0.35rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .landing-footer-row {
+    padding-top: 1.1rem;
+    padding-bottom: 1.5rem;
+  }
+}
+
 /* Transparent outline stroked text for depth layer */
 .text-stroke-out {
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.04);
@@ -150,5 +302,3 @@ body {
 .animate-scanline {
   animation: scanline-anim 6s linear infinite;
 }
-
-

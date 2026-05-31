@@ -1,404 +1,390 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
-import { 
-  Github, 
-  Linkedin, 
-  Mail, 
-  Twitter, 
-  Disc, 
-  Layers,
-  ChevronRight,
+import {
+  ArrowUpRight,
+  Braces,
+  Disc,
+  Github,
   Instagram,
-  Terminal,
-  Activity,
-  Cpu,
-  Feather,
-  Wrench,
-  Users,
-  Award
+  Linkedin,
+  Mail,
+  Menu,
+  MessageCircle,
+  Sparkles,
+  Twitter,
 } from 'lucide-react';
 
-interface SkillCategory {
-  id: string;
+type SkillSide = 'left' | 'right';
+
+interface SocialLink {
   name: string;
-  subName: string;
-  icon: any;
-  skills: string[];
+  handle: string;
+  href: string;
+  icon: ReactNode;
 }
 
-// dynamic tactile audio tick
-const playHapticTick = (freq = 1500, dur = 0.035) => {
+const leftSkills = [
+  'Python',
+  'React',
+  'GSAP',
+  'Three.js',
+  'WebGL',
+  'Framer Motion',
+  'Blender',
+  'UI/UX',
+  'Creative Coding',
+  'Motion Design',
+];
+
+const rightSkills = [
+  'TypeScript',
+  'Next.js',
+  'Tailwind CSS',
+  'Node.js',
+  'MongoDB',
+  'Firebase',
+  'Figma',
+  'Framer',
+  'AI Tools',
+  'Prompt Engineering',
+];
+
+const socials: SocialLink[] = [
+  { name: 'LinkedIn', handle: '/in/parth-bulbule', href: 'https://www.linkedin.com/in/parth-bulbule/', icon: <Linkedin size={15} /> },
+  { name: 'GitHub', handle: '@Parthbo7', href: 'https://github.com/Parthbo7', icon: <Github size={15} /> },
+  { name: 'Instagram', handle: '@parthb_o7', href: 'https://www.instagram.com/parthb_o7', icon: <Instagram size={15} /> },
+  { name: 'Twitter/X', handle: '@BulbuleParth', href: 'https://x.com/BulbuleParth', icon: <Twitter size={15} /> },
+  { name: 'Discord', handle: 'parth.system', href: 'https://discord.com', icon: <MessageCircle size={15} /> },
+  { name: 'Gmail', handle: 'contact@parth.dev', href: 'mailto:contact@parth.dev', icon: <Mail size={15} /> },
+];
+
+const accentColors = ['#00FF66', '#FF3E6C', '#D4AF37', '#8DEBFF'];
+
+const playSoftTick = (freq = 1400) => {
   try {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const audioWindow = window as Window & typeof globalThis & {
+      webkitAudioContext?: typeof AudioContext;
+    };
+    const AudioContextClass = window.AudioContext || audioWindow.webkitAudioContext;
     if (!AudioContextClass) return;
-    
+
     const audioCtx = new AudioContextClass();
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-    
+
     osc.type = 'sine';
     osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + dur);
-    
-    gain.gain.setValueAtTime(0.007, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + dur);
-    
+    osc.frequency.exponentialRampToValueAtTime(360, audioCtx.currentTime + 0.03);
+
+    gain.gain.setValueAtTime(0.006, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.035);
+
     osc.connect(gain);
     gain.connect(audioCtx.destination);
-    
     osc.start();
-    osc.stop(audioCtx.currentTime + dur + 0.01);
-  } catch (e) {}
+    osc.stop(audioCtx.currentTime + 0.04);
+  } catch {
+    // Audio context can be blocked until user interaction.
+  }
 };
 
 export const FuturisticFooter = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
+  const [activeSkill, setActiveSkill] = useState('Python');
   const [activeSocial, setActiveSocial] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<number>(0);
-
-  const categories: SkillCategory[] = [
-    {
-      id: 'cat-1',
-      name: 'PROGRAMMING',
-      subName: 'LANGUAGES & ALGORITHMS',
-      icon: <Terminal size={14} />,
-      skills: [
-        'Python',
-        'C++',
-        'C',
-        'Java',
-        'JavaScript',
-        'TypeScript',
-        'SQL',
-        'OOP Principles',
-        'Data Structures & Algorithms'
-      ]
-    },
-    {
-      id: 'cat-2',
-      name: 'WEB / FRONTEND',
-      subName: 'ENGINES & INTERACTION',
-      icon: <Layers size={14} />,
-      skills: [
-        'React',
-        'Next.js',
-        'HTML',
-        'CSS',
-        'Tailwind CSS',
-        'GSAP Animation',
-        'Framer Motion',
-        'Three.js',
-        'WebGL'
-      ]
-    },
-    {
-      id: 'cat-3',
-      name: 'BACKEND / DB',
-      subName: 'PIPELINES & DATABASES',
-      icon: <Activity size={14} />,
-      skills: [
-        'Node.js',
-        'Firebase',
-        'MongoDB',
-        'MySQL'
-      ]
-    },
-    {
-      id: 'cat-4',
-      name: 'AI / COGNITIVE',
-      subName: 'DATA & INTELLIGENCE',
-      icon: <Cpu size={14} />,
-      skills: [
-        'Artificial Intelligence',
-        'Prompt Engineering',
-        'Streamlit',
-        'AI Tools',
-        'Analytics Dashboards'
-      ]
-    },
-    {
-      id: 'cat-5',
-      name: 'DESIGN / CREATIVE',
-      subName: 'BRAND & INTERFACES',
-      icon: <Feather size={14} />,
-      skills: [
-        'Figma',
-        'Canva',
-        'UI/UX Design',
-        'Creative Coding',
-        'Motion Design',
-        'Branding'
-      ]
-    },
-    {
-      id: 'cat-6',
-      name: 'TOOLS / WORKFLOW',
-      subName: 'ECOSYSTEMS & ENGINE',
-      icon: <Wrench size={14} />,
-      skills: [
-        'Git & GitHub',
-        'VS Code',
-        'Blender',
-        'Framer',
-        'Responsive Design'
-      ]
-    },
-    {
-      id: 'cat-7',
-      name: 'SOFT SKILLS',
-      subName: 'COLLABORATIVE LAYER',
-      icon: <Users size={14} />,
-      skills: [
-        'Communication',
-        'Team Leadership',
-        'Event Coordination',
-        'Community Building',
-        'Problem Solving',
-        'Creative Thinking'
-      ]
-    }
-  ];
-
-  const experiences = [
-    { label: 'GDG Design Coordinator', role: 'COMMUNITY_LEAD', status: 'ACTIVE', color: 'text-emerald-400 border-emerald-400/20 bg-emerald-500/[0.03]' },
-    { label: 'Python Developer Intern', role: 'WORK_EXPERIENCE', status: 'COMPLETED', color: 'text-yellow-400 border-yellow-400/20 bg-yellow-500/[0.03]' },
-    { label: 'TPO LinkedIn Handler', role: 'CONTENT_STRATEGY', status: 'ACTIVE', color: 'text-fuchsia-400 border-fuchsia-400/20 bg-fuchsia-500/[0.03]' },
-    { label: 'Engineering Mechanics Topper', role: 'ACADEMIC_TOPPER', status: 'TOPPER', color: 'text-cyan-400 border-cyan-400/20 bg-cyan-500/[0.03]' },
-    { label: 'Hackathon Participation', role: 'COMPETITIVE_CODE', status: 'PARTICIPANT', color: 'text-orange-400 border-orange-400/20 bg-orange-500/[0.03]' },
-    { label: 'CampusConnect Builder', role: 'PRODUCT_SHIPPED', status: 'RELEASED', color: 'text-[#00FF66] border-[#00FF66]/20 bg-[#00FF66]/[0.03]' }
-  ];
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // Animate outline backdrop texts subtly on scroll trigger
-    const bgInfo = container.querySelector('.faded-info-text');
-    const bgNum = container.querySelector('.faded-info-num');
+    const parallaxItems = container.querySelectorAll<HTMLElement>('.footer-parallax');
+    const floatingItems = container.querySelectorAll<HTMLElement>('.footer-float');
 
-    gsap.fromTo([bgInfo, bgNum], 
-      { opacity: 0, y: 30 },
-      { 
-        opacity: 0.08, 
-        y: 0, 
-        duration: 1.5,
-        ease: 'power3.out',
-        stagger: 0.2,
-        scrollTrigger: {
-          trigger: container,
-          start: 'top 80%',
-        }
-      }
-    );
+    floatingItems.forEach((item, index) => {
+      gsap.to(item, {
+        y: index % 2 === 0 ? -10 : 10,
+        rotate: index % 2 === 0 ? 1.5 : -1.5,
+        duration: 4.8 + index * 0.35,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      });
+    });
+
+    const onMouseMove = (event: globalThis.MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      container.style.setProperty('--footer-glow-x', `${x}px`);
+      container.style.setProperty('--footer-glow-y', `${y}px`);
+
+      const moveX = (x / rect.width - 0.5) * 18;
+      const moveY = (y / rect.height - 0.5) * 18;
+
+      parallaxItems.forEach((item) => {
+        const depth = Number(item.dataset.depth || 1);
+        gsap.to(item, {
+          x: moveX * depth,
+          y: moveY * depth,
+          duration: 0.9,
+          ease: 'power3.out',
+          overwrite: 'auto',
+        });
+      });
+    };
+
+    container.addEventListener('mousemove', onMouseMove);
+    return () => container.removeEventListener('mousemove', onMouseMove);
   }, []);
 
-  const socials = [
-    { name: 'LinkedIn', handle: '@parth-bulbule', icon: <Linkedin size={14} />, href: 'https://www.linkedin.com/in/parth-bulbule/' },
-    { name: 'GitHub', handle: '@Parthbo7', icon: <Github size={14} />, href: 'https://github.com/Parthbo7' },
-    { name: 'Instagram', handle: '@parthb_o7', icon: <Instagram size={14} />, href: 'https://www.instagram.com/parthb_o7' },
-    { name: 'Twitter/X', handle: '@BulbuleParth', icon: <Twitter size={14} />, href: 'https://x.com/BulbuleParth' },
-    { name: 'Discord', handle: 'parth#404', icon: <Disc size={14} />, href: 'https://discord.com' },
-    { name: 'Gmail', handle: 'contact@parth.dev', icon: <Mail size={14} />, href: 'mailto:contact@parth.dev' },
-  ];
+  const handleMagneticMove = (event: ReactMouseEvent<HTMLElement>) => {
+    const target = event.currentTarget;
+    const rect = target.getBoundingClientRect();
+    const x = event.clientX - (rect.left + rect.width / 2);
+    const y = event.clientY - (rect.top + rect.height / 2);
+
+    gsap.to(target, {
+      x: x * 0.06,
+      y: y * 0.14,
+      duration: 0.35,
+      ease: 'power3.out',
+      overwrite: 'auto',
+    });
+  };
+
+  const handleMagneticLeave = (event: ReactMouseEvent<HTMLElement>) => {
+    gsap.to(event.currentTarget, {
+      x: 0,
+      y: 0,
+      duration: 0.7,
+      ease: 'elastic.out(1, 0.45)',
+      overwrite: 'auto',
+    });
+  };
+
+  const openMenu = () => {
+    playSoftTick(1800);
+    window.dispatchEvent(new Event('open-navigation-menu'));
+  };
+
+  const renderSkill = (skill: string, index: number, side: SkillSide) => {
+    const accent = accentColors[index % accentColors.length];
+    const number = side === 'left' ? index + 1 : index + 11;
+    const isActive = activeSkill === skill;
+    const isLongSkill = skill.length > 15;
+
+    return (
+      <motion.button
+        type="button"
+        key={skill}
+        onMouseMove={handleMagneticMove}
+        onMouseLeave={handleMagneticLeave}
+        onMouseEnter={() => {
+          setActiveSkill(skill);
+          playSoftTick(1180 + index * 48);
+        }}
+        className="footer-skill-row group relative flex w-full items-center justify-between overflow-hidden border-b border-white/[0.08] py-1 text-left outline-none transition-colors duration-300 hover:border-white/25 sm:py-1.5"
+        style={{ '--skill-accent': accent } as CSSProperties}
+        whileHover={{ scale: 1.018 }}
+        whileTap={{ scale: 0.99 }}
+      >
+        <span className="flex min-w-0 items-center gap-3 sm:gap-4">
+          <span className="font-mono text-[8px] font-bold tracking-[0.28em] text-white/22 transition-colors duration-300 group-hover:text-[var(--skill-accent)]">
+            {String(number).padStart(2, '0')}
+          </span>
+          <span
+            className={`footer-skill-label whitespace-nowrap font-display font-black uppercase leading-none tracking-[0em] transition-all duration-300 ${
+              isLongSkill
+                ? 'text-[0.92rem] sm:text-[1.08rem] lg:text-[1.22rem] xl:text-[1.34rem]'
+                : 'text-[1.14rem] sm:text-[1.28rem] lg:text-[1.45rem] xl:text-[1.62rem]'
+            } ${
+              isActive ? 'text-white' : 'text-white/72'
+            } group-hover:text-white group-hover:drop-shadow-[0_0_18px_rgba(255,255,255,0.18)]`}
+          >
+            {skill}
+          </span>
+        </span>
+        <ArrowUpRight
+          size={18}
+          className="mr-1 shrink-0 text-white/0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--skill-accent)]"
+        />
+      </motion.button>
+    );
+  };
 
   return (
-    <section 
+    <section
       ref={containerRef}
       id="skill-portal-footer"
-      className="w-screen h-screen overflow-hidden relative flex flex-col justify-between p-6 sm:p-12 lg:p-16 select-none bg-[#050505] text-white snap-start snap-always"
+      className="footer-portal no-scrollbar relative h-full min-h-screen w-full overflow-y-auto bg-[#050505] px-6 py-5 text-white sm:px-10 sm:py-8 lg:overflow-hidden lg:px-14 lg:py-10"
     >
-      {/* Film grain procedural overlay & thin grid lines */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none custom-grid-lines" />
-      
-      {/* Dynamic atmospheric radial blurs */}
-      <div className="absolute top-[30%] right-[20%] w-[35vw] h-[35vw] bg-yellow-500/[0.03] rounded-full blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-[10%] left-[10%] w-[45vw] h-[45vw] bg-emerald-500/[0.04] rounded-full blur-[140px] pointer-events-none animate-pulse" style={{ animationDuration: '10s' }} />
+      <div className="footer-grid-lines absolute inset-0 pointer-events-none" />
+      <div className="footer-noise absolute inset-0 pointer-events-none" />
+      <div className="footer-cursor-glow pointer-events-none absolute inset-0" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
 
-      {/* Cinematic backdrop layers */}
-      <div className="absolute right-[4%] bottom-[12%] select-none pointer-events-none z-0 hidden lg:flex flex-col items-end opacity-10">
-        <div className="faded-info-text font-display font-extrabold uppercase text-[6.5vw] leading-[0.8] text-stroke-gold select-none">
+      <div className="footer-parallax pointer-events-none absolute right-[-1.5rem] top-[13%] hidden select-none text-right lg:block" data-depth="0.36">
+        <div className="font-display text-[6.75rem] font-black uppercase leading-[0.78] tracking-[0em] text-white/[0.045] xl:text-[8rem]">
           <div>SKILL</div>
           <div>STACK</div>
           <div>INFO</div>
         </div>
-        <div className="faded-info-num font-display font-black text-[#D4AF37] text-[9vw] leading-none select-none mt-2">
-          02
-        </div>
+      </div>
+      <div className="footer-parallax pointer-events-none absolute right-[8%] bottom-[17%] hidden select-none font-display text-[10rem] font-black leading-none tracking-[0em] text-white/[0.035] lg:block xl:text-[12rem]" data-depth="0.18">
+        02
       </div>
 
-      {/* TOP HUD ROW */}
-      <div className="flex justify-between items-center z-10 w-full border-b border-white/5 pb-4">
-        <span className="font-mono text-[9px] sm:text-xs tracking-[0.25em] text-[#00FF66] font-bold uppercase flex items-center gap-1.5">
-          <Layers size={12} className="animate-pulse" />
-          CREATIVE DEVELOPER
-        </span>
-        
-        {/* Monogram OS status */}
-        <div className="font-mono text-[9px] sm:text-xs tracking-widest text-white/30 hidden sm:flex items-center gap-2 border border-white/10 px-3 py-1 rounded-full bg-white/[0.02]">
-          <span>SYSTEM_OS</span>
-          <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full" />
-          <span>[ P / B ]</span>
-        </div>
-
-        {/* Console Archive marker */}
-        <span className="font-mono text-[9px] sm:text-xs tracking-widest text-white/40">
-          SEC_02 // SYSTEM_ARCHIVE
-        </span>
-      </div>
-
-      {/* CENTER WORKSPACE: DYNAMIC TELEMETRY GRID */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 items-stretch z-10 w-full my-auto gap-6 lg:gap-10 relative min-h-[55vh] max-h-[60vh] overflow-hidden">
-        
-        {/* COLUMN 1: CATEGORIES NAV (Col Span 3) */}
-        <div className="lg:col-span-3 flex flex-col gap-1.5 justify-center border-r border-white/5 pr-4 select-none">
-          <span className="font-mono text-[9px] tracking-[0.2em] text-white/30 uppercase mb-2">
-            // ARCHIVE_DIRECTORY
-          </span>
-          {categories.map((cat, i) => (
-            <button
-              key={cat.id}
-              onClick={() => {
-                playHapticTick(1400 + i * 40, 0.02);
-                setActiveTab(i);
-              }}
-              onMouseEnter={() => playHapticTick(1500, 0.015)}
-              className={`flex items-center gap-3 p-2 rounded border text-left transition-all duration-300 w-full interactive-hover ${
-                activeTab === i 
-                  ? 'border-[#00FF66]/30 bg-[#00FF66]/5 text-[#00FF66] shadow-[0_0_15px_rgba(0,255,102,0.06)]' 
-                  : 'border-transparent text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.01]'
-              }`}
-            >
-              <div className={`p-1.5 rounded transition-colors ${activeTab === i ? 'bg-[#00FF66]/10 text-[#00FF66]' : 'bg-white/[0.02]'}`}>
-                {cat.icon}
-              </div>
-              <div className="flex flex-col">
-                <span className="font-display font-black text-[11px] sm:text-xs tracking-tight uppercase leading-none">
-                  {cat.name}
-                </span>
-                <span className="font-mono text-[7px] text-white/20 uppercase tracking-widest mt-0.5 whitespace-nowrap">
-                  {cat.subName}
-                </span>
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {/* COLUMN 2: ACTIVE CATEGORY SKILLS GRID (Col Span 5) */}
-        <div className="lg:col-span-5 flex flex-col justify-center border-r border-white/5 px-4 sm:px-6">
-          <span className="font-mono text-[9px] tracking-[0.2em] text-[#00FF66] font-bold uppercase mb-4 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 bg-[#00FF66] rounded-full animate-ping" />
-            // DYNAMIC_INSPECT: {categories[activeTab].name}
-          </span>
-          
-          <div className="h-[42vh] overflow-y-auto no-scrollbar pr-2 flex flex-col justify-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 10 }}
-                transition={{ duration: 0.25, ease: 'easeOut' }}
-                className="flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5"
-              >
-                {categories[activeTab].skills.map((skill) => (
-                  <div 
-                    key={skill}
-                    onMouseEnter={() => playHapticTick(1600, 0.015)}
-                    className="group flex items-center gap-2.5 interactive-hover py-0.5 cursor-pointer"
-                  >
-                    <ChevronRight size={11} className="text-[#00FF66] opacity-30 group-hover:opacity-100 transition-opacity duration-300" />
-                    <span className="font-display font-extrabold text-[13px] sm:text-[16px] lg:text-[18px] text-zinc-400 group-hover:text-white uppercase tracking-tighter transition-all duration-300 group-hover:translate-x-2 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.3)] whitespace-nowrap">
-                      {skill}
-                    </span>
-                  </div>
-                ))}
-              </motion.div>
-            </AnimatePresence>
+      <div className="relative z-10 grid h-auto min-h-[calc(100vh-2.5rem)] grid-rows-[auto_auto_auto] gap-5 sm:min-h-[calc(100vh-4rem)] lg:h-full lg:min-h-[calc(100vh-5rem)] lg:grid-rows-[auto_minmax(0,1fr)_auto] lg:gap-7">
+        <header className="grid grid-cols-[1fr_auto_1fr] items-center border-b border-white/[0.08] pb-4">
+          <div className="font-mono text-[9px] font-bold uppercase tracking-[0.28em] text-white/62 sm:text-[10px]">
+            CREATIVE DEVELOPER
           </div>
-        </div>
 
-        {/* COLUMN 3: EXPERIENCE ARCHIVE TELEMETRY LOGS (Col Span 4) */}
-        <div className="lg:col-span-4 flex flex-col justify-center pl-4 sm:pl-6 relative">
-          <span className="font-mono text-[9px] tracking-[0.2em] text-yellow-400 font-bold uppercase mb-4 flex items-center gap-1.5">
-            <Award size={10} className="animate-pulse" />
-            // EXPERIENCE_ARCHIVE_STATUS
-          </span>
-          
-          <div className="flex flex-col gap-1.5 max-h-[42vh] overflow-y-auto no-scrollbar pr-2">
-            {experiences.map((exp, expIdx) => (
-              <div 
-                key={expIdx}
-                className="p-2 sm:p-2.5 rounded border border-white/5 bg-white/[0.01] hover:border-white/10 hover:bg-white/[0.02] flex justify-between items-center gap-4 transition-all duration-300 interactive-hover cursor-default"
-                onMouseEnter={() => playHapticTick(1300 + expIdx * 50, 0.01)}
-              >
-                <div className="flex flex-col">
-                  <span className="font-display font-black text-[11px] sm:text-xs text-white uppercase tracking-tight">
-                    {exp.label}
-                  </span>
-                  <span className="font-mono text-[7px] text-white/30 tracking-widest mt-0.5">
-                    {exp.role}
-                  </span>
-                </div>
-                <span className={`font-mono text-[7px] tracking-widest font-bold px-2 py-0.5 rounded border ${exp.color} whitespace-nowrap`}>
-                  {exp.status}
-                </span>
+          <motion.button
+            type="button"
+            onClick={() => {
+              playSoftTick(2050);
+              window.location.hash = '#';
+            }}
+            onMouseMove={handleMagneticMove}
+            onMouseLeave={handleMagneticLeave}
+            className="footer-float interactive-hover grid h-10 w-10 place-items-center rounded-full border border-white/14 bg-white/[0.025] font-mono text-[10px] font-black tracking-[0.12em] text-white shadow-[0_0_30px_rgba(0,255,102,0.06)] transition-all duration-300 hover:border-[#00FF66]/60 hover:text-[#00FF66]"
+            aria-label="Return home"
+          >
+            PB
+          </motion.button>
+
+          <button
+            type="button"
+            onClick={openMenu}
+            onMouseMove={handleMagneticMove}
+            onMouseLeave={handleMagneticLeave}
+            className="interactive-hover justify-self-end border border-white/12 bg-white/[0.02] px-3 py-2 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-white/72 transition-all duration-300 hover:border-[#FF3E6C]/60 hover:text-white hover:shadow-[0_0_22px_rgba(255,62,108,0.18)] sm:px-4"
+          >
+            <span className="flex items-center gap-2">
+              MENU <Menu size={13} />
+            </span>
+          </button>
+        </header>
+
+        <main className="grid min-h-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-center lg:gap-8 xl:grid-cols-[minmax(0,1fr)_18rem]">
+          <div className="grid min-h-0 grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:gap-8">
+            <div className="footer-parallax min-w-0" data-depth="-0.12">
+              <div className="mb-3 flex items-center justify-between border-b border-white/[0.08] pb-2 font-mono text-[8px] font-bold uppercase tracking-[0.25em] text-[#00FF66]">
+                <span>// LEFT STACK</span>
+                <Braces size={13} />
               </div>
+              <div>{leftSkills.map((skill, index) => renderSkill(skill, index, 'left'))}</div>
+            </div>
+
+            <div className="footer-parallax min-w-0" data-depth="0.12">
+              <div className="mb-3 flex items-center justify-between border-b border-white/[0.08] pb-2 font-mono text-[8px] font-bold uppercase tracking-[0.25em] text-[#D4AF37]">
+                <span>// RIGHT STACK</span>
+                <Sparkles size={13} />
+              </div>
+              <div>{rightSkills.map((skill, index) => renderSkill(skill, index, 'right'))}</div>
+            </div>
+          </div>
+
+          <aside className="footer-parallax relative hidden h-full min-h-[26rem] border-l border-white/[0.08] pl-6 lg:flex lg:flex-col lg:justify-between" data-depth="0.24">
+            <div className="space-y-4">
+              <div className="font-mono text-[8px] font-bold uppercase tracking-[0.28em] text-white/35">
+                // ACTIVE HOVER SIGNAL
+              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeSkill}
+                  initial={{ opacity: 0, y: 12, filter: 'blur(8px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, y: -12, filter: 'blur(8px)' }}
+                  transition={{ duration: 0.32, ease: 'easeOut' }}
+                className="footer-float border border-white/[0.09] bg-white/[0.025] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+                >
+                  <div className="mb-5 flex items-center justify-between">
+                    <span className="h-2 w-2 rounded-full bg-[#00FF66] shadow-[0_0_16px_rgba(0,255,102,0.8)]" />
+                    <Disc size={15} className="text-white/30" />
+                  </div>
+                  <div className="font-display text-3xl font-black uppercase leading-none tracking-[0em] text-white">
+                    {activeSkill}
+                  </div>
+                  <div className="mt-4 font-mono text-[9px] uppercase leading-relaxed tracking-[0.2em] text-white/36">
+                    Signal isolated. Motion-ready interface skill archived in Parth OS.
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <div className="space-y-3 font-mono text-[8px] uppercase tracking-[0.24em] text-white/32">
+              <div className="flex items-center justify-between border-t border-white/[0.08] pt-4">
+                <span>Latency</span>
+                <span className="text-[#00FF66]">Nominal</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Archive</span>
+                <span className="text-white/60">Verified</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Mode</span>
+                <span className="text-[#FF3E6C]">Anti-gravity</span>
+              </div>
+            </div>
+          </aside>
+        </main>
+
+        <footer className="footer-bottom-row grid gap-4 border-t border-white/[0.08] pt-4 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-end">
+          <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/42 sm:text-[10px]">
+            <div>&copy; 2026 PARTH BULBULE</div>
+            <div className="mt-1 font-bold text-white/62">ENGINEERED FOR PREMIUM SCALABILITY</div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-start gap-2 sm:gap-2.5 md:justify-end">
+            {socials.map((social, index) => (
+              <motion.a
+                key={social.name}
+                href={social.href}
+                target="_blank"
+                rel="noreferrer"
+                onMouseEnter={() => {
+                  setActiveSocial(social.handle);
+                  playSoftTick(1280 + index * 65);
+                }}
+                onMouseLeave={(event) => {
+                  setActiveSocial(null);
+                  handleMagneticLeave(event);
+                }}
+                onMouseMove={handleMagneticMove}
+                className="group interactive-hover flex items-center gap-2 rounded-full border border-white/[0.1] bg-white/[0.015] p-0.5 text-white/64 transition-all duration-300 hover:border-[#00FF66]/70 hover:text-[#00FF66] hover:shadow-[0_0_22px_rgba(0,255,102,0.16)] sm:p-1"
+                aria-label={social.name}
+                whileHover={{ y: -4, scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+              >
+                <span className="footer-social-icon grid h-8 w-8 place-items-center rounded-full border border-white/[0.12] transition-colors duration-300 group-hover:border-[#00FF66]/55 sm:h-9 sm:w-9">
+                  {social.icon}
+                </span>
+                <span className="max-w-0 overflow-hidden whitespace-nowrap font-mono text-[8px] font-bold uppercase tracking-[0.2em] opacity-0 transition-all duration-300 group-hover:max-w-[11.5rem] group-hover:pr-3 group-hover:opacity-100">
+                  {social.handle}
+                </span>
+              </motion.a>
             ))}
           </div>
-        </div>
-
+        </footer>
       </div>
 
-      {/* BOTTOM FOOTER HUD ROW */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 lg:gap-0 z-10 w-full border-t border-white/5 pt-4">
-        
-        {/* Left trademark branding */}
-        <div className="font-mono text-[9px] sm:text-xs text-white/40 tracking-wider text-left">
-          <div>© 2026 PARTH BULBULE</div>
-          <div className="mt-1 flex items-center gap-1.5 font-bold text-emerald-400">
-            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
-            ENGINEERED FOR PREMIUM SCALABILITY
-          </div>
-        </div>
-
-        {/* Right sliding handle social rings */}
-        <div className="flex flex-wrap items-center gap-3 sm:gap-4 z-10">
-          <AnimatePresence>
-            {activeSocial !== null && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 15 }}
-                className="hidden sm:block px-3 py-1 font-mono text-[10px] tracking-widest text-[#00FF66] border border-[#00FF66]/20 bg-[#00FF66]/5 rounded bg-opacity-10 shadow-[0_0_10px_rgba(0,255,102,0.1)] mr-1"
-              >
-                {activeSocial}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {socials.map((soc, i) => (
-            <motion.a
-              key={i}
-              href={soc.href}
-              target="_blank"
-              rel="noreferrer"
-              onMouseEnter={() => {
-                playHapticTick(1300 + i * 80, 0.015);
-                setActiveSocial(soc.handle);
-              }}
-              onMouseLeave={() => setActiveSocial(null)}
-              className="interactive-hover w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center border border-white/10 rounded-full bg-white/[0.01] hover:border-[#00FF66] hover:text-[#00FF66] hover:drop-shadow-[0_0_8px_rgba(0,255,102,0.4)] transition-all duration-300"
-              whileHover={{ scale: 1.15, rotate: 15 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {soc.icon}
-            </motion.a>
-          ))}
-        </div>
-
-      </div>
-
+      <AnimatePresence>
+        {activeSocial && (
+          <motion.div
+            className="pointer-events-none absolute bottom-[5.4rem] right-6 hidden border border-[#00FF66]/20 bg-[#00FF66]/[0.045] px-3 py-1 font-mono text-[8px] font-bold uppercase tracking-[0.25em] text-[#00FF66] shadow-[0_0_24px_rgba(0,255,102,0.1)] lg:block"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+          >
+            {activeSocial}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

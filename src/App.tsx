@@ -10,6 +10,7 @@ import { HeroTypography } from './components/HeroTypography';
 import { MinimalUI } from './components/MinimalUI';
 import { VaultPortal } from './components/VaultPortal';
 import { ExperimentsPage } from './components/ExperimentsPage';
+import { FuturisticFooter } from './components/FuturisticFooter';
 import { ProfilePage } from './components/ProfilePage';
 import { ConnectPage } from './components/ConnectPage';
 import { TransitionOverlay } from './components/TransitionOverlay';
@@ -176,11 +177,11 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="w-screen h-screen overflow-y-auto relative scroll-smooth bg-transparent select-none no-scrollbar transform-gpu"
+              className="landing-scroll-shell w-screen h-screen overflow-y-auto relative scroll-smooth bg-transparent select-none no-scrollbar transform-gpu"
               style={{ transform: 'translate3d(0,0,0)' }}
             >
-              {/* SCREEN 1: HERO VIEWPORT PLAYGROUND (80vh for compact editorial flow) */}
-              <div className="w-full h-[80vh] relative flex flex-col justify-center items-center overflow-hidden">
+              {/* SCREEN 1: HERO VIEWPORT PLAYGROUND */}
+              <div className="landing-hero-stage w-full h-screen relative flex flex-col justify-center items-center overflow-hidden">
                 {/* Centered Editorial Oversized Headline (V3 Stack) */}
                 <HeroTypography />
                 
@@ -195,7 +196,7 @@ function App() {
                       container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
                     }
                   }}
-                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 opacity-40 z-30 select-none cursor-pointer hover:opacity-80 transition-all pointer-events-auto interactive-hover"
+                  className="landing-scroll-prompt absolute bottom-6 sm:bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 opacity-40 z-30 select-none cursor-pointer hover:opacity-80 transition-all pointer-events-auto interactive-hover"
                 >
                   <span className="font-mono text-[9px] tracking-[0.22em] text-black uppercase font-semibold">
                     SCROLL FOR FOOTER
@@ -208,7 +209,7 @@ function App() {
               </div>
 
               {/* Telemetry Divider grid line */}
-              <div className="w-full flex items-center justify-between px-8 sm:px-12 opacity-30 mt-4 mb-4 select-none">
+              <div className="landing-telemetry-divider w-full flex items-center justify-between px-8 sm:px-12 select-none mt-10 mb-4">
                 <span className="font-mono text-[7px] sm:text-[8px] text-black/40 tracking-widest">// ROOT_SYSTEM_FLOW_07</span>
                 <div className="flex-1 h-[1px] bg-black/10 mx-6 border-dashed border-t" />
                 <span className="font-mono text-[7px] sm:text-[8px] text-black/40 tracking-widest">LATENCY: NOMINAL // STATE: ACTIVE</span>
@@ -221,15 +222,15 @@ function App() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.05 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="w-full flex flex-col sm:flex-row justify-between items-center py-10 pb-16 px-8 sm:px-12 border-t border-black/5 bg-[#EFE5E0]/40 backdrop-blur-sm z-20 font-mono text-[9px] sm:text-xs text-black/50 select-none gap-6 sm:gap-0"
+                className="landing-footer-row w-full grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] items-center py-10 pb-16 px-8 sm:px-12 border-t border-black/5 bg-[#EFE5E0]/40 backdrop-blur-sm z-20 font-mono text-[9px] sm:text-xs text-black/50 select-none gap-3 sm:gap-0"
               >
-                <div className="text-left font-bold uppercase tracking-wider">
-                  PARTH BULBULE — 2026
+                <div className="text-center sm:text-left sm:justify-self-start font-bold uppercase tracking-wider">
+                  PARTH BULBULE &mdash; 2026
                 </div>
-                <div className="text-center font-bold uppercase tracking-wider text-[#FF3E6C]">
+                <div className="text-center sm:justify-self-center font-bold uppercase tracking-wider text-[#FF3E6C]">
                   ACTIVE VERIFIED SYSTEM NODE
                 </div>
-                <div className="text-right font-bold uppercase tracking-wider">
+                <div className="text-center sm:text-right sm:justify-self-end font-bold uppercase tracking-wider">
                   BASED IN INDIA
                 </div>
               </motion.div>
@@ -253,14 +254,14 @@ function App() {
           {activeSection === 'footer' && (
             <motion.section 
               key="footer"
-              id="experiments" 
+              id="skill-stack"
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.5, ease: 'easeInOut' }}
-              className="w-screen h-screen relative overflow-hidden flex flex-col justify-between p-6 sm:p-12 lg:p-16 bg-transparent select-none"
+              className="w-screen h-screen relative overflow-hidden bg-[#050505] select-none"
             >
-              <ExperimentsPage initialFilter="archive" />
+              <FuturisticFooter />
             </motion.section>
           )}
 
