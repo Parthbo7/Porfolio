@@ -173,37 +173,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
               AVAILABLE FULL-TIME
             </div>
           </motion.div>
-        ) : (
-          <motion.button
-            key="home-button"
-            onClick={() => {
-              playTick(900, 0.08);
-              window.location.hash = '#';
-            }}
-            onMouseEnter={() => playTick(1500, 0.01)}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            className="fixed top-6 left-6 sm:top-10 sm:left-10 z-50 pointer-events-auto flex flex-col items-start gap-1 select-none text-left interactive-hover cursor-pointer"
-          >
-            {/* Visual futuristic glass capsule button with thin green border */}
-            <motion.div 
-              className="flex items-center gap-2 px-3 py-1.5 bg-[#EFE5E0]/80 backdrop-blur-md border border-[#00FF66]/30 rounded-sm shadow-[0_4px_12px_rgba(0,0,0,0.03),2px_2px_0px_rgba(0,255,102,0.15)] text-black hover:border-[#00FF66] hover:shadow-[0_0_12px_rgba(0,255,102,0.25)] transition-all duration-300 transform-gpu will-change-transform font-mono text-[10px] sm:text-xs font-black uppercase tracking-widest"
-              whileHover={{ scale: 1.05, x: 2 }}
-              whileTap={{ scale: 0.95 }}
-              style={{ transform: 'translate3d(0,0,0)' }}
-            >
-              <span className="text-[#00CC52]">←</span> HOME
-              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse ml-0.5" />
-            </motion.div>
-            
-            {/* Subtle tilted terminal-style metadata */}
-            <span className="font-mono text-[7px] text-zinc-400 tracking-widest uppercase pl-1 sm:block hidden select-none">
-              EXIT_TO_ROOT // NOM_07
-            </span>
-          </motion.button>
-          )}
+        ) : null}
       </AnimatePresence>
 
       {/* TOP CENTER: MONOGRAM SECURE NODE STATUS (HIDDEN VAULT LAUNCHER) */}
@@ -324,7 +294,13 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
                   <motion.a
                     key={link.num}
                     href={link.href}
-                    onClick={handleMenuClick}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleMenuClick();
+                      window.history.pushState(null, '', '/');
+                      window.location.hash = link.href;
+                      window.dispatchEvent(new PopStateEvent('popstate'));
+                    }}
                     onMouseEnter={() => {
                       playTick(1100 + idx * 80, 0.02);
                       setHoveredIndex(idx);

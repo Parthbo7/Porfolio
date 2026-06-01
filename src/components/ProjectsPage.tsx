@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Terminal, ArrowUpRight, Cpu, Layers, ShieldAlert } from 'lucide-react';
 import { playClickTick } from '../utils/SoundManager';
-import { InternshipsArchive } from './projects/InternshipsArchive';
+import InternshipsPage from './projects/InternshipsPage';
 import { HackathonsArchive } from './projects/HackathonsArchive';
 import { ProjectsDatabase } from './projects/ProjectsDatabase';
 
@@ -16,15 +16,16 @@ export const ProjectsPage = () => {
     '> NETWORK STABLE // ACTIVE PORT: 07_'
   ]);
 
-  // Handle deep link routing if direct hash links contain sub-paths, or fallback
+  // Handle deep link routing if direct hash or path links contain sub-paths, or fallback
   useEffect(() => {
     const handleHashCheck = () => {
       const hash = window.location.hash;
-      if (hash === '#projects-list' || hash === '#projects/list') {
+      const path = window.location.pathname;
+      if (hash === '#projects-list' || hash === '#projects/list' || path === '/projects-list' || path === '/projects/list') {
         setSubView('projects-list');
-      } else if (hash === '#projects/internships') {
+      } else if (hash === '#projects/internships' || path === '/projects/internships' || path === '/projects/internships/') {
         setSubView('internships');
-      } else if (hash === '#projects/hackathons') {
+      } else if (hash.startsWith('#projects/hackathons') || path.startsWith('/projects/hackathons')) {
         setSubView('hackathons');
       } else {
         setSubView('menu');
@@ -33,21 +34,33 @@ export const ProjectsPage = () => {
     
     handleHashCheck();
     window.addEventListener('hashchange', handleHashCheck);
-    return () => window.removeEventListener('hashchange', handleHashCheck);
+    window.addEventListener('popstate', handleHashCheck);
+    return () => {
+      window.removeEventListener('hashchange', handleHashCheck);
+      window.removeEventListener('popstate', handleHashCheck);
+    };
   }, []);
 
-  // Update URL hash for each sub-view to support deep links and back button browser history
+  // Update URL hash & path for each sub-view to support deep links and clean history routing
   const navigateToView = (view: SubViewType) => {
     playClickTick(1600, 0.05);
     setSubView(view);
     if (view === 'menu') {
+      window.history.pushState(null, '', '/');
       window.location.hash = '#projects';
+      window.dispatchEvent(new PopStateEvent('popstate'));
     } else if (view === 'internships') {
-      window.location.hash = '#projects/internships';
+      window.history.pushState(null, '', '/projects/internships');
+      window.location.hash = '';
+      window.dispatchEvent(new PopStateEvent('popstate'));
     } else if (view === 'hackathons') {
-      window.location.hash = '#projects/hackathons';
+      window.history.pushState(null, '', '/projects/hackathons');
+      window.location.hash = '';
+      window.dispatchEvent(new PopStateEvent('popstate'));
     } else if (view === 'projects-list') {
-      window.location.hash = '#projects-list';
+      window.history.pushState(null, '', '/projects-list');
+      window.location.hash = '';
+      window.dispatchEvent(new PopStateEvent('popstate'));
     }
   };
 
@@ -127,7 +140,7 @@ export const ProjectsPage = () => {
   ];
 
   if (subView === 'internships') {
-    return <InternshipsArchive onBack={() => navigateToView('menu')} />;
+    return <InternshipsPage onBack={() => navigateToView('menu')} />;
   }
 
   if (subView === 'hackathons') {

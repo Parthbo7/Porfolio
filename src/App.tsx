@@ -106,49 +106,97 @@ function App() {
 
 
 
-  // URL Hash Sync for OS state router
+  // URL Path & Hash Sync for OS state router
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash;
-      if (hash === '#experiments' || hash === '#projects') {
-        triggerTransition('projects');
-      } else if (hash.startsWith('#experience')) {
-        triggerTransition('experience');
-      } else if (hash === '#stack') {
-        triggerTransition('footer');
-      } else if (hash === '#about') {
-        triggerTransition('profile');
-      } else if (hash === '#contact') {
-        triggerTransition('connect');
+      const path = window.location.pathname;
+      
+      // If there is an active hash, it takes routing precedence for menu navigation
+      if (hash && hash !== '#') {
+        if (hash.startsWith('#experiments') || hash.startsWith('#projects') || hash.startsWith('#projects-list')) {
+          triggerTransition('projects');
+        } else if (hash.startsWith('#experience')) {
+          triggerTransition('experience');
+        } else if (hash === '#stack') {
+          triggerTransition('footer');
+        } else if (hash === '#about') {
+          triggerTransition('profile');
+        } else if (hash === '#contact') {
+          triggerTransition('connect');
+        } else {
+          triggerTransition('hero');
+        }
       } else {
-        triggerTransition('hero');
+        // Fall back to pathname-based routing for clean URLs and direct loads
+        if (path.startsWith('/projects') || path.startsWith('/experiments') || path.startsWith('/projects-list')) {
+          triggerTransition('projects');
+        } else if (path.startsWith('/experience')) {
+          triggerTransition('experience');
+        } else if (path === '/stack' || path === '/stack/') {
+          triggerTransition('footer');
+        } else if (path === '/about' || path === '/about/') {
+          triggerTransition('profile');
+        } else if (path === '/contact' || path === '/contact/') {
+          triggerTransition('connect');
+        } else {
+          triggerTransition('hero');
+        }
       }
     };
 
     // Initialize state on first load based on direct links
     const initialHash = window.location.hash;
-    if (initialHash === '#experiments' || initialHash === '#projects') {
-      setActiveSection('projects');
-      setTargetSection('projects');
-    } else if (initialHash.startsWith('#experience')) {
-      setActiveSection('experience');
-      setTargetSection('experience');
-    } else if (initialHash === '#stack') {
-      setActiveSection('footer');
-      setTargetSection('footer');
-    } else if (initialHash === '#about') {
-      setActiveSection('profile');
-      setTargetSection('profile');
-    } else if (initialHash === '#contact') {
-      setActiveSection('connect');
-      setTargetSection('connect');
+    const initialPath = window.location.pathname;
+    
+    if (initialHash && initialHash !== '#') {
+      if (initialHash.startsWith('#experiments') || initialHash.startsWith('#projects') || initialHash.startsWith('#projects-list')) {
+        setActiveSection('projects');
+        setTargetSection('projects');
+      } else if (initialHash.startsWith('#experience')) {
+        setActiveSection('experience');
+        setTargetSection('experience');
+      } else if (initialHash === '#stack') {
+        setActiveSection('footer');
+        setTargetSection('footer');
+      } else if (initialHash === '#about') {
+        setActiveSection('profile');
+        setTargetSection('profile');
+      } else if (initialHash === '#contact') {
+        setActiveSection('connect');
+        setTargetSection('connect');
+      } else {
+        setActiveSection('hero');
+        setTargetSection('hero');
+      }
     } else {
-      setActiveSection('hero');
-      setTargetSection('hero');
+      if (initialPath.startsWith('/projects') || initialPath.startsWith('/experiments') || initialPath.startsWith('/projects-list')) {
+        setActiveSection('projects');
+        setTargetSection('projects');
+      } else if (initialPath.startsWith('/experience')) {
+        setActiveSection('experience');
+        setTargetSection('experience');
+      } else if (initialPath === '/stack' || initialPath === '/stack/') {
+        setActiveSection('footer');
+        setTargetSection('footer');
+      } else if (initialPath === '/about' || initialPath === '/about/') {
+        setActiveSection('profile');
+        setTargetSection('profile');
+      } else if (initialPath === '/contact' || initialPath === '/contact/') {
+        setActiveSection('connect');
+        setTargetSection('connect');
+      } else {
+        setActiveSection('hero');
+        setTargetSection('hero');
+      }
     }
 
     window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handleHashChange);
+    };
   }, []);
 
   return (
