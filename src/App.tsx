@@ -9,6 +9,7 @@ import { FloatingStickers } from './components/FloatingStickers';
 import { HeroTypography } from './components/HeroTypography';
 import { MinimalUI } from './components/MinimalUI';
 import { VaultPortal } from './components/VaultPortal';
+import { ExperiencePage } from './components/ExperiencePage';
 import { ExperimentsPage } from './components/ExperimentsPage';
 import { FuturisticFooter } from './components/FuturisticFooter';
 import { ProfilePage } from './components/ProfilePage';
@@ -19,19 +20,19 @@ function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVaultOpen, setIsVaultOpen] = useState(false);
   
-  const [activeSection, setActiveSection] = useState<'hero' | 'experiments' | 'footer' | 'profile' | 'connect'>('hero');
-  const [targetSection, setTargetSection] = useState<'hero' | 'experiments' | 'footer' | 'profile' | 'connect' | 'vault'>('hero');
+  const [activeSection, setActiveSection] = useState<'hero' | 'experiments' | 'experience' | 'footer' | 'profile' | 'connect'>('hero');
+  const [targetSection, setTargetSection] = useState<'hero' | 'experiments' | 'experience' | 'footer' | 'profile' | 'connect' | 'vault'>('hero');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const transitioningRef = useRef(false);
-  const activeSectionRef = useRef<'hero' | 'experiments' | 'footer' | 'profile' | 'connect'>('hero');
+  const activeSectionRef = useRef<'hero' | 'experiments' | 'experience' | 'footer' | 'profile' | 'connect'>('hero');
 
   useEffect(() => {
     transitioningRef.current = isTransitioning;
     activeSectionRef.current = activeSection;
   }, [isTransitioning, activeSection]);
 
-  const triggerTransition = (section: 'hero' | 'experiments' | 'footer' | 'profile' | 'connect') => {
+  const triggerTransition = (section: 'hero' | 'experiments' | 'experience' | 'footer' | 'profile' | 'connect') => {
     if (section === activeSectionRef.current) return;
     if (transitioningRef.current) return;
 
@@ -111,6 +112,8 @@ function App() {
       const hash = window.location.hash;
       if (hash === '#experiments') {
         triggerTransition('experiments');
+      } else if (hash === '#experience') {
+        triggerTransition('experience');
       } else if (hash === '#stack') {
         triggerTransition('footer');
       } else if (hash === '#about') {
@@ -127,6 +130,9 @@ function App() {
     if (initialHash === '#experiments') {
       setActiveSection('experiments');
       setTargetSection('experiments');
+    } else if (initialHash === '#experience') {
+      setActiveSection('experience');
+      setTargetSection('experience');
     } else if (initialHash === '#stack') {
       setActiveSection('footer');
       setTargetSection('footer');
@@ -248,6 +254,20 @@ function App() {
               className="w-screen h-screen relative overflow-hidden flex flex-col justify-between p-6 sm:p-12 lg:p-16 bg-transparent select-none"
             >
               <ExperimentsPage initialFilter="experiments" />
+            </motion.section>
+          )}
+
+          {activeSection === 'experience' && (
+            <motion.section 
+              key="experience"
+              id="experience" 
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.5, ease: 'easeInOut' }}
+              className="w-screen h-screen relative overflow-hidden flex flex-col justify-between p-6 sm:p-12 lg:p-16 bg-transparent select-none"
+            >
+              <ExperiencePage />
             </motion.section>
           )}
 

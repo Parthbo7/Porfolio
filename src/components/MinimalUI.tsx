@@ -29,7 +29,7 @@ const playTick = (freq = 1500, dur = 0.035) => {
 };
 
 interface MinimalUIProps {
-  activeSection: 'hero' | 'experiments' | 'footer' | 'profile' | 'connect';
+  activeSection: 'hero' | 'experiments' | 'experience' | 'footer' | 'profile' | 'connect';
 }
 
 export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
@@ -128,18 +128,24 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
     },
     { 
       num: '02', 
+      name: 'EXPERIENCE', 
+      href: '#experience',
+      tags: ['GDG DESIGN LEAD', 'PYTHON INTERN', 'LINKEDIN HANDLER', 'HACKATHONS', 'COMMUNITY BUILDING', 'ACADEMICS']
+    },
+    { 
+      num: '03', 
       name: 'SKILL STACK',
       href: '#stack',
       tags: ['PYTHON', 'REACT', 'THREE.JS', 'TYPESCRIPT', 'GSAP', 'PROMPT ENGINEERING']
     },
     { 
-      num: '03', 
+      num: '04', 
       name: 'PROFILE', 
       href: '#about',
       tags: ['ABOUT ME', 'PERSONALITY', 'CREATIVE MINDSET', 'DESIGN VIBE', 'MUSIC & GAMING', 'VISION & PHILOSOPHY']
     },
     { 
-      num: '04', 
+      num: '05', 
       name: 'CONNECT', 
       href: '#contact',
       tags: ['LINKEDIN', 'GITHUB', 'TWITTER / X', 'DIRECT EMAIL', 'RESUME', 'COLLAB PORTAL']

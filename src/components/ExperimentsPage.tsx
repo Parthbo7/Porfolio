@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { ArrowUpRight, Lock, Terminal, Check } from 'lucide-react';
 import { playClickTick } from '../utils/SoundManager';
+import { ExperienceSection } from './ExperienceSection';
 
 interface CardData {
   id: string;
@@ -256,7 +257,7 @@ export const ExperimentsPage = ({ initialFilter = 'experiments' }: ExperimentsPa
     if (filter === 'experiments') {
       window.location.hash = '#experiments';
     } else if (filter === 'archive') {
-      window.location.hash = '#stack';
+      window.location.hash = '#experience';
     }
     
     // Animate grid elements on filter switch
@@ -292,7 +293,7 @@ export const ExperimentsPage = ({ initialFilter = 'experiments' }: ExperimentsPa
                 activeFilter === filter ? 'text-[#FF3E6C]' : 'text-black/40 hover:text-black'
               }`}
             >
-              {filter === 'archive' ? 'archive' : filter}
+              {filter === 'archive' ? 'experience' : filter}
               {activeFilter === filter && (
                 <motion.div 
                   layoutId="activeFilterUnderline"
@@ -421,9 +422,9 @@ export const ExperimentsPage = ({ initialFilter = 'experiments' }: ExperimentsPa
         
         {/* Dynamic content rendering based on active filters */}
         <AnimatePresence mode="wait">
-          {(activeFilter === 'experiments' || activeFilter === 'archive') && (
+          {activeFilter === 'experiments' && (
             <motion.div 
-              key={activeFilter}
+              key="experiments"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -438,21 +439,18 @@ export const ExperimentsPage = ({ initialFilter = 'experiments' }: ExperimentsPa
                 </div>
 
                 <h1 className="font-display font-black text-[12vw] sm:text-[8vw] lg:text-[7vw] leading-[0.9] tracking-tighter text-black uppercase select-none mt-2 text-center">
-                  {activeFilter === 'experiments' ? 'EXPERIMENTS' : 'EXPERIENCE'}
+                  EXPERIMENTS
                 </h1>
 
                 {/* Subtitle Description Pill */}
                 <div className="mt-4 px-6 py-2.5 bg-white border border-black/10 text-center font-sans text-[11px] sm:text-[13px] tracking-wide text-black/70 max-w-lg shadow-[4px_4px_0px_rgba(0,0,0,0.03)] rounded-sm uppercase font-semibold">
-                  {activeFilter === 'experiments' 
-                    ? 'Creative engineering systems, rapid prototypes, and experimental digital concepts.'
-                    : 'LEADERSHIP SYSTEMS, COMMUNITY BUILDING, CREATIVE COORDINATION, AND ENGINEERING EXPERIENCES.'
-                  }
+                  Creative engineering systems, rapid prototypes, and experimental digital concepts.
                 </div>
               </div>
 
               {/* ASYMMETRICAL EDITORIAL GRID OR RESPONSIVE SCROLL */}
               <div className="w-full grid grid-cols-1 lg:grid-cols-10 gap-x-6 gap-y-12 lg:gap-y-16 px-4 py-8 relative min-h-[60vh]">
-                {(activeFilter === 'experiments' ? cards : experienceCards).map((card) => {
+                {cards.map((card) => {
                   return (
                     <motion.div
                       key={card.id}
@@ -525,6 +523,10 @@ export const ExperimentsPage = ({ initialFilter = 'experiments' }: ExperimentsPa
                 })}
               </div>
             </motion.div>
+          )}
+
+          {activeFilter === 'archive' && (
+            <ExperienceSection key="archive" />
           )}
 
           {activeFilter === 'system' && (

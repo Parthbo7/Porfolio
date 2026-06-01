@@ -4,7 +4,7 @@ import { playClickTick, playBeep } from '../utils/SoundManager';
 
 interface TransitionOverlayProps {
   isVisible: boolean;
-  destination: 'hero' | 'experiments' | 'footer' | 'profile' | 'vault' | 'connect';
+  destination: 'hero' | 'experiments' | 'experience' | 'footer' | 'profile' | 'vault' | 'connect';
 }
 
 export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayProps) => {
@@ -16,6 +16,7 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
   const loadingTexts = {
     hero: 'RETURNING TO CORE INTERFACE',
     experiments: 'INITIALIZING EXPERIMENT ARCHIVE',
+    experience: 'INITIALIZING EXPERIENCE DATABASE',
     footer: 'INITIALIZING EXPERIENCE ARCHIVE',
     profile: 'LOADING HUMAN ARCHIVE',
     vault: 'VAULT AUTHENTICATION IN PROGRESS',
@@ -36,6 +37,13 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
       '> SCANNING ENGINES & STICKER FRAGMENTS...',
       '> LAUNCHING ASYMMETRICAL CARD SCHEMAS...',
       '> ARCHIVE COMPILE COMPLETED // NOMINAL_V2.'
+    ],
+    experience: [
+      '> CONNECTING SECURE_PORT_EXP...',
+      '> DECRYPTING CAREER SEGMENTS...',
+      '> SCANNING COMMUNITY & DESIGN TIMELINES...',
+      '> LAUNCHING ZIG-ZAG ARCHIVE SCHEMAS...',
+      '> EXPERIENCE DATABASE COMPLETED // ACTIVE.'
     ],
     footer: [
       '> CONNECTING SECURE_PORT_08...',
@@ -211,6 +219,6 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
 };
 
 // Simple helper to count logs based on destination
-const activeLogsLength = (_destination: 'hero' | 'experiments' | 'footer' | 'profile' | 'vault' | 'connect') => {
+const activeLogsLength = (_destination: 'hero' | 'experiments' | 'experience' | 'footer' | 'profile' | 'vault' | 'connect') => {
   return 5;
 };
