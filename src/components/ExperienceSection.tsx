@@ -5,6 +5,10 @@ import { playClickTick } from '../utils/SoundManager';
 import gdg1 from '../assets/Images/GDG1.jpeg';
 import gdg2 from '../assets/Images/GDG2.jpeg';
 import gdg3 from '../assets/Images/GDG3.jpeg';
+import F1 from '../assets/Images/F1.jpeg';
+import F2 from '../assets/Images/F2.jpeg';
+import F3 from '../assets/Images/F3.jpeg';
+import F4 from '../assets/Images/F4.jpeg';
 
 // ─── Ambient floating dot ────────────────────────────────────────────────────
 const AmbientDot = ({ x, y, size, delay }: { x: string; y: string; size: number; delay: number }) => (
@@ -42,6 +46,22 @@ const TinyArrow = ({ x, y, dir = 'right' }: { x: string; y: string; dir?: 'right
     </motion.div>
   );
 };
+
+// ─── Image logger + render helper (ensures correct image paths before render) ───
+const LogImage = ({ src, alt, className }: { src: string; alt?: string; className?: string }) => {
+  // runtime verification for auditing during development
+  // eslint-disable-next-line no-console
+  console.log('Rendering imageSrc ->', src);
+  return <img src={src} alt={alt} className={className} />;
+};
+
+// ─── MR FRESHERS isolated image dataset ───────────────────────────────────────
+const mrFreshersGallery = {
+  gdRound: [F1, F2],
+  talentRound: [F3],
+  stageQa: [F4],
+};
+
 
 // ─── Card config ─────────────────────────────────────────────────────────────
 interface CardConfig {
@@ -483,16 +503,16 @@ export const ExperienceSection = () => {
               <div className="relative w-full h-[420px] bg-white/95 backdrop-blur-sm border border-black/5 rounded-md overflow-hidden">
                 <div className="absolute inset-0 pointer-events-none">
                   <motion.div className="absolute left-6 top-6 w-44 h-64 rounded-sm overflow-hidden shadow-lg" animate={{ y: [0,-6,0] }} transition={{ duration: 6, repeat: Infinity }}>
-                    <img src="/assets/F1.jpeg" alt="F1" className="w-full h-full object-cover grayscale-[0.06]" />
+                    <LogImage src={mrFreshersGallery.gdRound[0]} alt="F1" className="w-full h-full object-cover grayscale-[0.06]" />
                   </motion.div>
                   <motion.div className="absolute left-56 top-12 w-60 h-40 rounded-sm overflow-hidden shadow-xl" animate={{ y: [0,6,0] }} transition={{ duration: 7, repeat: Infinity }}>
-                    <img src="/assets/F2.jpeg" alt="F2" className="w-full h-full object-cover grayscale-[0.04]" />
+                    <LogImage src={mrFreshersGallery.gdRound[1]} alt="F2" className="w-full h-full object-cover grayscale-[0.04]" />
                   </motion.div>
                   <motion.div className="absolute right-6 top-20 w-56 h-72 rounded-sm overflow-hidden shadow-2xl" animate={{ y: [-2,4,-2] }} transition={{ duration: 8, repeat: Infinity }}>
-                    <img src="/assets/F3.jpeg" alt="F3" className="w-full h-full object-cover grayscale-[0.02]" />
+                    <LogImage src={mrFreshersGallery.talentRound[0]} alt="F3" className="w-full h-full object-cover grayscale-[0.02]" />
                   </motion.div>
                   <motion.div className="absolute right-64 bottom-6 w-36 h-48 rounded-sm overflow-hidden shadow-lg" animate={{ y: [0,-4,0] }} transition={{ duration: 5.5, repeat: Infinity }}>
-                    <img src="/assets/F4.jpeg" alt="F4" className="w-full h-full object-cover grayscale-[0.05]" />
+                    <LogImage src={mrFreshersGallery.stageQa[0]} alt="F4" className="w-full h-full object-cover grayscale-[0.05]" />
                   </motion.div>
                   <div className="absolute left-4 bottom-4 font-mono text-[8px] text-black/35 uppercase tracking-[0.2em]">PERSONALITY_ARCHIVE</div>
                 </div>
@@ -515,7 +535,7 @@ export const ExperienceSection = () => {
                   </div>
                   <div className="relative">
                     <motion.div className="w-full h-56 rounded-sm overflow-hidden shadow-md" whileHover={{ scale: 1.02 }}>
-                      <img src="/assets/F1.jpeg" alt="GD1" className="w-full h-full object-cover" />
+                      <LogImage src={mrFreshersGallery.gdRound[0]} alt="GD1" className="w-full h-full object-cover" />
                     </motion.div>
                     <div className="absolute right-3 top-3 font-mono text-[8px] text-black/30 uppercase">INTERVIEW_MATRIX</div>
                   </div>
@@ -533,7 +553,7 @@ export const ExperienceSection = () => {
                 <p className="text-black/75 max-w-2xl mx-auto">Performed live during the talent round with strong stage confidence, audience engagement, and expressive presentation. Showcased creativity, personality, and entertainment presence under live event conditions.</p>
                 <div className="mt-6 flex justify-center">
                   <motion.div className="w-[60%] h-64 rounded-sm overflow-hidden shadow-xl" animate={{ y: [-6,6,-6] }}>
-                    <img src="/assets/F3.jpeg" alt="Talent" className="w-full h-full object-cover" />
+                    <LogImage src={mrFreshersGallery.talentRound[0]} alt="Talent" className="w-full h-full object-cover" />
                   </motion.div>
                 </div>
               </div>
@@ -544,7 +564,7 @@ export const ExperienceSection = () => {
               <div className="relative bg-white/95 backdrop-blur-sm border border-black/6 rounded-md p-6 overflow-hidden flex gap-6 items-center">
                 <div className="w-1/2">
                   <motion.div className="w-full h-80 rounded-sm overflow-hidden shadow-lg" whileHover={{ scale: 1.01 }}>
-                    <img src="/assets/F4.jpeg" alt="Standup" className="w-full h-full object-cover" />
+                    <LogImage src={mrFreshersGallery.stageQa[0]} alt="Standup" className="w-full h-full object-cover" />
                   </motion.div>
                 </div>
                 <div className="w-1/2">
