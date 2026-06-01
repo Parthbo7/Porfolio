@@ -20,7 +20,11 @@ import {
   playClickTick, 
   playBeep, 
   playUnlockSuccess, 
-  playAccessDenied 
+  playAccessDenied,
+  startVaultAmbientAudio,
+  stopVaultAmbientAudio,
+  muteVaultAmbientAudio,
+  unmuteVaultAmbientAudio
 } from '../utils/SoundManager';
 
 interface VaultPortalProps {
@@ -72,14 +76,16 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
       setPlaceholderIdx(prev => (prev + 1) % placeholderTexts.length);
     }, 3000);
 
-    // Initial audio hum start on portal enter
+    // Initial audio start on portal enter
     if (!isAudioMuted) {
       startAmbientHum();
+      startVaultAmbientAudio();
     }
 
     return () => {
       clearInterval(interval);
       stopAmbientHum();
+      stopVaultAmbientAudio();
     };
   }, [isOpen, isAudioMuted]);
 
@@ -340,6 +346,7 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
         ]);
         playBeep(600, 0.2);
         stopAmbientHum();
+        stopVaultAmbientAudio();
         onClose();
         return;
       default:
@@ -353,8 +360,10 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
   const toggleMute = () => {
     if (isAudioMuted) {
       startAmbientHum();
+      unmuteVaultAmbientAudio();
     } else {
       stopAmbientHum();
+      muteVaultAmbientAudio();
     }
     setIsAudioMuted(!isAudioMuted);
     playClickTick(1400, 0.025);
@@ -374,6 +383,7 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
           onClick={() => {
             playClickTick(600, 0.1);
             stopAmbientHum();
+            stopVaultAmbientAudio();
             onClose();
           }}
           onMouseEnter={() => playClickTick(1500, 0.01)}
@@ -441,9 +451,20 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
               <div className="absolute inset-0 bg-[#00FF66]/5 rounded-full blur-md opacity-0 hover:opacity-100 transition-opacity duration-300" />
             </div>
 
-            {/* Header copy */}
-            <h3 className="font-display font-black text-lg sm:text-[22px] leading-tight tracking-tight uppercase mb-2">
-              UNLOCK THE PREMIUM SIDE OF PARTH
+            {/* Header copy — forbidden vault aesthetic */}
+            <h3 className="font-display font-black leading-none tracking-tight uppercase mb-2 text-center">
+              <span className="block text-sm sm:text-base text-white/70 tracking-[0.15em] mb-1" style={{ textShadow: '0 0 8px rgba(255,62,108,0.4)' }}>
+                OHH FUHH &mdash;
+              </span>
+              <span 
+                className="block text-[22px] sm:text-[28px] text-white tracking-tight"
+                style={{ 
+                  textShadow: '0 0 12px rgba(255,255,255,0.25), 0 0 40px rgba(0,255,102,0.12)',
+                  animation: 'vault-crt-flicker 4s ease-in-out infinite'
+                }}
+              >
+                YOU SHOULDN'T BE HERE
+              </span>
             </h3>
             
             {/* Dynamic rotating subtitle */}
@@ -530,6 +551,7 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
               onClick={() => {
                 playClickTick(600, 0.05);
                 stopAmbientHum();
+                stopVaultAmbientAudio();
                 onClose();
               }}
               className="mt-4 font-mono text-[9px] sm:text-[10px] tracking-widest text-zinc-500 hover:text-white transition-colors duration-300 uppercase underline cursor-pointer"

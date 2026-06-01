@@ -111,24 +111,26 @@ body {
 }
 
 .landing-hero-stage {
-  height: clamp(31rem, 72svh, 42rem);
+  height: 100svh;
+  min-height: 100svh;
+  flex-shrink: 0;
 }
 
 .landing-scroll-prompt {
-  bottom: clamp(0.6rem, 1.4svh, 0.95rem);
+  bottom: clamp(1rem, 2svh, 1.6rem);
   opacity: 0.34;
 }
 
 .landing-telemetry-divider {
-  margin-top: clamp(-0.55rem, -0.8svh, -0.25rem);
-  margin-bottom: clamp(0.45rem, 1svh, 0.75rem);
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   opacity: 0.36;
   animation: telemetry-glow 5.8s ease-in-out infinite;
 }
 
 .landing-footer-row {
-  padding-top: clamp(1.3rem, 2.7svh, 1.9rem);
-  padding-bottom: clamp(2rem, 4.4svh, 3rem);
+  padding-top: 1.4rem;
+  padding-bottom: 2rem;
 }
 
 /* Futuristic skill-stack footer */
@@ -241,19 +243,39 @@ body {
   }
 }
 
+@keyframes vault-crt-flicker {
+  0%, 100% {
+    text-shadow: 0 0 12px rgba(255,255,255,0.25), 0 0 40px rgba(0,255,102,0.12);
+    opacity: 1;
+  }
+  30% {
+    text-shadow: 0 0 18px rgba(255,255,255,0.35), 0 0 60px rgba(0,255,102,0.18);
+    opacity: 0.97;
+  }
+  50% {
+    text-shadow: 0 0 6px rgba(255,255,255,0.15), 0 0 20px rgba(255,62,108,0.1);
+    opacity: 0.92;
+  }
+  70% {
+    text-shadow: 0 0 14px rgba(255,255,255,0.3), 0 0 50px rgba(0,255,102,0.15);
+    opacity: 0.98;
+  }
+}
+
 @media (max-width: 767px) {
   .landing-hero-stage {
-    height: clamp(30rem, 72svh, 38rem);
+    height: 100svh;
+    min-height: 100svh;
   }
 
   .landing-telemetry-divider {
-    margin-top: -0.35rem;
-    margin-bottom: 0.5rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.35rem;
   }
 
   .landing-footer-row {
-    padding-top: 1.1rem;
-    padding-bottom: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1.2rem;
   }
 }
 

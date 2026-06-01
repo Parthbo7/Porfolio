@@ -181,7 +181,7 @@ function App() {
               style={{ transform: 'translate3d(0,0,0)' }}
             >
               {/* SCREEN 1: HERO VIEWPORT PLAYGROUND */}
-              <div className="landing-hero-stage w-full h-screen relative flex flex-col justify-center items-center overflow-hidden">
+              <div className="landing-hero-stage w-full relative flex flex-col justify-center items-center overflow-hidden">
                 {/* Centered Editorial Oversized Headline (V3 Stack) */}
                 <HeroTypography />
                 

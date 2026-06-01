@@ -88,6 +88,97 @@ export const stopAmbientHum = () => {
   }
 };
 
+// ── Vault Old TV Ambient Audio (MP3 file-based) ──
+let vaultAudioEl: HTMLAudioElement | null = null;
+let vaultFadeInterval: ReturnType<typeof setInterval> | null = null;
+
+const VAULT_TARGET_VOLUME = 0.18; // ~18% volume
+const VAULT_FADE_DURATION = 2000; // 2 second fade
+const VAULT_FADE_STEPS = 40;
+
+export const startVaultAmbientAudio = () => {
+  try {
+    if (!vaultAudioEl) {
+      vaultAudioEl = new Audio('/src/assets/audio/Old TV Audio.mp3');
+      vaultAudioEl.loop = true;
+      vaultAudioEl.volume = 0;
+      vaultAudioEl.preload = 'auto';
+    }
+
+    // Clear any existing fade
+    if (vaultFadeInterval) {
+      clearInterval(vaultFadeInterval);
+      vaultFadeInterval = null;
+    }
+
+    vaultAudioEl.volume = 0;
+    vaultAudioEl.play().catch(() => {});
+
+    // Smooth fade in
+    let step = 0;
+    vaultFadeInterval = setInterval(() => {
+      step++;
+      if (vaultAudioEl) {
+        vaultAudioEl.volume = Math.min(VAULT_TARGET_VOLUME, (step / VAULT_FADE_STEPS) * VAULT_TARGET_VOLUME);
+      }
+      if (step >= VAULT_FADE_STEPS) {
+        if (vaultFadeInterval) clearInterval(vaultFadeInterval);
+        vaultFadeInterval = null;
+      }
+    }, VAULT_FADE_DURATION / VAULT_FADE_STEPS);
+  } catch (e) {
+    console.warn('Failed to start vault ambient audio:', e);
+  }
+};
+
+export const stopVaultAmbientAudio = () => {
+  try {
+    if (!vaultAudioEl) return;
+
+    if (vaultFadeInterval) {
+      clearInterval(vaultFadeInterval);
+      vaultFadeInterval = null;
+    }
+
+    // Smooth fade out
+    const startVol = vaultAudioEl.volume;
+    let step = 0;
+    const fadeOutSteps = 20;
+    const fadeOutMs = 800;
+
+    vaultFadeInterval = setInterval(() => {
+      step++;
+      if (vaultAudioEl) {
+        vaultAudioEl.volume = Math.max(0, startVol * (1 - step / fadeOutSteps));
+      }
+      if (step >= fadeOutSteps) {
+        if (vaultFadeInterval) clearInterval(vaultFadeInterval);
+        vaultFadeInterval = null;
+        if (vaultAudioEl) {
+          vaultAudioEl.pause();
+          vaultAudioEl.currentTime = 0;
+        }
+      }
+    }, fadeOutMs / fadeOutSteps);
+  } catch (e) {
+    console.warn('Failed to stop vault ambient audio:', e);
+  }
+};
+
+export const muteVaultAmbientAudio = () => {
+  if (vaultAudioEl) {
+    vaultAudioEl.volume = 0;
+    vaultAudioEl.pause();
+  }
+};
+
+export const unmuteVaultAmbientAudio = () => {
+  if (vaultAudioEl) {
+    vaultAudioEl.volume = VAULT_TARGET_VOLUME;
+    vaultAudioEl.play().catch(() => {});
+  }
+};
+
 export const playClickTick = (freq = 1500, duration = 0.03) => {
   try {
     initAudio();

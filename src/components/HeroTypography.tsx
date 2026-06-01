@@ -54,14 +54,14 @@ export const HeroTypography = () => {
       className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none z-10 w-full h-full"
     >
       {/* Subtle oversized gold outlined depth text in the background */}
-      <div className="bg-depth-text absolute font-display font-extrabold uppercase text-[20vw] sm:text-[18vw] lg:text-[14vw] text-stroke-gold select-none pointer-events-none -z-10 leading-none translate-y-[-0.24em] select-none opacity-0">
+      <div className="bg-depth-text absolute font-display font-extrabold uppercase text-[16vw] sm:text-[14vw] lg:text-[11vw] text-stroke-gold select-none pointer-events-none -z-10 leading-none translate-y-[-0.24em] select-none opacity-0">
         CREATIVE
       </div>
 
-      <div className="flex flex-col text-center tracking-tighter text-black select-none leading-[0.82] lg:leading-[0.8] translate-y-[-7vh] sm:translate-y-[-10vh]">
+      <div className="flex flex-col text-center tracking-tighter text-black select-none leading-[0.82] lg:leading-[0.8] translate-y-[-2vh]">
         
         {/* Row 1: PARTH (with script H in neon-green) */}
-        <h1 className="row-1 flex justify-center text-[15vw] sm:text-[12vw] lg:text-[8.2vw] font-display font-extrabold gap-[0.02em] m-0 p-0">
+        <h1 className="row-1 flex justify-center text-[11vw] sm:text-[9vw] lg:text-[6.2vw] font-display font-extrabold gap-[0.03em] m-0 p-0">
           {/* P */}
           <span className="inline-block overflow-hidden h-[1.15em] leading-none">
             <span className="letter inline-block transform-gpu">P</span>
@@ -91,7 +91,7 @@ export const HeroTypography = () => {
         </h1>
 
         {/* Row 2: BULBULE (with script B in fuchsia/purple) */}
-        <h2 className="row-2 flex justify-center text-[15vw] sm:text-[12vw] lg:text-[8.2vw] font-display font-extrabold gap-[0.02em] m-0 p-0 mt-[-0.22em] sm:mt-[-0.18em]">
+        <h2 className="row-2 flex justify-center text-[11vw] sm:text-[9vw] lg:text-[6.2vw] font-display font-extrabold gap-[0.03em] m-0 p-0 mt-[-0.12em] sm:mt-[-0.1em]">
           {/* Script B in fuchsia/purple */}
           <span className="inline-block relative overflow-visible h-[1.15em] leading-none px-[0.04em]">
             <span className="letter opacity-0 select-none">B</span>
