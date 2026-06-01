@@ -29,14 +29,14 @@ const playTick = (freq = 1500, dur = 0.035) => {
 };
 
 interface MinimalUIProps {
-  activeSection: 'hero' | 'experiments' | 'experience' | 'footer' | 'profile' | 'connect';
+  activeSection: 'hero' | 'projects' | 'experience' | 'footer' | 'profile' | 'connect';
 }
 
 export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [time, setTime] = useState('');
-  const isExperimentsActive = activeSection !== 'hero';
+  const isProjectsActive = activeSection !== 'hero';
   const isFooterSection = activeSection === 'footer';
   const menuBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -122,8 +122,8 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
   const navLinks = [
     { 
       num: '01', 
-      name: 'EXPERIMENTS', 
-      href: '#experiments',
+      name: 'PROJECTS', 
+      href: '#projects',
       tags: ['CAMPUSCONNECT', 'AI IDEAS', 'HACKATHONS', 'UI CONCEPTS', 'WEB EXPERIMENTS', 'CREATIVE CODING']
     },
     { 
@@ -157,7 +157,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
       {/* FRAME CONTROLS */}
       {/* TOP LEFT: TITLE OR NAVIGATION NODE */}
       <AnimatePresence mode="wait">
-        {isFooterSection ? null : !isExperimentsActive ? (
+        {isFooterSection ? null : !isProjectsActive ? (
           <motion.div 
             key="title-hud"
             id="ui-top-left"
@@ -214,7 +214,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
         }}
         onMouseEnter={() => playTick(1500, 0.01)}
         className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 font-mono text-[8px] sm:text-[10px] tracking-widest text-black/40 flex items-center gap-2 border border-black/10 px-3 py-1 rounded-full bg-black/[0.01] hover:bg-black/[0.04] hover:text-black hover:border-black/30 transition-all duration-300 cursor-pointer interactive-hover ${
-          isExperimentsActive ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          isProjectsActive ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
       >
         <span>SYSTEM_OS</span>
@@ -230,7 +230,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
           ref={menuBtnRef}
           onClick={handleMenuClick}
           className={`interactive-hover magnetic flex flex-col items-end gap-1.5 p-3 text-right font-mono text-[10px] sm:text-xs font-bold leading-none tracking-widest transition-all duration-300 rounded-sm active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] ${
-            isExperimentsActive && !isOpen
+            isProjectsActive && !isOpen
               ? 'bg-transparent text-[#FF3E6C] hover:text-black border border-transparent shadow-none p-0 mt-2 sm:mt-0 font-extrabold text-[12px]'
               : 'bg-black text-white hover:bg-[#00FF66] hover:text-black border border-black/10 shadow-[3px_3px_0px_0px_rgba(0,255,102,0.4)]'
           }`}
@@ -241,7 +241,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
             </span>
           ) : (
             <div className="flex flex-col items-end">
-              {isExperimentsActive ? (
+              {isProjectsActive ? (
                 <span className="font-extrabold tracking-widest text-xs">MENU</span>
               ) : (
                 <>

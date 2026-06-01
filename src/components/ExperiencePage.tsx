@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { ArrowLeft, ArrowUpRight, Check, ArrowRight, Terminal as TerminalIcon } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Check, ArrowRight } from 'lucide-react';
 import { playClickTick } from '../utils/SoundManager';
+import { MRFreshers } from './freshers/MRFreshers';
+import { GDGExperience } from './gdg/GDGExperience';
+import { StartupBootcamp } from './bootcamp/StartupBootcamp';
+import { TPOCoordinator } from './tpo/TPOCoordinator';
+import { MechanicsTopper } from './mechanics/MechanicsTopper';
 
 // Import images
 import gdg1 from '../assets/Images/GDG1.jpeg';
@@ -24,15 +29,7 @@ interface ExperienceCardData {
   metaLabels?: string[];
 }
 
-interface ArchiveItem {
-  id: string;
-  year: string;
-  category: string;
-  title: string;
-  image: string;
-  description: string;
-  tags: string[];
-}
+
 
 interface DetailVaultConfig {
   archiveTitle: string;
@@ -120,9 +117,10 @@ export const ExperiencePage = () => {
       id: 'exp-tpo',
       year: '2025',
       title: 'TPO COORDINATOR',
-      subtitle: 'MANAGING STUDENT COORDINATION',
-      description: 'Handled placement coordination, communication workflows, and operational management for training and placement activities.',
-      tags: ['LEADERSHIP', 'COORDINATION', 'COMMUNICATION', 'MANAGEMENT'],
+      subtitle: 'Managing student coordination systems, placement operations, and professional engagement workflows.',
+      description: 'Currently working as a TPO Coordinator at MGMCOE Nanded, handling placement coordination, communication systems, student engagement, and operational management activities. Also received the opportunity to pitch a project during the HR Summit professional event.',
+      tags: ['TPO Operations', 'Placement Coordination', 'HR Summit', 'Project Pitching', 'Leadership', 'Communication'],
+      metaLabels: ['HR_SUMMIT_NODE', 'PLACEMENT_SYSTEM_ACTIVE', 'MGMCOE_COORDINATION', 'PROFESSIONAL_NETWORK'],
       isExpandable: true
     },
     {
@@ -138,10 +136,11 @@ export const ExperiencePage = () => {
     {
       id: 'exp-startup',
       year: '2025',
-      title: 'IDEA TO PITCH START BOOTCAMP',
-      subtitle: 'TRANSFORMING STARTUP CONCEPTS INTO PRODUCTS',
-      description: 'Participated in startup bootcamp activities focused on innovation strategy, pitching systems, and entrepreneurial development.',
-      tags: ['STARTUP THINKING', 'PITCHING', 'INNOVATION', 'PRODUCT STRATEGY'],
+      title: 'IDEA TO PITCH — STARTUP BOOTCAMP',
+      subtitle: 'Leading innovation teams and transforming startup concepts into structured product systems.',
+      description: 'Participated in the Idea to Pitch Startup Bootcamp focused on innovation strategy, entrepreneurial thinking, startup pitching, and product development. Led a 10-member team through collaborative ideation, leadership coordination, and startup execution activities.',
+      tags: ['Team Leadership', 'Startup Thinking', 'Product Strategy', 'Innovation Systems', 'Pitching', 'Collaboration'],
+      metaLabels: ['TEAM_LEAD_NODE', 'STARTUP_PROTOCOL', 'IDEA_MATRIX_ACTIVE', 'INNOVATION_ARCHIVE'],
       isExpandable: true
     },
     {
@@ -310,10 +309,10 @@ export const ExperiencePage = () => {
                   <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#FF3E6C]" />
                 </span>
                 <button 
-                  onClick={() => window.location.hash = '#experiments'}
+                  onClick={() => window.location.hash = '#projects'}
                   className="text-black/40 hover:text-black transition-all duration-300 uppercase interactive-hover cursor-pointer"
                 >
-                  experiments
+                  projects
                 </button>
               </div>
 
@@ -567,6 +566,17 @@ export const ExperiencePage = () => {
                             </div>
                           )}
 
+                          {card.id === 'exp-startup' && (
+                            <div className="absolute top-4 left-6 z-30 flex flex-col gap-2 pointer-events-none">
+                              {card.metaLabels?.map((label) => (
+                                <div key={label} className="transform transition-transform duration-300 group-hover/card:-translate-y-2 group-hover/card:rotate-1 bg-white/85 dark:bg-black/80 backdrop-blur-md border border-black/8 dark:border-white/10 px-2 py-0.5 rounded-sm font-mono text-[8px] tracking-[0.12em] text-[#00CC52] uppercase shadow-[0_6px_20px_rgba(0,0,0,0.06)]">
+                                  <span className="inline-block w-1.5 h-1.5 mr-2 rounded-full bg-[#00CC52] animate-pulse align-middle" />
+                                  {label}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
                           {card.id === 'exp-mechanics' && (
                             <div className="absolute top-4 right-6 z-30 flex flex-col gap-2 pointer-events-none items-end">
                               {card.metaLabels?.map((label) => (
@@ -711,7 +721,7 @@ export const ExperiencePage = () => {
             exit={{ opacity: 0, scale: 0.98 }}
             className="w-full bg-[#050505] text-white p-0 relative"
           >
-            <GDGDetailedView onBack={() => {
+            <GDGExperience onBack={() => {
               playClickTick(1400, 0.05);
               setView('list');
             }} />
@@ -724,14 +734,46 @@ export const ExperiencePage = () => {
             exit={{ opacity: 0, scale: 0.98 }}
             className="w-full bg-[#050505] text-white p-0 relative"
           >
-            <DetailedExperienceView
-              cardId={selectedCardId || ''}
-              card={experienceCards.find(c => c.id === selectedCardId)}
-              onBack={() => {
-                playClickTick(1400, 0.05);
-                setView('list');
-              }}
-            />
+            {selectedCardId === 'exp-freshers' ? (
+              <MRFreshers
+                onBack={() => {
+                  playClickTick(1400, 0.05);
+                  setView('list');
+                }}
+                isDarkMode={true}
+              />
+            ) : selectedCardId === 'exp-startup' ? (
+              <StartupBootcamp
+                onBack={() => {
+                  playClickTick(1400, 0.05);
+                  setView('list');
+                }}
+                isDarkMode={true}
+              />
+            ) : selectedCardId === 'exp-tpo' ? (
+              <TPOCoordinator
+                onBack={() => {
+                  playClickTick(1400, 0.05);
+                  setView('list');
+                }}
+              />
+            ) : selectedCardId === 'exp-mechanics' ? (
+              <MechanicsTopper
+                onBack={() => {
+                  playClickTick(1400, 0.05);
+                  setView('list');
+                }}
+              />
+            ) : (
+              <DetailedExperienceView
+                cardId={selectedCardId || ''}
+                card={experienceCards.find(c => c.id === selectedCardId)}
+                onBack={() => {
+                  playClickTick(1400, 0.05);
+                  setView('list');
+                }}
+              />
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -752,262 +794,6 @@ export const ExperiencePage = () => {
   );
 };
 
-const GDGDetailedView = ({ onBack }: { onBack: () => void }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const gdgArchive: ArchiveItem[] = [
-    {
-      id: 'gdg-1',
-      year: '2025',
-      category: 'GDG_INFO_SESSION',
-      title: 'GDG INFO SESSION',
-      image: gdg1,
-      description: 'Designed promotional creatives, event posters, and digital branding assets to improve awareness and student engagement during the GDG onboarding and info session campaign.',
-      tags: ['POSTER DESIGN', 'COMMUNITY BRANDING', 'SOCIAL MEDIA ASSETS']
-    },
-    {
-      id: 'gdg-2',
-      year: '2025',
-      category: 'GOOGLE_CLOUD_SESSION',
-      title: 'GOOGLE CLOUD SESSION',
-      image: gdg2,
-      description: 'Created futuristic cloud-themed promotional visuals and digital campaign systems for the Google Cloud developer session.',
-      tags: ['CLOUD BRANDING', 'EVENT CAMPAIGN', 'UI VISUALS']
-    },
-    {
-      id: 'gdg-3',
-      year: '2025',
-      category: 'HACKCITY_HACKATHON',
-      title: 'HACKCITY HACKATHON',
-      image: gdg3,
-      description: 'Designed high-energy hackathon banners, cyber-style promotional posters, and engagement creatives to build excitement and participation during Hackcity Hackathon.',
-      tags: ['HACKATHON BRANDING', 'BANNER DESIGN', 'CREATIVE CAMPAIGNS']
-    }
-  ];
-
-  return (
-    <div ref={containerRef} className="w-full min-h-screen relative overflow-x-hidden bg-[#F8F7F5] flex flex-col text-[#3F3F3F]">
-      {/* Background Layers */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.06] custom-dark-grid z-0" />
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#F8F7F5]/0 via-[#F5F5F5]/20 to-[#F2F1EF] pointer-events-none z-0" />
-      
-      {/* Animated Scanline (Muted) */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-[#A9A9A9]/8 animate-scanline z-10 pointer-events-none" />
-
-      {/* Grain overlay */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.02] z-[100] bg-[url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJub2lzZUZpbHRlciI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuNzUiIG51bU9jdGF2ZXM9IjQiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjbm9pc2VGaWx0ZXIpIi8+PC9zdmc+')] shadow-inner" />
-
-      {/* Navigation */}
-      <div className="fixed top-8 left-8 sm:top-12 sm:left-12 z-[110]">
-        <motion.button
-          onClick={onBack}
-          onMouseEnter={() => playClickTick(1600, 0.02)}
-          className="flex items-center gap-3 interactive-hover group bg-white/40 backdrop-blur-2xl border border-[#A9A9A9]/30 px-5 py-2.5 rounded-sm hover:border-[#A8D3C8]/50 transition-all"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform text-[#8B8B8B]" />
-          <span className="font-mono text-[9px] tracking-[0.2em] uppercase font-bold text-[#4A4A4A] group-hover:text-[#2A2A2A] transition-colors">CLOSE_ARCHIVE</span>
-        </motion.button>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 pt-32 pb-48 relative z-10 w-full">
-        {/* HERO SECTION - Cinematic Editorial */}
-        <header className="mb-24 lg:mb-28 flex flex-col items-center text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.85, ease: "easeOut" }}
-            className="flex flex-col items-center w-full"
-          >
-            <div className="flex items-center gap-4 mb-6 opacity-70">
-              <div className="h-[1px] w-10 bg-[#D8D0C6]/40" />
-              <span className="font-mono text-[9px] tracking-[0.6em] uppercase text-[#7C7C7C] font-bold">GDG_COMMUNITY_ARCHIVE</span>
-              <div className="h-[1px] w-10 bg-[#D8D0C6]/40" />
-            </div>
-
-            <div className="relative mb-4">
-              <h1 className="font-display font-black text-5xl sm:text-6xl lg:text-8xl leading-[0.9] uppercase text-[#2C2C2C]">
-                <motion.span initial={{ y: 6 }} animate={{ y: 0 }} transition={{ duration: 1 }} className="block">GDG DESIGN</motion.span>
-                <motion.span initial={{ y: 12, opacity: 0.85 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1.2 }} className="block text-opacity-90">EXPERIENCE</motion.span>
-              </h1>
-
-              {/* layered subtle opacity */}
-              <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[120px] opacity-5 pointer-events-none font-display font-black">GDG</span>
-            </div>
-
-            <p className="max-w-2xl font-mono text-sm text-[#6B6B6B] tracking-[0.12em] uppercase leading-relaxed mx-auto">
-              Designing communities. Building engagement. Creating impact.
-            </p>
-
-            {/* Floating metadata badges */}
-            <div className="mt-6 flex items-center gap-3">
-              {['COMMUNITY_NODE','DESIGN_SYSTEM_ACTIVE','CREATIVE_ARCHIVE','VISUAL_PROTOCOL'].map((m) => (
-                <motion.div key={m} whileHover={{ y: -6 }} className="px-3 py-1 bg-white/[0.03] border border-white/8 rounded-sm font-mono text-[10px] tracking-[0.18em] text-[#4F4F4F] uppercase">
-                  {m}
-                </motion.div>
-              ))}
-            </div>
-
-            {/* tiny animated dots */}
-            <div className="mt-4 flex items-center gap-2 pointer-events-none">
-              <motion.span className="w-2 h-2 rounded-full bg-[#C9D7D2]/60" animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity }} />
-              <motion.span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]/40" animate={{ y: [0, -4, 0] }} transition={{ duration: 4.5, repeat: Infinity }} />
-              <motion.span className="w-1 h-1 rounded-full bg-[#A8D3C8]/40" animate={{ y: [0, -3, 0] }} transition={{ duration: 5, repeat: Infinity }} />
-            </div>
-          </motion.div>
-        </header>
-
-        {/* DETAILED EVENT TIMELINE - SPLIT LAYOUT */}
-        <div className="flex flex-col gap-32 lg:gap-56 w-full">
-          {gdgArchive.map((item, index) => {
-            const isImageLeft = index % 2 === 0;
-            return (
-              <motion.section
-                key={item.id}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className={`flex flex-col ${isImageLeft ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-stretch gap-16 lg:gap-24 w-full`}
-              >
-                {/* IMAGE BLOCK */}
-                <div className="w-full lg:w-1/2 perspective-1000 relative group">
-                  <motion.div
-                    animate={{
-                      y: [0, -8, 0],
-                      rotateX: [0, 0.5, 0, -0.5, 0],
-                      rotateY: [0, -1, 0, 1, 0]
-                    }}
-                    transition={{
-                      duration: 8 + index,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                    className="relative overflow-hidden border border-[#A9A9A9]/30 shadow-[0_20px_40px_rgba(0,0,0,0.04)] group-hover:border-[#A8D3C8]/50 transition-all duration-700 h-full"
-                  >
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition-all duration-700 scale-110 group-hover:scale-100"
-                    />
-
-                    {/* Hover scanline effect */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#A8D3C8]/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none translate-y-[-100%] animate-scanline" />
-
-                    {/* Image corner deco */}
-                    <div className="absolute top-4 left-4 w-4 h-4 border-t border-l border-[#8B8B8B]/40 group-hover:border-[#A8D3C8]/60 transition-all" />
-                    <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-[#8B8B8B]/40 group-hover:border-[#A8D3C8]/60 transition-all" />
-                  </motion.div>
-                </div>
-
-                {/* CONTENT BLOCK */}
-                <div className="w-full lg:w-1/2 flex flex-col gap-8 text-left justify-center">
-                  {/* Header */}
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-[9px] text-[#8B8B8B] font-bold tracking-[0.3em] uppercase">EVENT_{index + 1}</span>
-                      <div className="h-[1px] flex-1 bg-gradient-to-r from-[#A9A9A9]/30 to-transparent" />
-                    </div>
-
-                    <div className="flex items-baseline gap-4">
-                      <h2 className="font-display font-black text-3xl md:text-4xl lg:text-5xl uppercase tracking-tighter leading-tight text-[#2A2A2A]">
-                        {item.title}
-                      </h2>
-                      <span className="font-mono text-[10px] text-[#8B8B8B]/60 whitespace-nowrap">{item.year}</span>
-                    </div>
-
-                    <span className="font-mono text-[8px] text-[#A9A9A9]/70 tracking-[0.2em] uppercase">{item.category}</span>
-                  </div>
-
-                  {/* Description */}
-                  <div className="relative py-6 border-y border-[#A9A9A9]/15">
-                    <p className="font-sans text-[#5A5A5A] leading-relaxed text-sm md:text-base font-light">
-                      {item.description}
-                    </p>
-                  </div>
-
-                  {/* Contributions */}
-                  <div className="flex flex-col gap-4">
-                    <span className="font-mono text-[8px] text-[#A9A9A9]/50 uppercase tracking-[0.3em]">CONTRIBUTIONS</span>
-                    <div className="flex flex-wrap gap-2">
-                      {item.tags.map((tag) => (
-                        <motion.div
-                          key={tag}
-                          whileHover={{ scale: 1.05 }}
-                          className="flex items-center gap-2 bg-[#E8E8E8]/40 border border-[#A9A9A9]/30 px-3 py-2 hover:border-[#A8D3C8]/50 transition-all group/tag interactive-hover"
-                        >
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#A8D3C8] group-hover/tag:scale-150 transition-transform" />
-                          <span className="font-mono text-[8px] text-[#6B6B6B] group-hover/tag:text-[#3F3F3F] uppercase tracking-wider">{tag}</span>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* System Metadata */}
-                  <div className="mt-4 flex items-center gap-2 opacity-40 group-hover:opacity-60 transition-opacity">
-                    <TerminalIcon size={10} className="text-[#A8D3C8]" />
-                    <span className="font-mono text-[7px] text-[#8B8B8B] tracking-[0.2em] uppercase">NODE_0{index + 1}</span>
-                  </div>
-                </div>
-              </motion.section>
-            );
-          })}
-        </div>
-
-        {/* FOOTER */}
-        <footer className="mt-64 flex flex-col items-center gap-12 text-center">
-          <div className="h-[1px] w-24 bg-[#A8D3C8]/30" />
-          
-          <div className="flex flex-col gap-4">
-            <h3 className="font-display font-bold text-3xl uppercase tracking-tighter text-[#2A2A2A]">END_OF_ARCHIVE_DATA</h3>
-            <p className="font-mono text-[9px] text-[#A9A9A9]/60 tracking-[0.4em] uppercase">READY FOR SYSTEM_EXIT</p>
-          </div>
-
-          <motion.button
-            onClick={onBack}
-            whileHover={{ scale: 1.05, backgroundColor: "rgba(168, 211, 200, 0.05)" }}
-            whileTap={{ scale: 0.95 }}
-            className="group flex items-center gap-4 border border-[#A8D3C8]/50 px-12 py-4 font-mono text-[10px] font-black tracking-[0.4em] uppercase transition-all text-[#8B8B8B] hover:text-[#A8D3C8] interactive-hover"
-          >
-            RETURN_TO_SYSTEM <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" />
-          </motion.button>
-        </footer>
-      </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .custom-dark-grid {
-          background-size: 100px 100px;
-          background-image:
-            linear-gradient(to right, rgba(169, 169, 169, 0.08) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(169, 169, 169, 0.08) 1px, transparent 1px);
-        }
-
-        .text-stroke-green {
-          -webkit-text-stroke: 1px rgba(168, 211, 200, 0.15);
-          color: transparent;
-        }
-
-        @keyframes scanline-anim {
-          0% { transform: translateY(-100vh); }
-          100% { transform: translateY(100vh); }
-        }
-        
-        .animate-scanline {
-          animation: scanline-anim 12s linear infinite;
-        }
-
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-
-        .bg-radial-vignette {
-          background: radial-gradient(ellipse at center, transparent 0%, rgba(169, 169, 169, 0.04) 100%);
-        }
-      `}} />
-    </div>
-  );
-};
 
 const DetailedExperienceView = ({
   cardId,
@@ -1082,19 +868,7 @@ const DetailedExperienceView = ({
       ],
       images: [gdg2, gdg3, gdg1]
     },
-    'exp-freshers': {
-      archiveTitle: 'MR FRESHERS STAGE VAULT',
-      intro: 'A personality-performance archive centered around stage confidence, presence, and communication energy.',
-      toneTag: 'STAGE_PERSONA_FIELD',
-      systemTag: 'CONFIDENCE_RUNTIME',
-      highlights: ['Stage presence', 'Public communication', 'Personality impact'],
-      timeline: [
-        { phase: 'ENTRY_SIGNAL', detail: 'Activated presence and confidence in live stage context.' },
-        { phase: 'PERSONA_STREAM', detail: 'Sustained energy, clarity, and audience connection.' },
-        { phase: 'RESULT_NODE', detail: 'Secured runner-up recognition in final evaluation.' }
-      ],
-      images: [gdg1, gdg3, gdg2]
-    }
+
   };
 
   const activeVault = vaultConfigs[cardId] || {
@@ -1293,65 +1067,7 @@ const DetailedExperienceView = ({
             </div>
           )}
 
-          {cardId === 'exp-mechanics' && (
-            <div className="flex flex-col gap-20 w-full mb-12">
-              <motion.section initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9}} className="">
-                <div>
-                  <h2 className="font-display font-black text-3xl text-white uppercase tracking-tight mb-3">ENGINEERING EXCELLENCE</h2>
-                  <p className="font-mono text-sm text-white/40 uppercase mb-4">Mastering one of the toughest engineering foundations.</p>
-                  <p className="font-sans text-white/70 leading-relaxed">Secured top academic performance in Engineering Mechanics through deep conceptual understanding, analytical problem-solving, and disciplined preparation. Recognized among peers for strong engineering fundamentals and consistent academic focus.</p>
 
-                  <div className="flex flex-wrap gap-2 mt-6">
-                    {['Engineering Fundamentals','Problem Solving','Academic Excellence','Precision Thinking'].map(t => (
-                      <span key={t} className="font-mono text-[10px] uppercase bg-white/[0.02] border border-white/10 px-3 py-1 rounded-sm">{t}</span>
-                    ))}
-                  </div>
-                </div>
-              </motion.section>
-
-              {/* Compact achievement nodes replacing oversized images */}
-              <motion.section initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9, delay:0.06}} className="relative grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mt-6">
-
-                {/* NODE 01 - Left aligned compact glass card */}
-                <motion.div className="flex justify-start lg:justify-start" initial={{y:0}} animate={{y:[0,-8,0]}} transition={{duration:6, repeat:Infinity, ease:'easeInOut'}}>
-                  <motion.div whileHover={{y:-10}} className="w-full max-w-sm bg-white/6 backdrop-blur-lg border border-white/8 rounded-md p-5 transform -rotate-1 shadow-lg">
-                    <div className="h-[2px] bg-[#D4AF37] w-16 mb-3 rounded-sm" />
-                    <h4 className="font-display font-bold text-xl text-white uppercase">ENGINEERING EXCELLENCE</h4>
-                    <p className="font-sans text-sm text-white/70 mt-3">Secured top academic performance in Engineering Mechanics through conceptual mastery, analytical thinking, and precision problem-solving.</p>
-                  </motion.div>
-                </motion.div>
-
-                {/* NODE 02 - Centered floating blur panel */}
-                <motion.div className="flex justify-center" initial={{y:0}} animate={{y:[0,-10,0]}} transition={{duration:6.5, repeat:Infinity, ease:'easeInOut', delay:0.2}}>
-                  <motion.div whileHover={{y:-8}} className="w-full max-w-sm bg-white/[0.04] backdrop-blur-2xl border border-white/6 rounded-md p-4 text-center">
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <span className="font-mono text-[9px] text-white/40 uppercase tracking-wider">NODE_META</span>
-                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#C9D7D2]" />
-                    </div>
-                    <h4 className="font-display font-bold text-lg text-white uppercase">STUDENT INSPIRATION</h4>
-                    <p className="font-sans text-sm text-white/70 mt-3">Inspired juniors through academic interaction, public speaking, and engineering-focused motivation sessions.</p>
-                  </motion.div>
-                </motion.div>
-
-                {/* NODE 03 - Right aligned cinematic panel */}
-                <motion.div className="flex justify-end lg:justify-end" initial={{y:0}} animate={{y:[0,-9,0]}} transition={{duration:5.8, repeat:Infinity, ease:'easeInOut', delay:0.4}}>
-                  <motion.div whileHover={{y:-10}} className="w-full max-w-sm bg-white/6 backdrop-blur-lg border border-white/8 rounded-md p-5 shadow-[0_18px_40px_rgba(0,0,0,0.18)]">
-                    <div className="h-[2px] bg-white/10 w-full mb-3 rounded-sm" />
-                    <h4 className="font-display font-bold text-lg text-white uppercase">RECOGNITION ARCHIVE</h4>
-                    <p className="font-sans text-sm text-white/70 mt-3">Recognized for consistency, engineering excellence, leadership presence, and academic contribution.</p>
-                  </motion.div>
-                </motion.div>
-
-                {/* Tiny coordinate labels and subtle floating dots */}
-                <span className="absolute left-2 top-6 font-mono text-[8px] text-white/30 uppercase tracking-[0.18em]">X:-12 / Y:412</span>
-                <span className="absolute right-2 top-6 font-mono text-[8px] text-white/30 uppercase tracking-[0.18em]">X:+46 / Y:412</span>
-                <motion.div className="absolute left-1/2 top-2 w-2 h-2 rounded-full bg-[#A8D3C8]/30 pointer-events-none" animate={{y:[0,-6,0], opacity:[0.2,0.6,0.2]}} transition={{duration:5, repeat:Infinity}} />
-                <motion.div className="absolute left-1/3 top-14 w-1.5 h-1.5 rounded-full bg-[#D4AF37]/20 pointer-events-none" animate={{y:[0,-4,0], opacity:[0.15,0.5,0.15]}} transition={{duration:6, repeat:Infinity}} />
-
-              </motion.section>
-
-            </div>
-          )}
         </div>
 
         {/* FOOTER */}

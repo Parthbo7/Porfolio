@@ -2,13 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight, ArrowLeft } from 'lucide-react';
 import { playClickTick } from '../utils/SoundManager';
-import gdg1 from '../assets/Images/GDG1.jpeg';
-import gdg2 from '../assets/Images/GDG2.jpeg';
-import gdg3 from '../assets/Images/GDG3.jpeg';
-import F1 from '../assets/Images/F1.jpeg';
-import F2 from '../assets/Images/F2.jpeg';
-import F3 from '../assets/Images/F3.jpeg';
-import F4 from '../assets/Images/F4.jpeg';
+import { MRFreshers } from './freshers/MRFreshers';
+import { GDGExperience } from './gdg/GDGExperience';
+import { StartupBootcamp } from './bootcamp/StartupBootcamp';
+import { TPOCoordinator } from './tpo/TPOCoordinator';
+import { MechanicsTopper } from './mechanics/MechanicsTopper';
 
 // ─── Ambient floating dot ────────────────────────────────────────────────────
 const AmbientDot = ({ x, y, size, delay }: { x: string; y: string; size: number; delay: number }) => (
@@ -47,20 +45,7 @@ const TinyArrow = ({ x, y, dir = 'right' }: { x: string; y: string; dir?: 'right
   );
 };
 
-// ─── Image logger + render helper (ensures correct image paths before render) ───
-const LogImage = ({ src, alt, className }: { src: string; alt?: string; className?: string }) => {
-  // runtime verification for auditing during development
-  // eslint-disable-next-line no-console
-  console.log('Rendering imageSrc ->', src);
-  return <img src={src} alt={alt} className={className} />;
-};
 
-// ─── MR FRESHERS isolated image dataset ───────────────────────────────────────
-const mrFreshersGallery = {
-  gdRound: [F1, F2],
-  talentRound: [F3],
-  stageQa: [F4],
-};
 
 
 // ─── Card config ─────────────────────────────────────────────────────────────
@@ -124,17 +109,17 @@ const CARDS: CardConfig[] = [
     id: 'exp-tpo',
     year: '2025',
     title: 'TPO COORDINATOR',
-    subtitle: 'Managing student coordination and placement communication systems.',
+    subtitle: 'Managing student coordination systems, placement operations, and professional engagement workflows.',
     description:
-      'Handled placement coordination, communication workflows, and operational management for training and placement activities.',
-    tags: ['Leadership', 'Coordination', 'Communication', 'Management'],
+      'Currently working as a TPO Coordinator at MGMCOE Nanded, handling placement coordination, communication systems, student engagement, and operational management activities. Also received the opportunity to pitch a project during the HR Summit professional event.',
+    tags: ['TPO Operations', 'Placement Coordination', 'HR Summit', 'Project Pitching', 'Leadership', 'Communication'],
     side: 'left',
     widthClass: 'w-[88vw] sm:w-[56vw] lg:w-[44vw]',
     marginLeft: '6vw',
     rotate: -0.6,
     extraTop: '-30px',
     accentColor: '#B8C8FF',
-    sysLabel: 'CAREER_ARCHIVE',
+    sysLabel: 'HR_SUMMIT_NODE',
     nodeIndex: '03',
   },
   {
@@ -158,18 +143,18 @@ const CARDS: CardConfig[] = [
   {
     id: 'exp-startup',
     year: '2025',
-    title: 'IDEA TO PITCH BOOTCAMP',
-    subtitle: 'Transforming startup concepts into structured product systems.',
+    title: 'IDEA TO PITCH — STARTUP BOOTCAMP',
+    subtitle: 'Leading innovation teams and transforming startup concepts into structured product systems.',
     description:
-      'Participated in startup bootcamp activities focused on innovation strategy, pitching systems, and entrepreneurial development.',
-    tags: ['Startup Thinking', 'Pitching', 'Innovation', 'Product Strategy'],
+      'Participated in the Idea to Pitch Startup Bootcamp focused on innovation strategy, entrepreneurial thinking, startup pitching, and product development. Led a 10-member team through collaborative ideation, leadership coordination, and startup execution activities.',
+    tags: ['Team Leadership', 'Startup Thinking', 'Product Strategy', 'Innovation Systems', 'Pitching', 'Collaboration'],
     side: 'left',
     widthClass: 'w-[88vw] sm:w-[58vw] lg:w-[48vw]',
     marginLeft: '3vw',
     rotate: -0.9,
     extraTop: '20px',
     accentColor: '#FF8C69',
-    sysLabel: 'DESIGN_MODE',
+    sysLabel: 'TEAM_LEAD_NODE',
     nodeIndex: '05',
   },
   {
@@ -203,8 +188,8 @@ const ExperienceCard = ({ card, index }: { card: CardConfig; index: number }) =>
     const slugMap: Record<string, string> = {
       'exp-gdg': 'gdg',
       'exp-visotech': 'visotech',
-      'exp-tpo': 'tpo',
-      'exp-mechanics': 'mechanics',
+      'exp-tpo': 'tpo-archive',
+      'exp-mechanics': 'mechanics-archive',
       'exp-startup': 'startup',
       'exp-freshers': 'freshers',
     };
@@ -388,32 +373,7 @@ export const ExperienceSection = () => {
 
   const isDetailView = currentHash.startsWith('#experience/') && currentHash !== '#experience';
 
-  const gdgShowcases = [
-    {
-      title: 'GDG INFO SESSION',
-      tagline: 'SECTION 1 // EVENT LAUNCH',
-      image: gdg1,
-      description:
-        'Designed promotional creatives, social media assets, and event branding materials for the GDG Info Session. Focused on increasing awareness, engagement, and visual consistency across the campaign.',
-      tags: ['Poster Design', 'Social Media Campaign', 'Community Branding', 'Event Promotion'],
-    },
-    {
-      title: 'GOOGLE CLOUD SESSION',
-      tagline: 'SECTION 2 // DEV EDUCATION',
-      image: gdg2,
-      description:
-        'Created futuristic campaign visuals and clean digital branding assets for the Google Cloud Session, helping communicate technical concepts through engaging visual storytelling.',
-      tags: ['Cloud Branding', 'Campaign Design', 'Event Identity', 'Visual Systems'],
-    },
-    {
-      title: 'HACKCITY HACKATHON',
-      tagline: 'SECTION 3 // BUILDING SPACES',
-      image: gdg3,
-      description:
-        'Designed high-energy hackathon banners, cyber-style promotional posters, and engagement creatives to build excitement and participation during Hackcity Hackathon.',
-      tags: ['Hackathon Branding', 'Banner Design', 'Creative Campaigns', 'Cyber Visuals'],
-    },
-  ];
+
 
   return (
     <div className="w-full relative overflow-x-hidden min-h-screen bg-[#F6F6F7]">
@@ -483,206 +443,15 @@ export const ExperienceSection = () => {
             </div>
           </motion.div>
         ) : currentHash === '#experience/freshers' ? (
-          <motion.div
-            key="freshers-detail-archive"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.4 }}
-            className="w-full max-w-6xl mx-auto flex flex-col items-center pb-24 relative px-4"
-          >
-            <div className="w-full flex flex-col items-center mb-10 sm:mb-16 relative z-10">
-              <button onClick={() => { playClickTick(1600, 0.05); window.location.hash = '#experience'; }} className="absolute left-0 top-0 font-mono text-[9px] sm:text-[10px] text-black/50 hover:text-black border border-black/10 hover:border-black px-3 py-1 rounded-[2px] bg-white shadow-sm flex items-center gap-1.5 transition-all duration-300"><ArrowLeft size={11} />BACK_TO_ARCHIVE</button>
-              <div className="absolute right-0 top-0 font-mono text-[8px] text-black/35 border border-black/10 px-2 py-0.5 rounded-[2px] bg-white shadow-sm">PERSONALITY_VAULT</div>
-              <h1 className="font-display font-black text-[9vw] sm:text-[6.5vw] lg:text-[5.5vw] leading-[0.9] tracking-tighter text-black uppercase select-none mt-12 sm:mt-8 text-center">MR FRESHERS EXPERIENCE</h1>
-              <div className="mt-4 px-6 py-2.5 bg-white border border-black/8 text-center font-sans text-[12px] sm:text-[13px] tracking-wide text-black/80 max-w-xl shadow-[4px_4px_0px_rgba(0,0,0,0.03)] rounded-[2px] uppercase font-bold">Confidence. Communication. Presence. Performance.</div>
-            </div>
-
-            {/* HERO COLLAGE */}
-            <div className="w-full max-w-5xl mx-auto mb-12 relative z-10">
-              <div className="relative w-full h-[420px] bg-white/95 backdrop-blur-sm border border-black/5 rounded-md overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none">
-                  <motion.div className="absolute left-6 top-6 w-44 h-64 rounded-sm overflow-hidden shadow-lg" animate={{ y: [0,-6,0] }} transition={{ duration: 6, repeat: Infinity }}>
-                    <LogImage src={mrFreshersGallery.gdRound[0]} alt="F1" className="w-full h-full object-cover grayscale-[0.06]" />
-                  </motion.div>
-                  <motion.div className="absolute left-56 top-12 w-60 h-40 rounded-sm overflow-hidden shadow-xl" animate={{ y: [0,6,0] }} transition={{ duration: 7, repeat: Infinity }}>
-                    <LogImage src={mrFreshersGallery.gdRound[1]} alt="F2" className="w-full h-full object-cover grayscale-[0.04]" />
-                  </motion.div>
-                  <motion.div className="absolute right-6 top-20 w-56 h-72 rounded-sm overflow-hidden shadow-2xl" animate={{ y: [-2,4,-2] }} transition={{ duration: 8, repeat: Infinity }}>
-                    <LogImage src={mrFreshersGallery.talentRound[0]} alt="F3" className="w-full h-full object-cover grayscale-[0.02]" />
-                  </motion.div>
-                  <motion.div className="absolute right-64 bottom-6 w-36 h-48 rounded-sm overflow-hidden shadow-lg" animate={{ y: [0,-4,0] }} transition={{ duration: 5.5, repeat: Infinity }}>
-                    <LogImage src={mrFreshersGallery.stageQa[0]} alt="F4" className="w-full h-full object-cover grayscale-[0.05]" />
-                  </motion.div>
-                  <div className="absolute left-4 bottom-4 font-mono text-[8px] text-black/35 uppercase tracking-[0.2em]">PERSONALITY_ARCHIVE</div>
-                </div>
-              </div>
-            </div>
-
-            {/* SECTION 01 - GROUP DISCUSSION & INTERVIEW */}
-            <section className="w-full max-w-4xl mx-auto mb-12 px-4">
-              <div className="relative bg-white/95 backdrop-blur-sm border border-black/6 rounded-md p-6 overflow-hidden">
-                <div className="absolute left-4 top-4 font-mono text-[8px] text-black/30 uppercase">SPEAKING_PROTOCOL</div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                  <div className="flex flex-col gap-4">
-                    <h2 className="font-display font-black text-2xl uppercase">GD & INTERVIEW ROUND</h2>
-                    <p className="text-black/75">Successfully cleared the Group Discussion and Interview stages through communication clarity, leadership presence, confidence, and audience interaction skills. Demonstrated personality, composure, and critical thinking under pressure.</p>
-                    <div className="flex gap-2 mt-3">
-                      <span className="font-mono text-[10px] px-3 py-1 border" style={{ borderColor: '#00000020' }}>Group Discussion</span>
-                      <span className="font-mono text-[10px] px-3 py-1 border" style={{ borderColor: '#00000020' }}>Interview Skills</span>
-                      <span className="font-mono text-[10px] px-3 py-1 border" style={{ borderColor: '#00000020' }}>Communication</span>
-                    </div>
-                  </div>
-                  <div className="relative">
-                    <motion.div className="w-full h-56 rounded-sm overflow-hidden shadow-md" whileHover={{ scale: 1.02 }}>
-                      <LogImage src={mrFreshersGallery.gdRound[0]} alt="GD1" className="w-full h-full object-cover" />
-                    </motion.div>
-                    <div className="absolute right-3 top-3 font-mono text-[8px] text-black/30 uppercase">INTERVIEW_MATRIX</div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* SECTION 02 - TALENT ROUND */}
-            <section className="w-full max-w-4xl mx-auto mb-12 px-4">
-              <div className="relative bg-white/95 backdrop-blur-sm border border-black/6 rounded-md p-8 text-center overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none">
-                  <div className="absolute left-1/2 -translate-x-1/2 top-6 w-48 h-48 rounded-full bg-black/6 blur-2xl" />
-                </div>
-                <h2 className="font-display font-black text-2xl uppercase mb-3">TALENT ROUND</h2>
-                <p className="text-black/75 max-w-2xl mx-auto">Performed live during the talent round with strong stage confidence, audience engagement, and expressive presentation. Showcased creativity, personality, and entertainment presence under live event conditions.</p>
-                <div className="mt-6 flex justify-center">
-                  <motion.div className="w-[60%] h-64 rounded-sm overflow-hidden shadow-xl" animate={{ y: [-6,6,-6] }}>
-                    <LogImage src={mrFreshersGallery.talentRound[0]} alt="Talent" className="w-full h-full object-cover" />
-                  </motion.div>
-                </div>
-              </div>
-            </section>
-
-            {/* SECTION 03 - STAND-UP COMEDY & Q&A */}
-            <section className="w-full max-w-4xl mx-auto mb-12 px-4">
-              <div className="relative bg-white/95 backdrop-blur-sm border border-black/6 rounded-md p-6 overflow-hidden flex gap-6 items-center">
-                <div className="w-1/2">
-                  <motion.div className="w-full h-80 rounded-sm overflow-hidden shadow-lg" whileHover={{ scale: 1.01 }}>
-                    <LogImage src={mrFreshersGallery.stageQa[0]} alt="Standup" className="w-full h-full object-cover" />
-                  </motion.div>
-                </div>
-                <div className="w-1/2">
-                  <h2 className="font-display font-black text-xl uppercase">LIVE Q&A & STAND-UP COMEDY</h2>
-                  <p className="text-black/75 mt-3">Handled live Q&A rounds confidently while performing stand-up comedy on stage with humor, spontaneity, and crowd interaction. Demonstrated confidence, quick thinking, and strong public engagement skills.</p>
-                  <div className="mt-4 flex gap-2">
-                    <span className="font-mono text-[10px] px-3 py-1 border" style={{ borderColor: '#00000020' }}>Stand-Up Comedy</span>
-                    <span className="font-mono text-[10px] px-3 py-1 border" style={{ borderColor: '#00000020' }}>Live Q&A</span>
-                  </div>
-                </div>
-                <div className="absolute right-4 bottom-4 font-mono text-[8px] text-black/30 uppercase">LIVE_STAGE_NODE</div>
-              </div>
-            </section>
-
-            {/* FINAL ACHIEVEMENT */}
-            <section className="w-full max-w-3xl mx-auto mb-20 px-4">
-              <div className="relative bg-white/98 backdrop-blur-sm border border-black/7 rounded-md p-10 text-center overflow-hidden">
-                <div className="absolute left-4 top-4 font-mono text-[8px] text-black/30 uppercase">CONFIDENCE_MATRIX</div>
-                <h3 className="font-display font-black text-2xl uppercase mb-3">RUNNER UP — MR FRESHERS 2024</h3>
-                <p className="text-black/75 max-w-2xl mx-auto">Recognized for confidence, communication, humor, leadership presence, and stage performance throughout the multi-round Mr. Freshers competition experience.</p>
-                <div className="mt-6 inline-block px-6 py-3 bg-white border border-black/10 rounded-full shadow-xl font-mono tracking-widest uppercase">ACHIEVEMENT_BADGE</div>
-              </div>
-            </section>
-          </motion.div>
+          <MRFreshers onBack={() => { playClickTick(1600, 0.05); window.location.hash = '#experience'; }} />
         ) : currentHash === '#experience/gdg' ? (
-          /* ════════════════════════════════════════════
-             GDG DETAIL PAGE
-          ════════════════════════════════════════════ */
-          <motion.div
-            key="gdg-detail-archive"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.4 }}
-            className="w-full max-w-5xl mx-auto flex flex-col items-center pb-24 relative px-4"
-          >
-            <div className="w-full flex flex-col items-center mb-10 sm:mb-16 relative z-10">
-              <button
-                onClick={() => { playClickTick(1600, 0.05); window.location.hash = '#experience'; }}
-                className="absolute left-0 top-0 font-mono text-[9px] sm:text-[10px] text-black/50 hover:text-black border border-black/10 hover:border-black px-3 py-1 rounded-[2px] bg-white shadow-sm flex items-center gap-1.5 transition-all duration-300"
-              >
-                <ArrowLeft size={11} />
-                BACK_TO_ARCHIVE
-              </button>
-
-              <div className="absolute right-0 top-0 font-mono text-[8px] text-black/35 border border-black/10 px-2 py-0.5 rounded-[2px] bg-white shadow-sm">
-                CAMPAIGN_FILES
-              </div>
-
-              <h1 className="font-display font-black text-[10vw] sm:text-[7vw] lg:text-[6vw] leading-[0.9] tracking-tighter text-black uppercase select-none mt-12 sm:mt-8 text-center">
-                GDG EXPERIENCE
-              </h1>
-
-              <div className="mt-4 px-6 py-2.5 bg-white border border-[#00FF66]/30 text-center font-sans text-[11px] sm:text-[13px] tracking-wide text-black/80 max-w-lg shadow-[4px_4px_0px_rgba(0,255,102,0.15)] rounded-[2px] uppercase font-bold">
-                Designing communities. Building engagement. Creating impact.
-              </div>
-            </div>
-
-            <div className="w-full max-w-3xl px-4 mb-16 sm:mb-24 z-10 text-center">
-              <p className="font-sans text-xs sm:text-sm text-black/75 leading-relaxed font-normal border-l-4 border-r-4 border-black/5 px-6 py-2 normal-case">
-                As GDG Design Coordinator, I worked on event branding, digital campaigns, hackathon creatives, and community-focused visual systems to strengthen engagement and create impactful developer experiences.
-              </p>
-            </div>
-
-            <div className="relative w-full px-2 flex flex-col gap-24 sm:gap-32 pb-12 z-10">
-              <div className="absolute left-1/2 top-0 bottom-0 w-[1px] border-l border-dashed border-[#A8D3C8] -translate-x-1/2 hidden md:block" />
-
-              {gdgShowcases.map((showcase, idx) => {
-                const isEven = idx % 2 === 0;
-                return (
-                  <div key={idx} className="relative w-full grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden md:block">
-                      <div className="w-5 h-5 bg-white border border-[#A8D3C8] rounded-full flex items-center justify-center shadow-md">
-                        <div className="w-2.5 h-2.5 bg-[#00CC52] rounded-full animate-pulse" />
-                      </div>
-                    </div>
-
-                    <motion.div
-                      className={`w-full flex flex-col ${isEven ? 'md:order-1' : 'md:order-2 md:pl-8'}`}
-                      initial={{ opacity: 0, x: isEven ? -40 : 40 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true, margin: '-50px' }}
-                      transition={{ duration: 0.6, ease: 'easeOut' }}
-                    >
-                      <div className="bg-white border border-[#A8D3C8] rounded-[2px] p-5 sm:p-7 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),3px_3px_0px_rgba(168,211,200,0.25)] hover:border-black transition-all duration-300">
-                        <span className="font-mono text-[9px] text-[#00CC52] font-extrabold tracking-widest uppercase mb-2 block">{showcase.tagline}</span>
-                        <h3 className="font-display font-black text-xl sm:text-2xl tracking-tighter text-black uppercase mb-4 leading-tight">{showcase.title}</h3>
-                        <p className="font-sans text-[11.5px] sm:text-[13px] text-black/75 leading-relaxed mb-6 normal-case font-normal border-t border-black/5 pt-4">{showcase.description}</p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {showcase.tags.map(tag => (
-                            <span key={tag} className="font-mono text-[8px] sm:text-[9px] tracking-wider uppercase px-2.5 py-0.5 rounded-[2px] border border-black/10 text-black/50 bg-black/[0.01]">{tag}</span>
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    <motion.div
-                      className={`w-full ${isEven ? 'md:order-2 md:pl-8' : 'md:order-1'}`}
-                      initial={{ opacity: 0, x: isEven ? 40 : -40 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true, margin: '-50px' }}
-                      transition={{ duration: 0.6, ease: 'easeOut' }}
-                    >
-                      <div className="relative group cursor-crosshair">
-                        <div className="absolute inset-0 bg-[#00FF66] opacity-0 group-hover:opacity-10 blur-xl transition-all duration-700 pointer-events-none" />
-                        <div className="relative border border-[#A8D3C8] hover:border-black rounded-[2px] shadow-[0_20px_50px_rgba(0,0,0,0.06)] overflow-hidden bg-black transition-all duration-500">
-                          <img src={showcase.image} alt={showcase.title} className="w-full h-auto object-cover opacity-85 group-hover:opacity-100 transition-all duration-700" />
-                        </div>
-                        <div className="absolute -bottom-2 -right-2 font-mono text-[7px] bg-black text-[#00FF66] border border-[#00FF66]/20 px-2 py-0.5 shadow-md">
-                          SHOWCASE_IMG_{idx + 1}
-                        </div>
-                      </div>
-                    </motion.div>
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
+          <GDGExperience onBack={() => { playClickTick(1600, 0.05); window.location.hash = '#experience'; }} />
+        ) : currentHash === '#experience/startup' ? (
+          <StartupBootcamp onBack={() => { playClickTick(1600, 0.05); window.location.hash = '#experience'; }} />
+        ) : currentHash === '#experience/tpo-archive' ? (
+          <TPOCoordinator onBack={() => { playClickTick(1600, 0.05); window.location.hash = '#experience'; }} />
+        ) : currentHash === '#experience/mechanics-archive' ? (
+          <MechanicsTopper onBack={() => { playClickTick(1600, 0.05); window.location.hash = '#experience'; }} />
         ) : (
           /* ════════════════════════════════════════════
              GENERIC DETAIL VIEW

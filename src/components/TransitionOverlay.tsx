@@ -4,7 +4,7 @@ import { playClickTick, playBeep } from '../utils/SoundManager';
 
 interface TransitionOverlayProps {
   isVisible: boolean;
-  destination: 'hero' | 'experiments' | 'experience' | 'footer' | 'profile' | 'vault' | 'connect';
+  destination: 'hero' | 'projects' | 'experience' | 'footer' | 'profile' | 'vault' | 'connect';
 }
 
 export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayProps) => {
@@ -15,7 +15,7 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
   // 1. Loading Text Mapping
   const loadingTexts = {
     hero: 'RETURNING TO CORE INTERFACE',
-    experiments: 'INITIALIZING EXPERIMENT ARCHIVE',
+    projects: 'INITIALIZING PROJECT ARCHIVE',
     experience: 'INITIALIZING EXPERIENCE DATABASE',
     footer: 'INITIALIZING EXPERIENCE ARCHIVE',
     profile: 'LOADING HUMAN ARCHIVE',
@@ -31,7 +31,7 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
       '> REBUILDING EDITORIAL GRID DESCRIPTOR...',
       '> RETRIEVAL SEQUENCING SUCCESSFUL.'
     ],
-    experiments: [
+    projects: [
       '> CONNECTING SECURE_PORT_07...',
       '> DECRYPTING PRIVATE WORKSPACES...',
       '> SCANNING ENGINES & STICKER FRAGMENTS...',
@@ -219,6 +219,6 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
 };
 
 // Simple helper to count logs based on destination
-const activeLogsLength = (_destination: 'hero' | 'experiments' | 'experience' | 'footer' | 'profile' | 'vault' | 'connect') => {
+const activeLogsLength = (_destination: 'hero' | 'projects' | 'experience' | 'footer' | 'profile' | 'vault' | 'connect') => {
   return 5;
 };
