@@ -1284,44 +1284,49 @@ const DetailedExperienceView = ({
                     ))}
                   </div>
                 </div>
-
-                <div className="mt-6">
-                  <img src={MT1} alt="Engineering Excellence" className="w-full max-w-xl object-cover rounded-sm border border-white/10 shadow-sm" />
-                </div>
               </motion.section>
 
-              <motion.section initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9, delay:0.06}} className="lg:flex lg:gap-12 items-center">
-                <div className="lg:w-6/12">
-                  <img src={MT2} alt="Student Inspiration" className="w-full object-cover rounded-sm border border-white/10 shadow-sm" />
-                </div>
-                <div className="lg:w-6/12">
-                  <h3 className="font-display font-black text-2xl text-white uppercase tracking-tight mb-3">STUDENT INSPIRATION</h3>
-                  <p className="font-mono text-sm text-white/40 uppercase mb-4">Sharing knowledge and motivating future engineers.</p>
-                  <p className="font-sans text-white/70 leading-relaxed">Delivered motivational and academic interaction sessions that inspired juniors to approach engineering subjects with confidence, discipline, and curiosity. Encouraged analytical learning methods and conceptual clarity.</p>
+              {/* Compact achievement nodes replacing oversized images */}
+              <motion.section initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9, delay:0.06}} className="relative grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mt-6">
 
-                  <div className="flex flex-wrap gap-2 mt-6">
-                    {['Public Speaking','Student Leadership','Mentorship','Academic Motivation'].map(t => (
-                      <span key={t} className="font-mono text-[10px] uppercase bg-white/[0.02] border border-white/10 px-3 py-1 rounded-sm">{t}</span>
-                    ))}
-                  </div>
-                </div>
+                {/* NODE 01 - Left aligned compact glass card */}
+                <motion.div className="flex justify-start lg:justify-start" initial={{y:0}} animate={{y:[0,-8,0]}} transition={{duration:6, repeat:Infinity, ease:'easeInOut'}}>
+                  <motion.div whileHover={{y:-10}} className="w-full max-w-sm bg-white/6 backdrop-blur-lg border border-white/8 rounded-md p-5 transform -rotate-1 shadow-lg">
+                    <div className="h-[2px] bg-[#D4AF37] w-16 mb-3 rounded-sm" />
+                    <h4 className="font-display font-bold text-xl text-white uppercase">ENGINEERING EXCELLENCE</h4>
+                    <p className="font-sans text-sm text-white/70 mt-3">Secured top academic performance in Engineering Mechanics through conceptual mastery, analytical thinking, and precision problem-solving.</p>
+                  </motion.div>
+                </motion.div>
+
+                {/* NODE 02 - Centered floating blur panel */}
+                <motion.div className="flex justify-center" initial={{y:0}} animate={{y:[0,-10,0]}} transition={{duration:6.5, repeat:Infinity, ease:'easeInOut', delay:0.2}}>
+                  <motion.div whileHover={{y:-8}} className="w-full max-w-sm bg-white/[0.04] backdrop-blur-2xl border border-white/6 rounded-md p-4 text-center">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <span className="font-mono text-[9px] text-white/40 uppercase tracking-wider">NODE_META</span>
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#C9D7D2]" />
+                    </div>
+                    <h4 className="font-display font-bold text-lg text-white uppercase">STUDENT INSPIRATION</h4>
+                    <p className="font-sans text-sm text-white/70 mt-3">Inspired juniors through academic interaction, public speaking, and engineering-focused motivation sessions.</p>
+                  </motion.div>
+                </motion.div>
+
+                {/* NODE 03 - Right aligned cinematic panel */}
+                <motion.div className="flex justify-end lg:justify-end" initial={{y:0}} animate={{y:[0,-9,0]}} transition={{duration:5.8, repeat:Infinity, ease:'easeInOut', delay:0.4}}>
+                  <motion.div whileHover={{y:-10}} className="w-full max-w-sm bg-white/6 backdrop-blur-lg border border-white/8 rounded-md p-5 shadow-[0_18px_40px_rgba(0,0,0,0.18)]">
+                    <div className="h-[2px] bg-white/10 w-full mb-3 rounded-sm" />
+                    <h4 className="font-display font-bold text-lg text-white uppercase">RECOGNITION ARCHIVE</h4>
+                    <p className="font-sans text-sm text-white/70 mt-3">Recognized for consistency, engineering excellence, leadership presence, and academic contribution.</p>
+                  </motion.div>
+                </motion.div>
+
+                {/* Tiny coordinate labels and subtle floating dots */}
+                <span className="absolute left-2 top-6 font-mono text-[8px] text-white/30 uppercase tracking-[0.18em]">X:-12 / Y:412</span>
+                <span className="absolute right-2 top-6 font-mono text-[8px] text-white/30 uppercase tracking-[0.18em]">X:+46 / Y:412</span>
+                <motion.div className="absolute left-1/2 top-2 w-2 h-2 rounded-full bg-[#A8D3C8]/30 pointer-events-none" animate={{y:[0,-6,0], opacity:[0.2,0.6,0.2]}} transition={{duration:5, repeat:Infinity}} />
+                <motion.div className="absolute left-1/3 top-14 w-1.5 h-1.5 rounded-full bg-[#D4AF37]/20 pointer-events-none" animate={{y:[0,-4,0], opacity:[0.15,0.5,0.15]}} transition={{duration:6, repeat:Infinity}} />
+
               </motion.section>
 
-              <motion.section initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9, delay:0.12}} className="">
-                <h3 className="font-display font-black text-2xl text-white uppercase tracking-tight mb-3">ACADEMIC RECOGNITION</h3>
-                <p className="font-mono text-sm text-white/40 uppercase mb-4">Recognition for performance, consistency, and engineering dedication.</p>
-                <p className="font-sans text-white/70 leading-relaxed">Received recognition during academic and student events for outstanding performance in Engineering Mechanics and active contribution toward student motivation and academic excellence.</p>
-
-                <div className="flex flex-wrap gap-2 mt-6">
-                  {['Recognition','Engineering Achievement','Student Excellence','Academic Leadership'].map(t => (
-                    <span key={t} className="font-mono text-[10px] uppercase bg-white/[0.02] border border-white/10 px-3 py-1 rounded-sm">{t}</span>
-                  ))}
-                </div>
-
-                <div className="mt-6">
-                  <img src={MT3} alt="Recognition Moment" className="w-full max-w-xl object-cover rounded-sm border border-white/10 shadow-sm" />
-                </div>
-              </motion.section>
             </div>
           )}
         </div>
