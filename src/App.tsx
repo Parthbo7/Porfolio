@@ -111,7 +111,7 @@ function App() {
       const hash = window.location.hash;
       if (hash === '#experiments') {
         triggerTransition('experiments');
-      } else if (hash === '#experience') {
+      } else if (hash.startsWith('#experience')) {
         triggerTransition('experience');
       } else if (hash === '#stack') {
         triggerTransition('footer');
@@ -129,7 +129,7 @@ function App() {
     if (initialHash === '#experiments') {
       setActiveSection('experiments');
       setTargetSection('experiments');
-    } else if (initialHash === '#experience') {
+    } else if (initialHash.startsWith('#experience')) {
       setActiveSection('experience');
       setTargetSection('experience');
     } else if (initialHash === '#stack') {
