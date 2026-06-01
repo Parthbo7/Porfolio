@@ -5,6 +5,10 @@ import { playClickTick } from '../utils/SoundManager';
 import gdg1 from '../assets/Images/GDG1.jpeg';
 import gdg2 from '../assets/Images/GDG2.jpeg';
 import gdg3 from '../assets/Images/GDG3.jpeg';
+import F1 from '../assets/Images/F1.jpeg';
+import F2 from '../assets/Images/F2.jpeg';
+import F3 from '../assets/Images/F3.jpeg';
+import F4 from '../assets/Images/F4.jpeg';
 
 // ─── Ambient floating dot ────────────────────────────────────────────────────
 const AmbientDot = ({ x, y, size, delay }: { x: string; y: string; size: number; delay: number }) => (
@@ -156,19 +160,20 @@ const CARDS: CardConfig[] = [
     id: 'exp-freshers',
     year: '2024',
     title: 'MR. FRESHERS — RUNNER UP',
-    subtitle: 'Stage presence, confidence, leadership, and personality recognition.',
+    subtitle: 'Confidence, communication, leadership, and stage performance recognition.',
     description:
-      'Recognized as Runner Up in Mr. Freshers for confidence, communication skills, personality, and stage presence.',
-    tags: ['Public Speaking', 'Stage Presence', 'Confidence', 'Leadership'],
+      'Successfully progressed through multiple competitive rounds including Group Discussion, Personal Interview, Talent Round, live Q&A, and stand-up comedy performance on stage — eventually achieving Runner Up in Mr. Freshers through confidence, communication skills, humor, and stage presence.',
+    tags: ['Public Speaking', 'Group Discussion', 'Interview Skills', 'Stand-Up Comedy', 'Stage Presence', 'Leadership', 'Confidence'],
     side: 'right',
     widthClass: 'w-[88vw] sm:w-[46vw] lg:w-[38vw]',
     marginRight: '5vw',
-    rotate: 1.7,
+    rotate: -1.0,
     extraTop: '50px',
-    accentColor: '#E879F9',
+    accentColor: '#B8C0C6',
     sysLabel: 'PERSONALITY_NODE',
     nodeIndex: '06',
   },
+
 ];
 
 // ─── Individual card ──────────────────────────────────────────────────────────
@@ -395,7 +400,7 @@ export const ExperienceSection = () => {
   ];
 
   return (
-    <div className="w-full relative overflow-x-hidden min-h-screen">
+    <div className="w-full relative overflow-x-hidden min-h-screen bg-[#F6F6F7]">
       {/* ── Ambient background dots ── */}
       <AmbientDot x="5%" y="12%" size={6} delay={0} />
       <AmbientDot x="92%" y="22%" size={4} delay={1.5} />
@@ -460,6 +465,113 @@ export const ExperienceSection = () => {
                 <ExperienceCard key={card.id} card={card} index={i} />
               ))}
             </div>
+          </motion.div>
+        ) : currentHash === '#experience/freshers' ? (
+          <motion.div
+            key="freshers-detail-archive"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.4 }}
+            className="w-full max-w-6xl mx-auto flex flex-col items-center pb-24 relative px-4"
+          >
+            <div className="w-full flex flex-col items-center mb-10 sm:mb-16 relative z-10">
+              <button onClick={() => { playClickTick(1600, 0.05); window.location.hash = '#experience'; }} className="absolute left-0 top-0 font-mono text-[9px] sm:text-[10px] text-black/50 hover:text-black border border-black/10 hover:border-black px-3 py-1 rounded-[2px] bg-white shadow-sm flex items-center gap-1.5 transition-all duration-300"><ArrowLeft size={11} />BACK_TO_ARCHIVE</button>
+              <div className="absolute right-0 top-0 font-mono text-[8px] text-black/35 border border-black/10 px-2 py-0.5 rounded-[2px] bg-white shadow-sm">PERSONALITY_VAULT</div>
+              <h1 className="font-display font-black text-[9vw] sm:text-[6.5vw] lg:text-[5.5vw] leading-[0.9] tracking-tighter text-black uppercase select-none mt-12 sm:mt-8 text-center">MR FRESHERS EXPERIENCE</h1>
+              <div className="mt-4 px-6 py-2.5 bg-white border border-black/8 text-center font-sans text-[12px] sm:text-[13px] tracking-wide text-black/80 max-w-xl shadow-[4px_4px_0px_rgba(0,0,0,0.03)] rounded-[2px] uppercase font-bold">Confidence. Communication. Presence. Performance.</div>
+            </div>
+
+            {/* HERO COLLAGE */}
+            <div className="w-full max-w-5xl mx-auto mb-12 relative z-10">
+              <div className="relative w-full h-[420px] bg-white/95 backdrop-blur-sm border border-black/5 rounded-md overflow-hidden">
+                <div className="absolute inset-0 pointer-events-none">
+                  <motion.div className="absolute left-6 top-6 w-44 h-64 rounded-sm overflow-hidden shadow-lg" animate={{ y: [0,-6,0] }} transition={{ duration: 6, repeat: Infinity }}>
+                    <img src={F1} alt="F1" className="w-full h-full object-cover grayscale-[0.06]" />
+                  </motion.div>
+                  <motion.div className="absolute left-56 top-12 w-60 h-40 rounded-sm overflow-hidden shadow-xl" animate={{ y: [0,6,0] }} transition={{ duration: 7, repeat: Infinity }}>
+                    <img src={F2} alt="F2" className="w-full h-full object-cover grayscale-[0.04]" />
+                  </motion.div>
+                  <motion.div className="absolute right-6 top-20 w-56 h-72 rounded-sm overflow-hidden shadow-2xl" animate={{ y: [-2,4,-2] }} transition={{ duration: 8, repeat: Infinity }}>
+                    <img src={F3} alt="F3" className="w-full h-full object-cover grayscale-[0.02]" />
+                  </motion.div>
+                  <motion.div className="absolute right-64 bottom-6 w-36 h-48 rounded-sm overflow-hidden shadow-lg" animate={{ y: [0,-4,0] }} transition={{ duration: 5.5, repeat: Infinity }}>
+                    <img src={F4} alt="F4" className="w-full h-full object-cover grayscale-[0.05]" />
+                  </motion.div>
+                  <div className="absolute left-4 bottom-4 font-mono text-[8px] text-black/35 uppercase tracking-[0.2em]">PERSONALITY_ARCHIVE</div>
+                </div>
+              </div>
+            </div>
+
+            {/* SECTION 01 - GROUP DISCUSSION & INTERVIEW */}
+            <section className="w-full max-w-4xl mx-auto mb-12 px-4">
+              <div className="relative bg-white/95 backdrop-blur-sm border border-black/6 rounded-md p-6 overflow-hidden">
+                <div className="absolute left-4 top-4 font-mono text-[8px] text-black/30 uppercase">SPEAKING_PROTOCOL</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                  <div className="flex flex-col gap-4">
+                    <h2 className="font-display font-black text-2xl uppercase">GD & INTERVIEW ROUND</h2>
+                    <p className="text-black/75">Successfully cleared the Group Discussion and Interview stages through communication clarity, leadership presence, confidence, and audience interaction skills. Demonstrated personality, composure, and critical thinking under pressure.</p>
+                    <div className="flex gap-2 mt-3">
+                      <span className="font-mono text-[10px] px-3 py-1 border" style={{ borderColor: '#00000020' }}>Group Discussion</span>
+                      <span className="font-mono text-[10px] px-3 py-1 border" style={{ borderColor: '#00000020' }}>Interview Skills</span>
+                      <span className="font-mono text-[10px] px-3 py-1 border" style={{ borderColor: '#00000020' }}>Communication</span>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <motion.div className="w-full h-56 rounded-sm overflow-hidden shadow-md" whileHover={{ scale: 1.02 }}>
+                      <img src={F1} alt="GD1" className="w-full h-full object-cover" />
+                    </motion.div>
+                    <div className="absolute right-3 top-3 font-mono text-[8px] text-black/30 uppercase">INTERVIEW_MATRIX</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* SECTION 02 - TALENT ROUND */}
+            <section className="w-full max-w-4xl mx-auto mb-12 px-4">
+              <div className="relative bg-white/95 backdrop-blur-sm border border-black/6 rounded-md p-8 text-center overflow-hidden">
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute left-1/2 -translate-x-1/2 top-6 w-48 h-48 rounded-full bg-black/6 blur-2xl" />
+                </div>
+                <h2 className="font-display font-black text-2xl uppercase mb-3">TALENT ROUND</h2>
+                <p className="text-black/75 max-w-2xl mx-auto">Performed live during the talent round with strong stage confidence, audience engagement, and expressive presentation. Showcased creativity, personality, and entertainment presence under live event conditions.</p>
+                <div className="mt-6 flex justify-center">
+                  <motion.div className="w-[60%] h-64 rounded-sm overflow-hidden shadow-xl" animate={{ y: [-6,6,-6] }}>
+                    <img src={F3} alt="Talent" className="w-full h-full object-cover" />
+                  </motion.div>
+                </div>
+              </div>
+            </section>
+
+            {/* SECTION 03 - STAND-UP COMEDY & Q&A */}
+            <section className="w-full max-w-4xl mx-auto mb-12 px-4">
+              <div className="relative bg-white/95 backdrop-blur-sm border border-black/6 rounded-md p-6 overflow-hidden flex gap-6 items-center">
+                <div className="w-1/2">
+                  <motion.div className="w-full h-80 rounded-sm overflow-hidden shadow-lg" whileHover={{ scale: 1.01 }}>
+                    <img src={F4} alt="Standup" className="w-full h-full object-cover" />
+                  </motion.div>
+                </div>
+                <div className="w-1/2">
+                  <h2 className="font-display font-black text-xl uppercase">LIVE Q&A & STAND-UP COMEDY</h2>
+                  <p className="text-black/75 mt-3">Handled live Q&A rounds confidently while performing stand-up comedy on stage with humor, spontaneity, and crowd interaction. Demonstrated confidence, quick thinking, and strong public engagement skills.</p>
+                  <div className="mt-4 flex gap-2">
+                    <span className="font-mono text-[10px] px-3 py-1 border" style={{ borderColor: '#00000020' }}>Stand-Up Comedy</span>
+                    <span className="font-mono text-[10px] px-3 py-1 border" style={{ borderColor: '#00000020' }}>Live Q&A</span>
+                  </div>
+                </div>
+                <div className="absolute right-4 bottom-4 font-mono text-[8px] text-black/30 uppercase">LIVE_STAGE_NODE</div>
+              </div>
+            </section>
+
+            {/* FINAL ACHIEVEMENT */}
+            <section className="w-full max-w-3xl mx-auto mb-20 px-4">
+              <div className="relative bg-white/98 backdrop-blur-sm border border-black/7 rounded-md p-10 text-center overflow-hidden">
+                <div className="absolute left-4 top-4 font-mono text-[8px] text-black/30 uppercase">CONFIDENCE_MATRIX</div>
+                <h3 className="font-display font-black text-2xl uppercase mb-3">RUNNER UP — MR FRESHERS 2024</h3>
+                <p className="text-black/75 max-w-2xl mx-auto">Recognized for confidence, communication, humor, leadership presence, and stage performance throughout the multi-round Mr. Freshers competition experience.</p>
+                <div className="mt-6 inline-block px-6 py-3 bg-white border border-black/10 rounded-full shadow-xl font-mono tracking-widest uppercase">ACHIEVEMENT_BADGE</div>
+              </div>
+            </section>
           </motion.div>
         ) : currentHash === '#experience/gdg' ? (
           /* ════════════════════════════════════════════

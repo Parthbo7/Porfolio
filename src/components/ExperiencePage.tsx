@@ -148,9 +148,10 @@ export const ExperiencePage = () => {
       id: 'exp-freshers',
       year: '2024',
       title: 'MR. FRESHERS — RUNNER UP',
-      subtitle: 'STAGE PRESENCE & PERSONALITY RECOGNITION',
-      description: 'Recognized as Runner Up in Mr. Freshers for confidence, communication skills, personality, and stage presence during the college fresher experience.',
-      tags: ['PUBLIC SPEAKING', 'STAGE PRESENCE', 'CONFIDENCE', 'LEADERSHIP', 'PERSONALITY'],
+      subtitle: 'Confidence, communication, leadership, and stage performance recognition.',
+      description: 'Successfully progressed through multiple competitive rounds including Group Discussion, Personal Interview, Talent Round, live Q&A, and stand-up comedy performance on stage — eventually achieving Runner Up in Mr. Freshers through confidence, communication skills, humor, and stage presence.',
+      tags: ['PUBLIC SPEAKING', 'GROUP DISCUSSION', 'INTERVIEW SKILLS', 'STAND-UP COMEDY', 'STAGE PRESENCE', 'LEADERSHIP', 'CONFIDENCE'],
+      metaLabels: ['PERSONALITY_NODE','STAGE_ACTIVE','LIVE_QNA_PROTOCOL','TALENT_SYSTEM','CONFIDENCE_MATRIX'],
       isExpandable: true
     }
   ];
@@ -244,13 +245,13 @@ export const ExperiencePage = () => {
       desktopParallaxShift: -14,
       mobileSpacingClass: 'mt-48',
       minHeightClass: 'min-h-[290px]',
-      baseRotate: 1,
-      revealRotate: 2.2,
+      baseRotate: -1,
+      revealRotate: -1.2,
       floatShift: -10,
-      nodeLabel: 'STAGE_PERSONA_NODE',
+      nodeLabel: 'PERSONALITY_NODE',
       coordinateLabel: 'X:+42 / Y:662',
-      shellLabel: 'PERSONALITY_CLUSTER',
-      accentClass: 'border-[#B7CCD5]/50'
+      shellLabel: 'PERSONALITY_ARCHIVE',
+      accentClass: 'border-[#BCC3C8]/40'
     }
   };
 
@@ -811,27 +812,49 @@ const GDGDetailedView = ({ onBack }: { onBack: () => void }) => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 pt-32 pb-48 relative z-10 w-full">
-        {/* HERO SECTION - SINGLE TONE REFINEMENT */}
-        <header className="mb-48 flex flex-col items-center text-center">
+        {/* HERO SECTION - Cinematic Editorial */}
+        <header className="mb-24 lg:mb-28 flex flex-col items-center text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex flex-col items-center"
+            transition={{ duration: 0.85, ease: "easeOut" }}
+            className="flex flex-col items-center w-full"
           >
-            <div className="flex items-center gap-4 mb-10 opacity-60">
-              <div className="h-[1px] w-10 bg-[#A9A9A9]/60" />
-              <span className="font-mono text-[9px] tracking-[0.6em] uppercase text-[#8B8B8B] font-bold">GDG_COMMUNITY_ARCHIVE</span>
-              <div className="h-[1px] w-10 bg-[#A9A9A9]/60" />
+            <div className="flex items-center gap-4 mb-6 opacity-70">
+              <div className="h-[1px] w-10 bg-[#D8D0C6]/40" />
+              <span className="font-mono text-[9px] tracking-[0.6em] uppercase text-[#7C7C7C] font-bold">GDG_COMMUNITY_ARCHIVE</span>
+              <div className="h-[1px] w-10 bg-[#D8D0C6]/40" />
             </div>
 
-            <h1 className="font-display font-black text-4xl md:text-6xl lg:text-7xl tracking-tighter uppercase leading-tight mb-6 text-[#2A2A2A]">
-              GDG DESIGN EXPERIENCE
-            </h1>
+            <div className="relative mb-4">
+              <h1 className="font-display font-black text-5xl sm:text-6xl lg:text-8xl leading-[0.9] uppercase text-[#2C2C2C]">
+                <motion.span initial={{ y: 6 }} animate={{ y: 0 }} transition={{ duration: 1 }} className="block">GDG DESIGN</motion.span>
+                <motion.span initial={{ y: 12, opacity: 0.85 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1.2 }} className="block text-opacity-90">EXPERIENCE</motion.span>
+              </h1>
 
-            <p className="max-w-2xl font-mono text-xs md:text-sm text-[#6B6B6B] tracking-[0.15em] uppercase leading-relaxed mx-auto">
+              {/* layered subtle opacity */}
+              <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[120px] opacity-5 pointer-events-none font-display font-black">GDG</span>
+            </div>
+
+            <p className="max-w-2xl font-mono text-sm text-[#6B6B6B] tracking-[0.12em] uppercase leading-relaxed mx-auto">
               Designing communities. Building engagement. Creating impact.
             </p>
+
+            {/* Floating metadata badges */}
+            <div className="mt-6 flex items-center gap-3">
+              {['COMMUNITY_NODE','DESIGN_SYSTEM_ACTIVE','CREATIVE_ARCHIVE','VISUAL_PROTOCOL'].map((m) => (
+                <motion.div key={m} whileHover={{ y: -6 }} className="px-3 py-1 bg-white/[0.03] border border-white/8 rounded-sm font-mono text-[10px] tracking-[0.18em] text-[#4F4F4F] uppercase">
+                  {m}
+                </motion.div>
+              ))}
+            </div>
+
+            {/* tiny animated dots */}
+            <div className="mt-4 flex items-center gap-2 pointer-events-none">
+              <motion.span className="w-2 h-2 rounded-full bg-[#C9D7D2]/60" animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity }} />
+              <motion.span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]/40" animate={{ y: [0, -4, 0] }} transition={{ duration: 4.5, repeat: Infinity }} />
+              <motion.span className="w-1 h-1 rounded-full bg-[#A8D3C8]/40" animate={{ y: [0, -3, 0] }} transition={{ duration: 5, repeat: Infinity }} />
+            </div>
           </motion.div>
         </header>
 
