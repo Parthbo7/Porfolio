@@ -10,6 +10,7 @@ import { HeroTypography } from './components/HeroTypography';
 import { MinimalUI } from './components/MinimalUI';
 import { VaultPortal } from './components/VaultPortal';
 import { ExperimentsPage } from './components/ExperimentsPage';
+import { ExperiencePage } from './components/ExperiencePage';
 import { FuturisticFooter } from './components/FuturisticFooter';
 import { ProfilePage } from './components/ProfilePage';
 import { ConnectPage } from './components/ConnectPage';
@@ -266,7 +267,7 @@ function App() {
               transition={{ duration: 0.5, ease: 'easeInOut' }}
               className="w-screen h-screen relative overflow-hidden flex flex-col justify-between p-6 sm:p-12 lg:p-16 bg-transparent select-none"
             >
-              <ExperimentsPage initialFilter="archive" />
+              <ExperiencePage />
             </motion.section>
           )}
 

@@ -364,7 +364,7 @@ export const ExperimentsPage = ({ initialFilter = 'experiments' }: ExperimentsPa
       )}
 
       {/* 2. MAIN CENTER CONTAINER: SCROLLER OR ABSOLUTE CANVAS */}
-      <div className="flex-1 w-full overflow-y-auto no-scrollbar py-6 relative z-20 flex flex-col items-center">
+      <div className={`flex-1 w-full overflow-y-auto no-scrollbar relative z-20 flex flex-col ${activeFilter === 'archive' ? '' : 'items-center py-6'}`}>
         
         {/* Dynamic content rendering based on active filters */}
         <AnimatePresence mode="wait">
@@ -472,7 +472,16 @@ export const ExperimentsPage = ({ initialFilter = 'experiments' }: ExperimentsPa
           )}
 
           {activeFilter === 'archive' && (
-            <ExperienceSection key="archive" />
+            <motion.div
+              key="archive"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35 }}
+              className="w-full"
+            >
+              <ExperienceSection />
+            </motion.div>
           )}
 
           {activeFilter === 'system' && (
