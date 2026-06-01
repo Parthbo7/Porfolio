@@ -1,7 +1,8 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Award, Check } from 'lucide-react';
 import { playClickTick } from '../../utils/SoundManager';
+import { InfosysSpringboard } from './InfosysSpringboard';
 
 interface InternshipsArchiveProps {
   onBack: () => void;
@@ -9,6 +10,14 @@ interface InternshipsArchiveProps {
 
 export const InternshipsArchive = ({ onBack }: InternshipsArchiveProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [view, setView] = useState<'list' | 'infosys'>('list');
+
+  if (view === 'infosys') {
+    return <InfosysSpringboard onBack={() => {
+      playClickTick(1600, 0.05);
+      setView('list');
+    }} />;
+  }
 
   return (
     <div 
@@ -33,7 +42,7 @@ export const InternshipsArchive = ({ onBack }: InternshipsArchiveProps) => {
             onBack();
           }}
           onMouseEnter={() => playClickTick(1600, 0.02)}
-          className="flex items-center gap-3 interactive-hover group backdrop-blur-2xl border border-black/10 bg-white/70 px-5 py-2.5 rounded-sm transition-all duration-300 text-black/60 hover:text-black hover:border-black/30"
+          className="flex items-center gap-3 interactive-hover group backdrop-blur-2xl border border-black/10 bg-white/70 px-5 py-2.5 rounded-sm transition-all duration-300 text-black/60 hover:text-white hover:border-black/30"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
         >
@@ -91,14 +100,50 @@ export const InternshipsArchive = ({ onBack }: InternshipsArchiveProps) => {
           ))}
         </div>
 
-        {/* SECTION 1: DETAILED TIMELINE */}
+        {/* TIMELINE TIMING LOGS */}
         <section className="w-full max-w-5xl mx-auto mb-20">
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-10">
             
-            {/* ROLE 1 CARD: PYTHON DEVELOPER INTERN */}
+            {/* ROLE 1: CLICKABLE INFOSYS SPRINGBOARD INTERNSHIP CARD */}
+            <motion.div 
+              onClick={() => {
+                playClickTick(1600, 0.08);
+                setView('infosys');
+              }}
+              onMouseEnter={() => playClickTick(1500, 0.015)}
+              className="relative backdrop-blur-md border border-black/10 rounded-sm p-8 md:p-12 overflow-hidden bg-white/80 shadow-[10px_10px_0px_rgba(168,211,200,0.12)] hover:border-[#00CC52] hover:shadow-[13px_13px_0px_rgba(0,255,82,0.15)] cursor-pointer group transition-all duration-500 text-left"
+              whileHover={{ y: -8, scale: 1.01 }}
+            >
+              <div className="absolute left-6 top-6 font-mono text-[8px] uppercase tracking-[0.25em] text-black/35">
+                INTEGRATION_NODE_01 // CLICK TO OPEN ARCHIVE
+              </div>
+              
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pt-4">
+                <div>
+                  <span className="font-mono text-[10px] text-[#00CC52] font-black tracking-[0.3em] uppercase block mb-1">
+                    ROLE // AI & ANALYTICS INTERN
+                  </span>
+                  <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tighter leading-none text-black group-hover:text-[#00CC52] transition-colors">
+                    INFOSYS SPRINGBOARD INTERNSHIP →
+                  </h3>
+                </div>
+                <div className="bg-white text-black font-mono text-[10px] font-extrabold tracking-widest uppercase px-4 py-2 border border-black/10 rounded-sm shadow-[3px_3px_0px_rgba(0,255,82,0.15)] flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#00CC52] animate-pulse" />
+                  INFOSYS SPRINGBOARD
+                </div>
+              </div>
+
+              <div className="h-[1px] w-full bg-black/10 mb-8" />
+
+              <p className="font-sans text-[14.5px] leading-relaxed font-light text-black/75">
+                Building data-driven analytics platforms through AI, Streamlit dashboards, and YouTube Data API pipelines. Coordinated real-world workflows inside Infosys Springboard virtual internship ecosystems. Click to decrypt full archive.
+              </p>
+            </motion.div>
+
+            {/* ROLE 2 CARD: PYTHON DEVELOPER INTERN */}
             <div className="relative backdrop-blur-md border border-black/10 rounded-sm p-8 md:p-12 overflow-hidden bg-white/80 shadow-[10px_10px_0px_rgba(168,211,200,0.12)] hover:border-black transition-all duration-500">
               <div className="absolute left-6 top-6 font-mono text-[8px] uppercase tracking-[0.25em] text-black/30">
-                INTEGRATION_NODE_01 // ACTIVE
+                INTEGRATION_NODE_02 // FLAT_CARD
               </div>
               
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pt-4">
