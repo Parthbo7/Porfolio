@@ -7,6 +7,11 @@ import { playClickTick } from '../utils/SoundManager';
 import gdg1 from '../assets/Images/GDG1.jpeg';
 import gdg2 from '../assets/Images/GDG2.jpeg';
 import gdg3 from '../assets/Images/GDG3.jpeg';
+import Viso1 from '../assets/Images/Viso1.jpeg';
+import Viso2 from '../assets/Images/Viso2.jpeg';
+import MT1 from '../assets/Images/MT1.jpeg';
+import MT2 from '../assets/Images/MT2.jpeg';
+import MT3 from '../assets/Images/MT3.jpeg';
 
 interface ExperienceCardData {
   id: string;
@@ -16,6 +21,7 @@ interface ExperienceCardData {
   description?: string;
   tags: string[];
   isExpandable?: boolean;
+  metaLabels?: string[];
 }
 
 interface ArchiveItem {
@@ -103,10 +109,11 @@ export const ExperiencePage = () => {
     {
       id: 'exp-visotech',
       year: '2026',
-      title: 'VISOTECH',
-      subtitle: 'BUILDING FUTURISTIC DIGITAL SYSTEMS',
-      description: 'Worked on experimental UI systems, futuristic interfaces, and innovative digital visual workflows.',
-      tags: ['UI SYSTEMS', 'VISUAL TECH', 'CREATIVE DEVELOPMENT', 'DIGITAL INNOVATION'],
+      title: 'VISOTECH 2026',
+      subtitle: 'Event volunteering, futuristic decoration systems, and live technical engagement experiences.',
+      description: 'Contributed as a volunteer during VISOTECH 2026 by working on event decoration systems and actively hosting the C-Striker engagement activity while helping create an immersive futuristic technical event atmosphere.',
+      tags: ['Event Volunteering', 'Decoration Design', 'C-Striker Hosting', 'Technical Event', 'Community Engagement'],
+      metaLabels: ['EVENT_NODE', 'VISUAL_SETUP_ACTIVE', 'TECH_EVENT_PROTOCOL', 'LIVE_HOST_SYSTEM'],
       isExpandable: true
     },
     {
@@ -122,9 +129,10 @@ export const ExperiencePage = () => {
       id: 'exp-mechanics',
       year: '2024',
       title: 'MECHANICS TOPPER',
-      subtitle: 'ACADEMIC EXCELLENCE IN ENGINEERING',
-      description: 'Achieved top academic performance through analytical problem-solving and engineering precision.',
-      tags: ['ENGINEERING MECHANICS', 'ACADEMIC EXCELLENCE', 'PROBLEM SOLVING', 'ANALYTICAL THINKING'],
+      subtitle: "Academic excellence in one of engineering's most challenging foundational subjects.",
+      description: 'Achieved top academic performance in Engineering Mechanics — one of the toughest core engineering subjects — through analytical thinking, precision problem-solving, and conceptual mastery. Inspired juniors academically through consistency and strong engineering fundamentals.',
+      tags: ['Engineering Mechanics', 'Academic Excellence', 'Problem Solving', 'Analytical Thinking', 'Student Inspiration'],
+      metaLabels: ['TOPPER_NODE', 'ANALYTICAL_SYSTEM', 'ENGINEERING_ARCHIVE', 'PRECISION_MODE_ACTIVE'],
       isExpandable: true
     },
     {
@@ -544,6 +552,28 @@ export const ExperiencePage = () => {
                             <div className="absolute bottom-4 right-4 flex items-center gap-1.5 bg-[#D4AF37]/10 border border-[#D4AF37]/35 px-3 py-1 rounded-sm font-mono text-[7px] tracking-[0.2em] text-[#D4AF37] uppercase">
                               <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
                               STAGE_SIGNAL
+                            </div>
+                          )}
+
+                          {card.id === 'exp-visotech' && (
+                            <div className="absolute top-4 left-6 z-30 flex flex-col gap-2 pointer-events-none">
+                              {card.metaLabels?.map((label) => (
+                                <div key={label} className="transform transition-transform duration-300 group-hover/card:-translate-y-2 group-hover/card:rotate-1 bg-white/80 backdrop-blur-md border border-black/8 px-2 py-0.5 rounded-sm font-mono text-[8px] tracking-[0.12em] text-black/60 uppercase shadow-[0_6px_20px_rgba(0,0,0,0.06)]">
+                                  <span className="inline-block w-1.5 h-1.5 mr-2 rounded-full bg-[#A8D3C8] animate-pulse align-middle" />
+                                  {label}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {card.id === 'exp-mechanics' && (
+                            <div className="absolute top-4 right-6 z-30 flex flex-col gap-2 pointer-events-none items-end">
+                              {card.metaLabels?.map((label) => (
+                                <div key={label} className="transform transition-transform duration-300 group-hover/card:-translate-y-2 group-hover/card:rotate-1 bg-white/80 backdrop-blur-md border border-black/8 px-2 py-0.5 rounded-sm font-mono text-[8px] tracking-[0.12em] text-black/60 uppercase shadow-[0_6px_20px_rgba(0,0,0,0.06)]">
+                                  <span className="inline-block w-1.5 h-1.5 mr-2 rounded-full bg-[#C9D7D2] animate-pulse align-middle" />
+                                  {label}
+                                </div>
+                              ))}
                             </div>
                           )}
 
@@ -978,17 +1008,18 @@ const DetailedExperienceView = ({
   const vaultConfigs: Record<string, DetailVaultConfig> = {
     'exp-visotech': {
       archiveTitle: 'VISOTECH 2026 ARCHIVE',
-      intro: 'An immersive build zone focused on futuristic interfaces, visual engineering, and digital experimentation.',
-      toneTag: 'FUTURE_INTERFACE_LAYER',
+      intro: 'A futuristic event memory archive documenting volunteering, event creativity, and technical engagement.',
+      toneTag: 'EVENT_MEMORY_ARCHIVE',
       systemTag: 'VISOTECH_RUNTIME',
-      highlights: ['Experimental UI systems', 'Interaction prototypes', 'Visual technology pipelines'],
+      highlights: ['Event Volunteering', 'Decoration Systems', 'Live Technical Hosting', 'Audience Engagement'],
       timeline: [
-        { phase: 'RESEARCH_LAYER', detail: 'Mapped emerging interface patterns and rapid visual tests.' },
-        { phase: 'SYSTEM_BUILD', detail: 'Built modular screens with clean hierarchy and cinematic rhythm.' },
-        { phase: 'DEPLOY_STAGE', detail: 'Refined interaction polish and presentation readiness.' }
+        { phase: 'DECORATION_SYSTEMS', detail: 'Designed immersive visual environments and coordinated decoration execution.' },
+        { phase: 'C_STRIKER_ENGAGEMENT', detail: 'Hosted live C-Striker interactions and maintained participant engagement.' },
+        { phase: 'COMMUNITY_IMPACT', detail: 'Contributed to event atmosphere and volunteer-driven technical storytelling.' }
       ],
-      images: [gdg2, gdg1, gdg3]
+      images: [Viso1, Viso2]
     },
+
     'exp-tpo': {
       archiveTitle: 'TPO COORDINATOR ARCHIVE',
       intro: 'A logistics and communication command center for student-placement operations and coordination flows.',
@@ -1003,17 +1034,17 @@ const DetailedExperienceView = ({
       images: [gdg1, gdg2, gdg3]
     },
     'exp-mechanics': {
-      archiveTitle: 'MECHANICS TOPPER VAULT',
-      intro: 'A precision-focused archive showcasing analytical depth, engineering clarity, and structured problem-solving.',
-      toneTag: 'ACADEMIC_PRECISION_CORE',
-      systemTag: 'MECHANICS_SIGNAL',
-      highlights: ['Engineering rigor', 'Analytical mastery', 'Structured execution'],
+      archiveTitle: 'ENGINEERING MECHANICS ARCHIVE',
+      intro: 'An archived engineering achievement system documenting academic excellence, recognition, and student inspiration.',
+      toneTag: 'ENGINEERING_ARCHIVE_LAYER',
+      systemTag: 'MECHANICS_PRECISION_LOG',
+      highlights: ['Engineering Fundamentals', 'Problem Solving', 'Academic Recognition'],
       timeline: [
-        { phase: 'FOUNDATION_PASS', detail: 'Strengthened conceptual mechanics and formula reasoning.' },
-        { phase: 'ITERATION_GRID', detail: 'Repeated scenario solving for precision under constraints.' },
-        { phase: 'RANK_CONFIRM', detail: 'Delivered top performance with consistent accuracy.' }
+        { phase: 'ENGINEERING_EXCELLENCE', detail: 'Secured top academic performance through conceptual mastery.' },
+        { phase: 'STUDENT_INSPIRATION', detail: 'Shared knowledge and motivated future engineers through academic sessions.' },
+        { phase: 'RECOGNITION_MOMENT', detail: 'Received recognition for consistent performance and contribution.' }
       ],
-      images: [gdg3, gdg1, gdg2]
+      images: [MT1, MT2, MT3]
     },
     'exp-startup': {
       archiveTitle: 'BOOTCAMP INNOVATION ARCHIVE',
@@ -1193,6 +1224,106 @@ const DetailedExperienceView = ({
               </motion.div>
             ))}
           </motion.section>
+
+          {/* Custom storytelling sections for specific archives */}
+          {cardId === 'exp-visotech' && (
+            <div className="flex flex-col gap-24 w-full mb-12">
+              <motion.section initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9}} className="lg:flex lg:items-start lg:gap-12">
+                <div className="lg:w-6/12">
+                  <h2 className="font-display font-black text-3xl text-white uppercase tracking-tight mb-3">DECORATION SYSTEMS</h2>
+                  <p className="font-mono text-sm text-white/40 uppercase mb-4">Designing immersive visual environments for VISOTECH 2026.</p>
+                  <p className="font-sans text-white/70 leading-relaxed">Worked as a volunteer in the decoration team for VISOTECH 2026, helping create a futuristic space-themed event environment using creative visual setups, entrance structures, and immersive display concepts. Contributed to improving the overall event atmosphere and audience experience through coordinated decoration execution.</p>
+
+                  <div className="flex flex-wrap gap-2 mt-6">
+                    {['Event Decoration','Visual Setup','Creative Execution','Team Coordination'].map(t => (
+                      <span key={t} className="font-mono text-[10px] uppercase bg-white/[0.02] border border-white/10 px-3 py-1 rounded-sm">{t}</span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="lg:w-6/12 mt-6 lg:mt-0 flex justify-center lg:justify-end">
+                  <motion.div whileHover={{scale:1.02, y:-8, rotate:-2}} className="w-[420px] lg:w-[520px] transform -rotate-6 shadow-lg border border-white/8 bg-white/[0.02] backdrop-blur-sm">
+                    <img src={Viso1} alt="Decoration Systems" className="w-full h-[320px] object-cover filter-grain" />
+                  </motion.div>
+                </div>
+              </motion.section>
+
+              <motion.section initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9, delay:0.08}} className="lg:flex lg:items-start lg:gap-12">
+                <div className="lg:w-6/12 order-2 lg:order-1 mt-6 lg:mt-0 flex items-center lg:justify-start">
+                  <motion.div whileInView={{x:[-12,0,6]}} className="w-[420px] lg:w-[480px] transform rotate-2 shadow-lg border border-white/8 bg-white/[0.02] backdrop-blur-sm">
+                    <img src={Viso2} alt="C-Striker Engagement" className="w-full h-[320px] object-cover" />
+                  </motion.div>
+                </div>
+
+                <div className="lg:w-6/12 order-1 lg:order-2">
+                  <h2 className="font-display font-black text-3xl text-white uppercase tracking-tight mb-3">C-STRIKER ENGAGEMENT</h2>
+                  <p className="font-mono text-sm text-white/40 uppercase mb-4">Live interaction, technical hosting, and event engagement.</p>
+                  <p className="font-sans text-white/70 leading-relaxed">Actively hosted and managed the C-Striker engagement activity during VISOTECH 2026, interacting with participants and maintaining audience engagement throughout the technical showcase. Helped create an energetic and interactive event environment while representing the volunteer team.</p>
+
+                  <div className="flex flex-wrap gap-2 mt-6">
+                    {['Event Hosting','Public Interaction','Technical Engagement','Live Coordination'].map(t => (
+                      <span key={t} className="font-mono text-[10px] uppercase bg-white/[0.02] border border-white/10 px-3 py-1 rounded-sm">{t}</span>
+                    ))}
+                  </div>
+                </div>
+              </motion.section>
+            </div>
+          )}
+
+          {cardId === 'exp-mechanics' && (
+            <div className="flex flex-col gap-20 w-full mb-12">
+              <motion.section initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9}} className="">
+                <div>
+                  <h2 className="font-display font-black text-3xl text-white uppercase tracking-tight mb-3">ENGINEERING EXCELLENCE</h2>
+                  <p className="font-mono text-sm text-white/40 uppercase mb-4">Mastering one of the toughest engineering foundations.</p>
+                  <p className="font-sans text-white/70 leading-relaxed">Secured top academic performance in Engineering Mechanics through deep conceptual understanding, analytical problem-solving, and disciplined preparation. Recognized among peers for strong engineering fundamentals and consistent academic focus.</p>
+
+                  <div className="flex flex-wrap gap-2 mt-6">
+                    {['Engineering Fundamentals','Problem Solving','Academic Excellence','Precision Thinking'].map(t => (
+                      <span key={t} className="font-mono text-[10px] uppercase bg-white/[0.02] border border-white/10 px-3 py-1 rounded-sm">{t}</span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <img src={MT1} alt="Engineering Excellence" className="w-full max-w-xl object-cover rounded-sm border border-white/10 shadow-sm" />
+                </div>
+              </motion.section>
+
+              <motion.section initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9, delay:0.06}} className="lg:flex lg:gap-12 items-center">
+                <div className="lg:w-6/12">
+                  <img src={MT2} alt="Student Inspiration" className="w-full object-cover rounded-sm border border-white/10 shadow-sm" />
+                </div>
+                <div className="lg:w-6/12">
+                  <h3 className="font-display font-black text-2xl text-white uppercase tracking-tight mb-3">STUDENT INSPIRATION</h3>
+                  <p className="font-mono text-sm text-white/40 uppercase mb-4">Sharing knowledge and motivating future engineers.</p>
+                  <p className="font-sans text-white/70 leading-relaxed">Delivered motivational and academic interaction sessions that inspired juniors to approach engineering subjects with confidence, discipline, and curiosity. Encouraged analytical learning methods and conceptual clarity.</p>
+
+                  <div className="flex flex-wrap gap-2 mt-6">
+                    {['Public Speaking','Student Leadership','Mentorship','Academic Motivation'].map(t => (
+                      <span key={t} className="font-mono text-[10px] uppercase bg-white/[0.02] border border-white/10 px-3 py-1 rounded-sm">{t}</span>
+                    ))}
+                  </div>
+                </div>
+              </motion.section>
+
+              <motion.section initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9, delay:0.12}} className="">
+                <h3 className="font-display font-black text-2xl text-white uppercase tracking-tight mb-3">ACADEMIC RECOGNITION</h3>
+                <p className="font-mono text-sm text-white/40 uppercase mb-4">Recognition for performance, consistency, and engineering dedication.</p>
+                <p className="font-sans text-white/70 leading-relaxed">Received recognition during academic and student events for outstanding performance in Engineering Mechanics and active contribution toward student motivation and academic excellence.</p>
+
+                <div className="flex flex-wrap gap-2 mt-6">
+                  {['Recognition','Engineering Achievement','Student Excellence','Academic Leadership'].map(t => (
+                    <span key={t} className="font-mono text-[10px] uppercase bg-white/[0.02] border border-white/10 px-3 py-1 rounded-sm">{t}</span>
+                  ))}
+                </div>
+
+                <div className="mt-6">
+                  <img src={MT3} alt="Recognition Moment" className="w-full max-w-xl object-cover rounded-sm border border-white/10 shadow-sm" />
+                </div>
+              </motion.section>
+            </div>
+          )}
         </div>
 
         {/* FOOTER */}
