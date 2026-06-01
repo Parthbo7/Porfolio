@@ -185,60 +185,6 @@ export const ExperimentsPage = ({ initialFilter = 'experiments' }: ExperimentsPa
     }
   ];
 
-  // Card definitions for experience filter (mockup replica)
-  const experienceCards: CardData[] = [
-    {
-      id: 'experience-1',
-      year: '2023 - PRESENT',
-      title: 'GDG DESIGN COORDINATOR',
-      subtitle: 'GDG ON CAMPUS - MGACOET, NANDED',
-      description: 'Spearheading design initiatives, managing creative teams, and orchestrating visual experiences for community tech events.',
-      tags: ['LEADERSHIP', 'DESIGN', 'COMMUNITY'],
-      alignment: 'left',
-      gridArea: 'lg:col-start-2 lg:col-span-4 lg:row-start-1'
-    },
-    {
-      id: 'experience-2',
-      year: '2023',
-      title: 'PYTHON DEVELOPER INTERN',
-      subtitle: 'INFOSYS SPRINGBOARD',
-      description: 'Developed backend systems, automated workflows, and contributed to scalable Python-based microservices.',
-      tags: ['PYTHON', 'BACK-END', 'AUTOMATION'],
-      alignment: 'right',
-      gridArea: 'lg:col-start-6 lg:col-span-4 lg:row-start-2'
-    },
-    {
-      id: 'experience-3',
-      year: '2022 - 2023',
-      title: 'TPO LINKEDIN HANDLER',
-      subtitle: 'COLLEGE TPO CELL',
-      description: 'Managed digital presence, coordinated corporate communications, and amplified placement drive reach.',
-      tags: ['COMMUNICATION', 'SOCIAL'],
-      alignment: 'left',
-      gridArea: 'lg:col-start-2 lg:col-span-4 lg:row-start-3'
-    },
-    {
-      id: 'experience-4',
-      year: '2022',
-      title: 'HACKATHON PARTICIPANT',
-      subtitle: 'HACKSPECTRA',
-      description: 'Built rapid prototype solutions under intense time pressure focusing on accessibility and fast iteration.',
-      tags: ['PROTOTYPING', 'HACKATHON'],
-      alignment: 'right',
-      gridArea: 'lg:col-start-6 lg:col-span-4 lg:row-start-4'
-    },
-    {
-      id: 'experience-5',
-      year: '2021',
-      title: 'ENG. MECHANICS TOPPER',
-      subtitle: 'ACADEMIC ACHIEVEMENT',
-      description: 'Achieved top rank in Engineering Mechanics, demonstrating strong analytical and structural problem-solving skills.',
-      tags: ['ANALYTICAL', 'ACADEMICS'],
-      alignment: 'left',
-      gridArea: 'lg:col-start-2 lg:col-span-4 lg:row-start-5'
-    }
-  ];
-
   const handleCardClick = (card: CardData) => {
     playClickTick(1600, 0.08);
     if (card.isLocked) {

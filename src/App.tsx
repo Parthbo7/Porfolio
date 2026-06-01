@@ -266,7 +266,7 @@ function App() {
               transition={{ duration: 0.5, ease: 'easeInOut' }}
               className="w-screen h-screen relative overflow-hidden flex flex-col justify-between p-6 sm:p-12 lg:p-16 bg-transparent select-none"
             >
-              <ExperiencePage />
+              <ExperimentsPage initialFilter="archive" />
             </motion.section>
           )}
 
