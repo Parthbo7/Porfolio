@@ -9,7 +9,6 @@ import { FloatingStickers } from './components/FloatingStickers';
 import { HeroTypography } from './components/HeroTypography';
 import { MinimalUI } from './components/MinimalUI';
 import { VaultPortal } from './components/VaultPortal';
-import { ExperiencePage } from './components/ExperiencePage';
 import { ExperimentsPage } from './components/ExperimentsPage';
 import { FuturisticFooter } from './components/FuturisticFooter';
 import { ProfilePage } from './components/ProfilePage';
