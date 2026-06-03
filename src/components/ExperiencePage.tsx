@@ -1,12 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { ArrowLeft, ArrowUpRight, Check, ArrowRight } from 'lucide-react';
+import { ArrowUpRight, Check, ArrowRight } from 'lucide-react';
 import { playClickTick } from '../utils/SoundManager';
 import { MRFreshers } from './freshers/MRFreshers';
 import { GDGExperience } from './gdg/GDGExperience';
 import { StartupBootcamp } from './bootcamp/StartupBootcamp';
 import { TPOCoordinator } from './tpo/TPOCoordinator';
 import { MechanicsTopper } from './mechanics/MechanicsTopper';
+import {
+  ExperienceHero,
+  ExperienceOverview,
+  ExperienceGallery,
+  ExperienceTags,
+  ExperienceFooter,
+  ExperienceMetadata
+} from './ExperienceCommon';
 
 // Import images
 import gdg1 from '../assets/Images/GDG1.jpeg';
@@ -719,7 +727,7 @@ export const ExperiencePage = () => {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            className="w-full bg-[#050505] text-white p-0 relative"
+            className="w-full bg-[#FAF9F6] text-black p-0 relative"
           >
             <GDGExperience onBack={() => {
               playClickTick(1400, 0.05);
@@ -732,7 +740,7 @@ export const ExperiencePage = () => {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            className="w-full bg-[#050505] text-white p-0 relative"
+            className="w-full bg-[#FAF9F6] text-black p-0 relative"
           >
             {selectedCardId === 'exp-freshers' ? (
               <MRFreshers
@@ -805,11 +813,34 @@ const DetailedExperienceView = ({
   onBack: () => void
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [logs, setLogs] = useState<string[]>([
+    '> ARCHIVE DATABASE ACCESS NOMINAL...',
+    '> SYSTEM METRICS DECRYPTED // SECURITY PROTOCOL NOMINAL'
+  ]);
+
+  useEffect(() => {
+    const telemetries = [
+      'PULLING CAREER DATA SEGMENTS...',
+      'LOGGING OPERATIONS MATRIX NOMINAL.',
+      'SOURCE ARCHIVE ON STANDBY...'
+    ];
+
+    const logInterval = setInterval(() => {
+      const randomLog = telemetries[Math.floor(Math.random() * telemetries.length)];
+      const now = new Date().toLocaleTimeString();
+      setLogs((prev) => [
+        prev[1],
+        `> [${now}] ${randomLog}`
+      ]);
+    }, 6000);
+
+    return () => clearInterval(logInterval);
+  }, []);
 
   if (!card) {
     return (
-      <div className="w-full h-screen flex items-center justify-center">
-        <span className="text-white/50 font-mono">Experience not found</span>
+      <div className="w-full h-screen flex items-center justify-center bg-[#FAF9F6]">
+        <span className="text-black/50 font-mono">Experience not found</span>
       </div>
     );
   }
@@ -828,7 +859,6 @@ const DetailedExperienceView = ({
       ],
       images: [Viso1, Viso2]
     },
-
     'exp-tpo': {
       archiveTitle: 'TPO COORDINATOR ARCHIVE',
       intro: 'A logistics and communication command center for student-placement operations and coordination flows.',
@@ -868,7 +898,6 @@ const DetailedExperienceView = ({
       ],
       images: [gdg2, gdg3, gdg1]
     },
-
   };
 
   const activeVault = vaultConfigs[cardId] || {
@@ -885,237 +914,161 @@ const DetailedExperienceView = ({
     images: [gdg1, gdg2, gdg3]
   };
 
+  const badges = [
+    { label: activeVault.systemTag, top: '12%', left: '4%', rotate: -5, delay: 0.1 },
+    { label: activeVault.toneTag, top: '24%', right: '4%', rotate: 3, delay: 0.3 },
+    { label: 'SECURE_NODE', bottom: '8%', left: '8%', rotate: 4, delay: 0.2 },
+    { label: 'OS_VAULT_ACTIVE', bottom: '18%', right: '8%', rotate: -4, delay: 0.5 }
+  ];
+
+  const isVisotech = cardId === 'exp-visotech';
+
   return (
-    <div ref={containerRef} className="w-full min-h-screen relative overflow-x-hidden bg-[#050505] flex flex-col text-white">
-      {/* Background Layers */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.06] custom-dark-grid z-0" />
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#050505]/0 via-[#0a0a0c]/20 to-[#0e0e12] pointer-events-none z-0" />
+    <div
+      ref={containerRef}
+      className="w-full h-full overflow-y-auto no-scrollbar relative flex flex-col bg-transparent text-black z-10"
+    >
+      <main className="min-h-screen w-full relative overflow-x-hidden pb-32">
+        {/* Background Grid Pattern */}
+        <div className="absolute inset-0 pointer-events-none z-0 custom-beige-grid opacity-35" />
 
-      {/* Animated Scanline */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-[#A9A9A9]/8 animate-scanline z-10 pointer-events-none" />
+        {/* Ambient Glow Halos */}
+        <div className="absolute inset-0 pointer-events-none hidden lg:block z-0">
+          <div className="absolute left-[8%] top-[14%] w-72 h-72 rounded-full bg-[#00CC52]/6 blur-[80px]" />
+          <div className="absolute right-[12%] top-[48%] w-80 h-80 rounded-full bg-[#D4AF37]/6 blur-[90px]" />
+        </div>
 
-      {/* Grain overlay */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.02] z-[100] bg-[url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJub2lzZUZpbHRlciI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuNzUiIG51bU9jdGF2ZXM9IjQiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjbm9pc2VGaWx0ZXIpIi8+PC9zdmc+')] shadow-inner" />
+        {/* Draggable Badges */}
+        <ExperienceMetadata badges={badges} containerRef={containerRef} />
 
-      {/* Navigation */}
-      <div className="fixed top-8 left-8 sm:top-12 sm:left-12 z-[110]">
-        <motion.button
-          onClick={onBack}
-          onMouseEnter={() => playClickTick(1600, 0.02)}
-          className="flex items-center gap-3 interactive-hover group bg-white/5 backdrop-blur-2xl border border-white/10 px-5 py-2.5 rounded-sm hover:border-[#D4AF37]/50 transition-all"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform text-white/60 group-hover:text-white" />
-          <span className="font-mono text-[9px] tracking-[0.2em] uppercase font-bold text-white/60 group-hover:text-white transition-colors">CLOSE_ARCHIVE</span>
-        </motion.button>
-      </div>
+        <div className="max-w-6xl mx-auto px-6 pt-32 w-full relative z-10">
+          {/* HERO */}
+          <ExperienceHero
+            onBack={onBack}
+            protocolLabel={`${activeVault.systemTag}_PROTOCOL`}
+            title={activeVault.archiveTitle}
+            subtitle={card.subtitle}
+            infoLabel={`${card.year} • SYSTEM VAULT SECURE`}
+          />
 
-      <div className="max-w-7xl mx-auto px-6 pt-32 pb-48 relative z-10 w-full">
-        {/* HERO SECTION */}
-        <header className="mb-32 flex flex-col items-center text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex flex-col items-center w-full"
-          >
-            <div className="flex items-center gap-4 mb-10 opacity-30">
-              <div className="h-[1px] w-10 bg-[#D4AF37]/40" />
-              <span className="font-mono text-[9px] tracking-[0.6em] uppercase text-[#D4AF37] font-bold">{activeVault.systemTag}</span>
-              <div className="h-[1px] w-10 bg-[#D4AF37]/40" />
-            </div>
+          {/* OVERVIEW */}
+          <ExperienceOverview
+            ledgerLabel="LEDGER_NODE // SYSTEM_VAULT"
+            identityLabel="ARCHIVE IDENTITY"
+            headline={activeVault.intro}
+            points={activeVault.timeline.map((t) => `${t.phase}: ${t.detail}`)}
+            pointsTitle="[ ARCHIVE PROCESSING TIMELINE ]"
+            sidebarTitle="// HIGHLIGHTS"
+            sidebarLabel="STACK_SPEC"
+            sidebarItems={activeVault.highlights}
+          />
 
-            <h1 className="font-display font-black text-5xl md:text-7xl lg:text-8xl tracking-tighter uppercase leading-none mb-8 text-white">
-              {activeVault.archiveTitle}
-            </h1>
-
-            <p className="max-w-2xl font-mono text-xs md:text-sm text-white/40 tracking-[0.15em] uppercase leading-relaxed mx-auto">
-              {card.subtitle}
-            </p>
-
-            {/* Intro Block */}
-            <div className="mt-16 relative py-8 px-12 max-w-3xl border-l border-[#D4AF37]/10 bg-[#D4AF37]/[0.02] backdrop-blur-sm">
-              <p className="font-sans text-sm md:text-base text-white/60 leading-relaxed text-left font-light">
-                {activeVault.intro}
-              </p>
-              <div className="absolute top-0 left-0 w-4 h-[1px] bg-[#D4AF37]/20" />
-              <div className="absolute bottom-0 left-0 w-4 h-[1px] bg-[#D4AF37]/20" />
-            </div>
-          </motion.div>
-        </header>
-
-        {/* DETAILS SECTION */}
-        <div className="flex flex-col gap-24 w-full mb-32">
-          <motion.section
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="flex flex-col items-center text-center"
-          >
-            <div className="inline-flex items-center gap-4 mb-8 border border-[#D4AF37]/20 px-8 py-4 bg-[#D4AF37]/[0.02] backdrop-blur-sm">
-              <div className="h-[1px] w-8 bg-[#D4AF37]/40" />
-              <span className="font-mono text-[11px] md:text-[12px] text-[#D4AF37] font-black tracking-[0.3em] uppercase">{card.year}</span>
-              <div className="h-[1px] w-8 bg-[#D4AF37]/40" />
-            </div>
-            <div className="font-mono text-[8px] tracking-[0.2em] uppercase text-white/45 border border-white/10 px-3 py-1 rounded-sm">
-              {activeVault.toneTag}
-            </div>
-          </motion.section>
-
-          <motion.section
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
-            className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 items-start"
-          >
-            <div className="w-full">
-              <div className="mb-6">
-                <span className="font-mono text-[9px] text-[#D4AF37]/60 font-black tracking-[0.4em] uppercase">CONTRIBUTIONS</span>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                {card.tags.map((tag) => (
+          {/* VISOTECH CUSTOM SPECIFIC SECTIONS */}
+          {isVisotech && (
+            <div className="flex flex-col gap-20 w-full mb-20">
+              <section className="w-full max-w-5xl mx-auto relative z-10 flex flex-col lg:flex-row gap-12 items-center text-left">
+                <div className="w-full lg:w-7/12 relative flex justify-center">
+                  <div className="absolute top-4 left-4 -right-4 -bottom-4 bg-gradient-to-br from-[#00CC52]/5 to-transparent border border-black/5 rounded-[18px] pointer-events-none -z-10" />
                   <motion.div
-                    key={tag}
-                    whileHover={{ scale: 1.05 }}
-                    className="flex items-center gap-2 bg-white/[0.02] border border-white/10 px-5 py-3 hover:border-[#D4AF37]/30 transition-all group interactive-hover backdrop-blur-sm"
+                    className="p-[10px] rounded-[18px] border border-black/10 hover:border-black bg-white/80 overflow-hidden flex items-center justify-center transition-all duration-500 backdrop-blur-md relative shadow-[10px_10px_0px_rgba(168,211,200,0.12)] group"
+                    whileHover={{ scale: 1.015, y: -6 }}
                   >
-                    <div className="w-2 h-2 bg-[#D4AF37] rounded-full group-hover:bg-[#00FF66] group-hover:scale-150 transition-all" />
-                    <span className="font-mono text-[10px] text-white/40 group-hover:text-white uppercase tracking-wider">{tag}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            <div className="w-full border border-white/10 bg-white/[0.02] p-6 backdrop-blur-sm">
-              <div className="font-mono text-[8px] tracking-[0.3em] uppercase text-[#D4AF37]/70 mb-4">TIMELINE_STORY</div>
-              <div className="flex flex-col gap-4">
-                {activeVault.timeline.map((step) => (
-                  <div key={step.phase} className="border-l border-[#D4AF37]/20 pl-4">
-                    <div className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#D4AF37]">{step.phase}</div>
-                    <p className="font-sans text-sm text-white/70 mt-1">{step.detail}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.section>
-
-          <motion.section
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-6"
-          >
-            {activeVault.images.map((image, index) => (
-              <motion.div
-                key={`${image}-${index}`}
-                className={`${index === 0 ? 'lg:col-span-7' : index === 1 ? 'lg:col-span-5' : 'lg:col-span-12'} border border-white/10 bg-white/[0.02] p-2 backdrop-blur-sm`}
-                whileHover={{ y: -10, rotate: index === 1 ? 1.2 : -0.8 }}
-                animate={{ y: [0, index % 2 === 0 ? -6 : -4, 0], rotate: [0, index === 1 ? 0.4 : -0.4, 0] }}
-                transition={{ duration: 6 + index, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <img src={image} alt={`${activeVault.archiveTitle} showcase ${index + 1}`} className="w-full h-[260px] lg:h-[320px] object-cover opacity-85 hover:opacity-100 transition-opacity duration-500" />
-              </motion.div>
-            ))}
-          </motion.section>
-
-          {/* Custom storytelling sections for specific archives */}
-          {cardId === 'exp-visotech' && (
-            <div className="flex flex-col gap-24 w-full mb-12">
-              <motion.section initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9}} className="lg:flex lg:items-start lg:gap-12">
-                <div className="lg:w-6/12">
-                  <h2 className="font-display font-black text-3xl text-white uppercase tracking-tight mb-3">DECORATION SYSTEMS</h2>
-                  <p className="font-mono text-sm text-white/40 uppercase mb-4">Designing immersive visual environments for VISOTECH 2026.</p>
-                  <p className="font-sans text-white/70 leading-relaxed">Worked as a volunteer in the decoration team for VISOTECH 2026, helping create a futuristic space-themed event environment using creative visual setups, entrance structures, and immersive display concepts. Contributed to improving the overall event atmosphere and audience experience through coordinated decoration execution.</p>
-
-                  <div className="flex flex-wrap gap-2 mt-6">
-                    {['Event Decoration','Visual Setup','Creative Execution','Team Coordination'].map(t => (
-                      <span key={t} className="font-mono text-[10px] uppercase bg-white/[0.02] border border-white/10 px-3 py-1 rounded-sm">{t}</span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="lg:w-6/12 mt-6 lg:mt-0 flex justify-center lg:justify-end">
-                  <motion.div whileHover={{scale:1.02, y:-8, rotate:-2}} className="w-[420px] lg:w-[520px] transform -rotate-6 shadow-lg border border-white/8 bg-white/[0.02] backdrop-blur-sm">
-                    <img src={Viso1} alt="Decoration Systems" className="w-full h-[320px] object-cover filter-grain" />
+                    <div className="w-full rounded-[10px] overflow-hidden bg-black/5">
+                      <img
+                        src={Viso1}
+                        alt="Decoration Systems"
+                        className="w-full h-[320px] object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                      />
+                    </div>
                   </motion.div>
                 </div>
-              </motion.section>
-
-              <motion.section initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.9, delay:0.08}} className="lg:flex lg:items-start lg:gap-12">
-                <div className="lg:w-6/12 order-2 lg:order-1 mt-6 lg:mt-0 flex items-center lg:justify-start">
-                  <motion.div whileInView={{x:[-12,0,6]}} className="w-[420px] lg:w-[480px] transform rotate-2 shadow-lg border border-white/8 bg-white/[0.02] backdrop-blur-sm">
-                    <img src={Viso2} alt="C-Striker Engagement" className="w-full h-[320px] object-cover" />
-                  </motion.div>
-                </div>
-
-                <div className="lg:w-6/12 order-1 lg:order-2">
-                  <h2 className="font-display font-black text-3xl text-white uppercase tracking-tight mb-3">C-STRIKER ENGAGEMENT</h2>
-                  <p className="font-mono text-sm text-white/40 uppercase mb-4">Live interaction, technical hosting, and event engagement.</p>
-                  <p className="font-sans text-white/70 leading-relaxed">Actively hosted and managed the C-Striker engagement activity during VISOTECH 2026, interacting with participants and maintaining audience engagement throughout the technical showcase. Helped create an energetic and interactive event environment while representing the volunteer team.</p>
-
-                  <div className="flex flex-wrap gap-2 mt-6">
-                    {['Event Hosting','Public Interaction','Technical Engagement','Live Coordination'].map(t => (
-                      <span key={t} className="font-mono text-[10px] uppercase bg-white/[0.02] border border-white/10 px-3 py-1 rounded-sm">{t}</span>
-                    ))}
+                <div className="w-full lg:w-5/12 flex flex-col gap-6 text-left">
+                  <h3 className="font-display font-black text-3xl uppercase tracking-tighter leading-none">
+                    DECORATION SYSTEMS
+                  </h3>
+                  <div className="h-[2px] w-12 bg-[#00CC52]" />
+                  <p className="font-sans text-[14px] leading-relaxed text-[#5A5A5A] font-light">
+                    Worked as a volunteer in the decoration team for VISOTECH 2026, helping create a
+                    futuristic space-themed event environment using creative visual setups, entrance
+                    structures, and immersive display concepts. Contributed to improving the overall
+                    event atmosphere and audience experience through coordinated decoration execution.
+                  </p>
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {['Event Decoration', 'Visual Setup', 'Creative Execution', 'Team Coordination'].map(
+                      (t) => (
+                        <span
+                          key={t}
+                          className="font-mono text-[8px] uppercase border border-black/10 bg-white/80 px-2 py-0.5 rounded-sm"
+                        >
+                          {t}
+                        </span>
+                      )
+                    )}
                   </div>
                 </div>
-              </motion.section>
+              </section>
+
+              <section className="w-full max-w-5xl mx-auto relative z-10 flex flex-col lg:flex-row-reverse gap-12 items-center text-left">
+                <div className="w-full lg:w-7/12 relative flex justify-center">
+                  <div className="absolute top-4 left-4 -right-4 -bottom-4 bg-gradient-to-br from-[#00CC52]/5 to-transparent border border-black/5 rounded-[18px] pointer-events-none -z-10" />
+                  <motion.div
+                    className="p-[10px] rounded-[18px] border border-black/10 hover:border-black bg-white/80 overflow-hidden flex items-center justify-center transition-all duration-500 backdrop-blur-md relative shadow-[10px_10px_0px_rgba(168,211,200,0.12)] group"
+                    whileHover={{ scale: 1.015, y: -6 }}
+                  >
+                    <div className="w-full rounded-[10px] overflow-hidden bg-black/5">
+                      <img
+                        src={Viso2}
+                        alt="C-Striker Engagement"
+                        className="w-full h-[320px] object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                      />
+                    </div>
+                  </motion.div>
+                </div>
+                <div className="w-full lg:w-5/12 flex flex-col gap-6 text-left">
+                  <h3 className="font-display font-black text-3xl uppercase tracking-tighter leading-none">
+                    C-STRIKER ENGAGEMENT
+                  </h3>
+                  <div className="h-[2px] w-12 bg-[#00CC52]" />
+                  <p className="font-sans text-[14px] leading-relaxed text-[#5A5A5A] font-light">
+                    Actively hosted and managed the C-Striker engagement activity during VISOTECH
+                    2026, interacting with participants and maintaining audience engagement
+                    throughout the technical showcase. Helped create an energetic and interactive
+                    event environment while representing the volunteer team.
+                  </p>
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {['Event Hosting', 'Public Interaction', 'Technical Engagement', 'Live Coordination'].map(
+                      (t) => (
+                        <span
+                          key={t}
+                          className="font-mono text-[8px] uppercase border border-black/10 bg-white/80 px-2 py-0.5 rounded-sm"
+                        >
+                          {t}
+                        </span>
+                      )
+                    )}
+                  </div>
+                </div>
+              </section>
             </div>
           )}
 
+          {/* GALLERY (FOR NON-VISOTECH generic pages) */}
+          {!isVisotech && activeVault.images && activeVault.images.length > 0 && (
+            <ExperienceGallery
+              images={activeVault.images.map((img, i) => ({
+                src: img,
+                caption: `ARCHIVE IMAGE PROOF 0${i + 1}`,
+              }))}
+            />
+          )}
 
+          {/* TAGS */}
+          <ExperienceTags tags={card.tags} />
+
+          {/* FOOTER */}
+          <ExperienceFooter onBack={onBack} logs={logs} />
         </div>
-
-        {/* FOOTER */}
-        <footer className="mt-48 flex flex-col items-center gap-12 text-center">
-          <div className="h-[1px] w-24 bg-[#D4AF37]/20" />
-
-          <div className="flex flex-col gap-4">
-            <h3 className="font-display font-bold text-3xl uppercase tracking-tighter text-white/90">END_OF_ARCHIVE_DATA</h3>
-            <p className="font-mono text-[9px] text-white/20 tracking-[0.4em] uppercase">READY FOR SYSTEM_EXIT</p>
-          </div>
-
-          <motion.button
-            onClick={onBack}
-            whileHover={{ scale: 1.05, backgroundColor: "rgba(212, 175, 55, 0.05)" }}
-            whileTap={{ scale: 0.95 }}
-            className="group flex items-center gap-4 border border-[#D4AF37]/30 px-12 py-4 font-mono text-[10px] font-black tracking-[0.4em] uppercase transition-all text-[#D4AF37] interactive-hover"
-          >
-            RETURN_TO_EXPERIENCE <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" />
-          </motion.button>
-        </footer>
-      </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .custom-dark-grid {
-          background-size: 100px 100px;
-          background-image:
-            linear-gradient(to right, rgba(212, 175, 55, 0.015) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(212, 175, 55, 0.015) 1px, transparent 1px);
-        }
-
-        .text-stroke-gold {
-          -webkit-text-stroke: 1px rgba(212, 175, 55, 0.2);
-          color: transparent;
-        }
-
-        @keyframes scanline-anim {
-          0% { transform: translateY(-100vh); }
-          100% { transform: translateY(100vh); }
-        }
-
-        .animate-scanline {
-          animation: scanline-anim 12s linear infinite;
-        }
-
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-      `}} />
+      </main>
     </div>
   );
 };

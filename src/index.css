@@ -324,3 +324,10 @@ body {
 .animate-scanline {
   animation: scanline-anim 6s linear infinite;
 }
+
+.custom-beige-grid {
+  background-size: 80px 80px;
+  background-image:
+    linear-gradient(to right, rgba(212, 175, 55, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(212, 175, 55, 0.04) 1px, transparent 1px);
+}
