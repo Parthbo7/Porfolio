@@ -388,13 +388,13 @@ export const ProfilePage = ({ onBack }: ProfilePageProps) => {
                           <span className="col-span-2 text-black font-extrabold">DBATU</span>
                         </div>
                         <div className="grid grid-cols-3 border-b border-black/[0.03] pb-2">
-                          <span className="text-black/40">SEMESTER:</span>
+                          <span className="text-black/40">CURRENT SEMESTER:</span>
                           <span className="col-span-2 text-[#FF3E6C] font-extrabold">Semester III</span>
                         </div>
                         <div className="grid grid-cols-3 border-b border-black/[0.03] pb-2">
                           <span className="text-black/40">SGPA:</span>
-                          <span className="col-span-2 text-emerald-600 font-extrabold flex items-baseline gap-1.5">
-                            8.31 (Semester I)
+                          <span className="col-span-2 text-emerald-600 font-extrabold">
+                            8.31
                           </span>
                         </div>
                         <div className="grid grid-cols-3">
@@ -413,9 +413,10 @@ export const ProfilePage = ({ onBack }: ProfilePageProps) => {
                             <div>
                               <span className="font-mono text-[8.5px] font-black text-[#FF3E6C] block uppercase tracking-wider">CBSE</span>
                               <span className="font-sans text-[10.5px] font-bold text-black block mt-0.5">Oxford The Global School</span>
-                              <span className="font-sans text-[10px] text-black/60 leading-tight block mt-1">
-                                Foundation in Mathematics, Science, Communication Skills, and Technology.
-                              </span>
+                              <div className="mt-2 flex justify-between items-baseline border-t border-black/[0.03] pt-2">
+                                <span className="font-mono text-sm font-black text-black">88%</span>
+                                <span className="font-mono text-[8px] font-bold text-emerald-600 uppercase">Completed</span>
+                              </div>
                             </div>
                           </div>
                           
@@ -423,9 +424,10 @@ export const ProfilePage = ({ onBack }: ProfilePageProps) => {
                             <div>
                               <span className="font-mono text-[8.5px] font-black text-emerald-600 block uppercase tracking-wider">HSC</span>
                               <span className="font-sans text-[10.5px] font-bold text-black block mt-0.5">JNV Junior College</span>
-                              <span className="font-sans text-[10px] text-black/60 leading-tight block mt-1">
-                                Science Stream with focus on Physics, Chemistry, and Mathematics.
-                              </span>
+                              <div className="mt-2 flex justify-between items-baseline border-t border-black/[0.03] pt-2">
+                                <span className="font-mono text-sm font-black text-black">90%</span>
+                                <span className="font-mono text-[8px] font-bold text-emerald-600 uppercase">Completed</span>
+                              </div>
                             </div>
                           </div>
 
@@ -433,9 +435,10 @@ export const ProfilePage = ({ onBack }: ProfilePageProps) => {
                             <div>
                               <span className="font-mono text-[8.5px] font-black text-blue-600 block uppercase tracking-wider">B.Tech IT</span>
                               <span className="font-sans text-[10.5px] font-bold text-black block mt-0.5">MGM's College of Engineering</span>
-                              <span className="font-sans text-[10px] text-black/60 leading-tight block mt-1">
-                                Developing expertise in Software Development, Artificial Intelligence, Web Technologies, and Engineering Problem Solving.
-                              </span>
+                              <div className="mt-2 flex justify-between items-baseline border-t border-black/[0.03] pt-2">
+                                <span className="font-mono text-[10.5px] font-black text-black">Semester III</span>
+                                <span className="font-mono text-[8px] font-bold text-yellow-600 uppercase">In Progress</span>
+                              </div>
                             </div>
                           </div>
                         </div>
