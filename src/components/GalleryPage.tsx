@@ -31,8 +31,8 @@ const mediaItems = [
 export const GalleryPage = ({ onBack }: GalleryPageProps) => {
   const [activeCategory, setActiveCategory] = useState<'ALL' | 'GDG' | 'VISOTECH' | 'ACADEMICS'>('ALL');
 
-  const filteredItems = activeCategory === 'ALL' 
-    ? mediaItems 
+  const filteredItems = activeCategory === 'ALL'
+    ? mediaItems
     : mediaItems.filter(item => item.category === activeCategory);
 
   const handleCategoryChange = (category: typeof activeCategory) => {
@@ -63,7 +63,7 @@ export const GalleryPage = ({ onBack }: GalleryPageProps) => {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pt-32 w-full relative z-10 text-left">
-        
+
         {/* HEADER SECTION */}
         <header className="mb-12 relative flex flex-col sm:flex-row justify-between sm:items-end gap-6">
           <div>
@@ -87,11 +87,10 @@ export const GalleryPage = ({ onBack }: GalleryPageProps) => {
               <button
                 key={cat}
                 onClick={() => handleCategoryChange(cat)}
-                className={`px-4 py-2 border rounded-sm transition-all cursor-pointer interactive-hover uppercase ${
-                  activeCategory === cat 
-                    ? 'bg-black text-white border-black shadow-[2px_2px_0px_rgba(0,255,102,0.4)]' 
+                className={`px-4 py-2 border rounded-sm transition-all cursor-pointer interactive-hover uppercase ${activeCategory === cat
+                    ? 'bg-black text-white border-black shadow-[2px_2px_0px_rgba(0,255,102,0.4)]'
                     : 'bg-white text-black/60 border-black/10 hover:border-black hover:text-black'
-                }`}
+                  }`}
               >
                 {cat}
               </button>
@@ -100,7 +99,7 @@ export const GalleryPage = ({ onBack }: GalleryPageProps) => {
         </header>
 
         {/* Media Grid */}
-        <motion.div 
+        <motion.div
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch"
         >
@@ -118,9 +117,9 @@ export const GalleryPage = ({ onBack }: GalleryPageProps) => {
               >
                 {/* Photo frame */}
                 <div className="aspect-[4/3] bg-black/[0.02] border border-black/5 rounded-sm overflow-hidden mb-4 relative">
-                  <img 
-                    src={item.src} 
-                    alt={item.title} 
+                  <img
+                    src={item.src}
+                    alt={item.title}
                     className="w-full h-full object-cover grayscale contrast-[1.05] group-hover:grayscale-0 transition-all duration-500 pointer-events-none select-none"
                   />
                   <span className="absolute top-2 left-2 bg-black/95 text-[#00FF66] font-mono text-[7px] tracking-widest px-2 py-0.5 rounded-sm uppercase">
