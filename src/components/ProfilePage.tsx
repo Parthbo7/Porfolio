@@ -1,140 +1,84 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
-import { Lock, Terminal, ShieldAlert, Cpu, HeartPulse } from 'lucide-react';
+import { Terminal, ShieldAlert, HeartPulse, ArrowLeft, Code, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { playClickTick } from '../utils/SoundManager';
 
-interface PlaceholderCard {
-  id: string;
-  num: string;
-  title: string;
-  subtitle: string;
-  year: string;
-  type: 'wireframe' | 'holographic' | 'telemetry' | 'locked' | 'scan';
-  gridArea: string;
-  alignment: 'left' | 'right';
+// Custom Animated Counter component for System Stats
+const AnimatedCounter = ({ value, suffix = '', duration = 1.2 }: { value: number; suffix?: string; duration?: number }) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const end = value;
+    if (start === end) return;
+
+    const totalMiliseconds = duration * 1000;
+    const incrementTime = Math.max(Math.floor(totalMiliseconds / end), 15);
+
+    const timer = setInterval(() => {
+      start += 1;
+      setCount(start);
+      if (start >= end) {
+        clearInterval(timer);
+        setCount(end); // Ensure exact end value is set
+      }
+    }, incrementTime);
+
+    return () => clearInterval(timer);
+  }, [value, duration]);
+
+  return (
+    <span className="font-mono text-3xl sm:text-4xl font-black text-emerald-500">
+      {count}{suffix}
+    </span>
+  );
+};
+
+interface ProfilePageProps {
+  onBack?: () => void;
 }
 
-export const ProfilePage = () => {
+export const ProfilePage = ({ onBack }: ProfilePageProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState<'profile' | 'identity' | 'system'>('profile');
-  const [logs, setLogs] = useState<string[]>([
-    '> PROFILE DATABASE INITIALIZING...',
-    'SECURITY_KEY: GRANTED // LAYER_INDEX: NOMINAL_'
-  ]);
+  const [logs, setLogs] = useState<string[]>([]);
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
+  const clicksRef = useRef(0);
 
-  // Live fluctuating mock telemetry stats for the telemetry card
-  const [coreTemp, setCoreTemp] = useState(36.5);
+  // Live fluctuating mock telemetry stats for stats panel
   const [synapseRate, setSynapseRate] = useState(88);
-  const [authProgress, setAuthProgress] = useState(0);
 
   useEffect(() => {
     const tempInterval = setInterval(() => {
-      setCoreTemp((prev) => +(prev + (Math.random() * 0.4 - 0.2)).toFixed(1));
       setSynapseRate((prev) => Math.floor(prev + (Math.random() * 6 - 3)));
     }, 1500);
 
-    const authInterval = setInterval(() => {
-      setAuthProgress((prev) => (prev >= 100 ? 0 : prev + 1));
-    }, 200);
-
-    return () => {
-      clearInterval(tempInterval);
-      clearInterval(authInterval);
-    };
+    return () => clearInterval(tempInterval);
   }, []);
 
-  // Generate live simulated system logs for the profile terminal overlay
+  // Sequential boot logs
   useEffect(() => {
-    const systemLogs = {
-      profile: [
-        'PARSING BIOMETRIC MATRIX...',
-        'ESTABLISHING COGNITIVE NEURAL PIPELINE...',
-        'MEM_NODE_01 ACCESSED WITH ROOT PRIVILEGES...',
-        'GATHERING INTERACTIVE COORDINATE MATRIX...',
-        'HUMAN GRAPH SYNCS READY.'
-      ],
-      identity: [
-        'SYNCHRONIZING VERIFIED CORE REGISTRY...',
-        'RESOLVING MULTI-LAYER SOCIAL KEYS...',
-        'DECRYPTING BRAND PERSISTENCE DATA...',
-        'COGNITIVE WEIGHTS ENGAGED SUCCESSFULLY.',
-        'ACCESS MATRIX SIGNED BY LOCAL_OS.'
-      ],
-      system: [
-        'THROTTLING EVENT LISTENERS BY 30%...',
-        'enabling hardware acceleration layers...',
-        'OPTIMIZING GSAP ANIMATION OVERHEAD...',
-        'GPU COMPILING RENDER BUFFER MATRIX...',
-        'UI NOMINAL STATUS: STABLE.'
-      ]
+    const logTimeline = [
+      '[SYSTEM] Identity Archive Loaded',
+      '[SYSTEM] Academic Records Synced',
+      '[SYSTEM] Skill Matrix Verified',
+      '[SYSTEM] Project Database Online',
+      '[SYSTEM] Portfolio Status: ACTIVE'
+    ];
+
+    setLogs([logTimeline[0]]);
+
+    const timers = logTimeline.slice(1).map((log, idx) => {
+      return setTimeout(() => {
+        setLogs((prev) => [...prev, log]);
+      }, (idx + 1) * 500);
+    });
+
+    return () => {
+      timers.forEach(clearTimeout);
     };
-
-    const logInterval = setInterval(() => {
-      const activeLogs = systemLogs[activeFilter];
-      const randomLog = activeLogs[Math.floor(Math.random() * activeLogs.length)];
-      const now = new Date().toLocaleTimeString();
-      setLogs((prev) => [
-        prev[1],
-        `> [${now}] ${randomLog}`
-      ]);
-    }, 6000);
-
-    return () => clearInterval(logInterval);
-  }, [activeFilter]);
-
-  const cards: PlaceholderCard[] = [
-    {
-      id: 'prof-1',
-      num: '01',
-      title: 'MEMORY NODE',
-      subtitle: 'CORE DATA ARCHIVE',
-      year: 'SEC_INDEX_01',
-      type: 'wireframe',
-      alignment: 'left',
-      gridArea: 'lg:col-start-2 lg:col-span-4 lg:row-start-1'
-    },
-    {
-      id: 'prof-2',
-      num: '02',
-      title: 'PERSONALITY SYSTEM',
-      subtitle: 'COGNITIVE ARCHITECTURE',
-      year: 'FREQ_LATCH_02',
-      type: 'holographic',
-      alignment: 'right',
-      gridArea: 'lg:col-start-6 lg:col-span-4 lg:row-start-2'
-    },
-    {
-      id: 'prof-3',
-      num: '03',
-      title: 'HUMAN TELEMETRY',
-      subtitle: 'BIOMETRIC STREAM',
-      year: 'TELEMETRY_03',
-      type: 'telemetry',
-      alignment: 'left',
-      gridArea: 'lg:col-start-2 lg:col-span-4 lg:row-start-3'
-    },
-    {
-      id: 'prof-4',
-      num: '04',
-      title: 'ARCHIVE LOCKED',
-      subtitle: 'ENCRYPTED DATA BLOCK',
-      year: 'RESTRICTED_04',
-      type: 'locked',
-      alignment: 'right',
-      gridArea: 'lg:col-start-6 lg:col-span-4 lg:row-start-4'
-    },
-    {
-      id: 'prof-5',
-      num: '05',
-      title: 'IDENTITY SCAN',
-      subtitle: 'BIOMETRIC VERIFICATION',
-      year: 'SCAN_SYS_05',
-      type: 'scan',
-      alignment: 'left',
-      gridArea: 'lg:col-start-2 lg:col-span-4 lg:row-start-5'
-    }
-  ];
+  }, []);
 
   const handleFilterChange = (filter: 'profile' | 'identity' | 'system') => {
     playClickTick(1400, 0.05);
@@ -142,10 +86,12 @@ export const ProfilePage = () => {
     
     // Animate grid elements on filter switch
     if (containerRef.current) {
-      gsap.fromTo(containerRef.current.querySelectorAll('.profile-card'), 
-        { opacity: 0, y: 15 },
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'power2.out' }
-      );
+      setTimeout(() => {
+        gsap.fromTo(containerRef.current?.querySelectorAll('.profile-card') || [], 
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out' }
+        );
+      }, 50);
     }
   };
 
@@ -157,10 +103,26 @@ export const ProfilePage = () => {
       {/* 1. TOP HEADER LOCAL OVERLAY */}
       <div className="flex justify-between items-center w-full z-30 pt-2 border-b border-black/5 pb-4">
         {/* Top Left Title */}
-        <div className="text-left font-mono text-[9px] sm:text-xs tracking-widest text-[#FF3E6C] font-extrabold uppercase">
-          <div>CREATIVE DEVELOPER</div>
-          <div className="mt-0.5 text-[#FF3E6C]/70">AVAILABLE FULL-TIME</div>
-        </div>
+        {onBack ? (
+          <motion.button
+            onClick={() => {
+              playClickTick(1600, 0.05);
+              onBack();
+            }}
+            onMouseEnter={() => playClickTick(1600, 0.02)}
+            className="flex items-center gap-3 interactive-hover group backdrop-blur-2xl border border-black/10 bg-white/70 px-5 py-2 rounded-sm transition-all duration-300 text-black/60 hover:text-black hover:border-black/30 pointer-events-auto cursor-pointer"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform text-[#6B6B6B]" />
+            <span className="font-mono text-[9px] tracking-[0.25em] uppercase font-bold text-black/70">CLOSE_ARCHIVE</span>
+          </motion.button>
+        ) : (
+          <div className="text-left font-mono text-[9px] sm:text-xs tracking-widest text-[#FF3E6C] font-extrabold uppercase">
+            <div>CREATIVE DEVELOPER</div>
+            <div className="mt-0.5 text-[#FF3E6C]/70">AVAILABLE FULL-TIME</div>
+          </div>
+        )}
 
         {/* Top Center Sub-Navigation */}
         <div className="flex items-center gap-6 sm:gap-8 font-mono text-[10px] sm:text-[11px] tracking-widest font-extrabold">
@@ -185,12 +147,12 @@ export const ProfilePage = () => {
           ))}
         </div>
 
-        {/* Top Right Spacer to keep center elements centered */}
+        {/* Top Right Spacer */}
         <div className="w-[45px] sm:w-[60px] hidden sm:block" />
       </div>
 
-      {/* DRAGGABLE FLOATING STICKERS (PROFILE SPECIALTIES) - OPTIMIZED: Redundancy cut for performance */}
-      <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden">
+      {/* DRAGGABLE FLOATING STICKERS */}
+      <div className="absolute inset-0 pointer-events-none z-35 overflow-hidden">
         {/* PROFILE_NODE Sticker */}
         <motion.div
           drag
@@ -204,7 +166,7 @@ export const ProfilePage = () => {
           PROFILE_NODE
         </motion.div>
 
-        {/* PARTH_OS Sticker */}
+        {/* PARTH_OS Sticker (Easter egg trigger) */}
         <motion.div
           drag
           dragConstraints={containerRef}
@@ -212,6 +174,15 @@ export const ProfilePage = () => {
           className="absolute left-[24%] top-[11%] pointer-events-auto interactive-hover cursor-grab active:cursor-grabbing bg-yellow-300 border border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] px-2 py-0.5 font-mono text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest rotate-2 select-none will-change-transform"
           whileHover={{ scale: 1.05, rotate: 6 }}
           onHoverStart={() => playClickTick(1500, 0.02)}
+          onTap={() => {
+            playClickTick(1400, 0.05);
+            clicksRef.current += 1;
+            if (clicksRef.current >= 5) {
+              setShowEasterEgg(true);
+              playClickTick(1800, 0.1);
+              clicksRef.current = 0;
+            }
+          }}
           style={{ transform: 'translate3d(0,0,0)' }}
         >
           PARTH_OS
@@ -254,10 +225,11 @@ export const ProfilePage = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}
-              className="w-full max-w-6xl flex flex-col items-center"
+              className="w-full max-w-6xl flex flex-col items-center px-4"
             >
+              
               {/* OVERSZIED TITLE STACK */}
-              <div className="w-full flex flex-col items-center mb-6 relative">
+              <div className="w-full flex flex-col items-center mb-10 relative">
                 <div className="absolute right-[5%] top-[-10px] font-mono text-[8px] sm:text-[10px] text-black/40 border border-black/10 px-2 py-0.5 rounded-sm">
                   PORTAL_V3
                 </div>
@@ -267,182 +239,539 @@ export const ProfilePage = () => {
                 </h1>
 
                 {/* Subtext description */}
-                <div className="mt-4 px-6 py-2.5 bg-white border border-black/10 text-center font-sans text-[11px] sm:text-[13px] tracking-wide text-black/70 max-w-lg shadow-[4px_4px_0px_rgba(0,0,0,0.03)] rounded-sm uppercase font-semibold">
-                  Identity systems, personality archives, and human-interface layers initializing...
+                <div className="mt-4 px-6 py-2.5 bg-white/70 backdrop-blur-md border border-black/10 text-center font-sans text-[11px] sm:text-[13px] tracking-wide text-black/70 max-w-lg shadow-[4px_4px_0px_rgba(0,0,0,0.03)] rounded-sm uppercase font-semibold">
+                  Identity systems, academic timelines, and technology vaults loading...
                 </div>
               </div>
 
-              {/* ASYMMETRICAL EDITORIAL GRID FOR PROFILE PLACEHOLDERS */}
-              <div className="w-full grid grid-cols-1 lg:grid-cols-10 gap-x-6 gap-y-12 lg:gap-y-16 px-4 py-8 relative min-h-[60vh]">
-                {cards.map((card) => {
-                  return (
-                    <motion.div
-                      key={card.id}
-                      onMouseEnter={() => playClickTick(1500, 0.015)}
-                      className={`profile-card group w-full bg-white border border-[#A8D3C8] rounded-sm p-5 sm:p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),3px_3px_0px_rgba(168,211,200,0.2)] hover:border-black transition-all duration-300 cursor-default select-none will-change-transform ${card.gridArea}`}
-                      whileHover={{ 
-                        y: -5,
-                        scale: 1.01,
-                        boxShadow: '0 15px 30px rgba(0,0,0,0.03), 4px 4px 0px rgba(0,0,0,0.8)' 
-                      }}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ type: 'spring', stiffness: 90, damping: 18 }}
-                      style={{ transform: 'translate3d(0,0,0)' }}
-                    >
-                      {/* Top Row */}
-                      <div className="flex justify-between items-center w-full mb-4">
-                        <span className="font-mono text-[9px] sm:text-[10px] text-[#00CC52] font-extrabold tracking-widest">
-                          {card.year}
+              {/* CORE OS PROFILE CONTAINER */}
+              <div className="w-full flex flex-col gap-10">
+
+                {/* TOP HEADER: PORTRAIT IMAGE & IDENTITY INFO (SECTION 01) */}
+                <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch bg-white/45 backdrop-blur-xl border border-black/10 rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_rgba(0,0,0,0.02)]">
+                  
+                  {/* Left Column: Portrait image with scanningContour frame */}
+                  <div className="lg:col-span-5 flex flex-col justify-center items-center relative overflow-hidden group min-h-[320px] bg-black/[0.02] border border-black/5 rounded-sm p-4">
+                    {/* Futuristic wireframe contours */}
+                    <div className="absolute inset-0 opacity-[0.04] pointer-events-none flex items-center justify-center">
+                      <svg className="w-full h-full text-black" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2, 2" />
+                        <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="0.5" />
+                        <line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" strokeWidth="0.5" />
+                      </svg>
+                    </div>
+
+                    {/* Sweeping green laser scanline */}
+                    <div className="absolute top-0 left-0 w-full h-[2px] bg-emerald-500 opacity-70 shadow-[0_0_8px_#10B981] pointer-events-none animate-scanline z-20" />
+
+                    <div className="w-full h-full max-w-[280px] max-h-[340px] aspect-[3/4] border border-black/10 rounded-sm overflow-hidden relative shadow-[4px_4px_0px_rgba(0,0,0,0.08)] bg-white p-1">
+                      <img 
+                        src="/assets/og/parth.jpg" 
+                        alt="Parth Pandurang Bulbule Portrait"
+                        className="w-full h-full object-cover grayscale contrast-105 group-hover:grayscale-0 transition-all duration-700 select-none pointer-events-none"
+                      />
+                      {/* Telemetry labels on corners */}
+                      <span className="absolute bottom-2.5 left-2.5 bg-black/95 text-emerald-400 font-mono text-[7px] tracking-widest px-2 py-0.5 rounded-sm uppercase">
+                        TARGET: PARTH_B
+                      </span>
+                    </div>
+
+                    <div className="mt-4 font-mono text-[8px] text-black/40 uppercase tracking-widest">
+                      BIOMETRIC SCAN: COMPLETED NOMINAL
+                    </div>
+                  </div>
+
+                  {/* Right Column: Identity details */}
+                  <div className="lg:col-span-7 flex flex-col justify-between text-left">
+                    <div>
+                      {/* Section Title */}
+                      <div className="inline-flex items-center gap-2 mb-4">
+                        <span className="font-mono text-[9px] text-red-500 font-extrabold tracking-widest uppercase">
+                          SECTION 01 — IDENTITY ARCHIVE
                         </span>
-                        <div className="font-mono text-[9px] tracking-widest text-black/30 font-bold border border-black/5 px-2 py-0.5 rounded-sm">
-                          // SEC_{card.num}
+                        <div className="h-[1px] w-8 bg-red-500/30" />
+                      </div>
+
+                      <h2 className="font-display font-black text-2xl sm:text-3xl text-black uppercase tracking-tight mb-6">
+                        PARTH PANDURANG BULBULE
+                      </h2>
+
+                      <div className="space-y-4 font-sans text-xs text-black/70">
+                        <div className="grid grid-cols-1 sm:grid-cols-4 border-b border-black/[0.04] pb-2.5">
+                          <span className="font-mono text-[9px] text-black/40 font-bold uppercase sm:pt-0.5">ROLE:</span>
+                          <span className="sm:col-span-3 text-black font-extrabold text-[12.5px] tracking-tight leading-tight">
+                            B.Tech Information Technology Student
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-4 border-b border-black/[0.04] pb-2.5">
+                          <span className="font-mono text-[9px] text-black/40 font-bold uppercase sm:pt-0.5">COLLEGE:</span>
+                          <span className="sm:col-span-3 text-black font-extrabold text-[12px] tracking-tight leading-tight">
+                            MGM's College of Engineering
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-4 border-b border-black/[0.04] pb-2.5">
+                          <span className="font-mono text-[9px] text-black/40 font-bold uppercase sm:pt-0.5">UNIVERSITY:</span>
+                          <span className="sm:col-span-3 text-black font-extrabold leading-tight text-[11.5px]">
+                            Dr. Babasaheb Ambedkar Technological University (DBATU)
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-4 border-b border-black/[0.04] pb-2.5">
+                          <span className="font-mono text-[9px] text-black/40 font-bold uppercase sm:pt-0.5">LOCATION:</span>
+                          <span className="sm:col-span-3 text-black font-extrabold">
+                            Maharashtra, India
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-4 border-b border-black/[0.04] pb-2.5">
+                          <span className="font-mono text-[9px] text-black/40 font-bold uppercase sm:pt-0.5">STATUS:</span>
+                          <span className="sm:col-span-3 text-emerald-600 font-extrabold">
+                            Active Student & Developer
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-4">
+                          <span className="font-mono text-[9px] text-black/40 font-bold uppercase">FOCUS:</span>
+                          <div className="sm:col-span-3 flex flex-wrap gap-x-4 gap-y-1 mt-1 sm:mt-0 font-bold text-black text-[11px]">
+                            <span className="flex items-center gap-1.5"><CheckCircle2 size={10} className="text-emerald-500" /> Web Development</span>
+                            <span className="flex items-center gap-1.5"><CheckCircle2 size={10} className="text-emerald-500" /> Artificial Intelligence</span>
+                            <span className="flex items-center gap-1.5"><CheckCircle2 size={10} className="text-emerald-500" /> UI/UX Design</span>
+                            <span className="flex items-center gap-1.5"><CheckCircle2 size={10} className="text-emerald-500" /> Problem Solving</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-8 pt-4 border-t border-black/5 flex justify-between items-center text-mono font-mono text-[8px] text-black/30 uppercase">
+                      <span>OS_INDEX_SEC_01</span>
+                      <span className="flex items-center gap-1.5 text-emerald-600 font-bold">
+                        <HeartPulse size={9} className="animate-pulse" />
+                        BIOMETRIC FREQ: {synapseRate} HZ
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* SECTION 02 & 03: ACADEMIC ARCHIVE & SKILL MATRIX */}
+                <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  
+                  {/* SECTION 02: ACADEMIC ARCHIVE */}
+                  <motion.div
+                    onMouseEnter={() => playClickTick(1500, 0.015)}
+                    className="profile-card bg-white/45 backdrop-blur-xl border border-black/10 rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_rgba(0,0,0,0.02)] hover:border-black transition-all duration-300 text-left flex flex-col justify-between"
+                    whileHover={{ y: -3, boxShadow: '0 12px 24px rgba(0,0,0,0.02), 4px 4px 0px rgba(0,0,0,0.9)' }}
+                  >
+                    <div>
+                      <div className="flex justify-between items-center w-full mb-5">
+                        <span className="font-mono text-[9px] text-[#00CC52] font-extrabold tracking-widest uppercase">
+                          SECTION 02 — ACADEMIC ARCHIVE
+                        </span>
+                        <div className="font-mono text-[9px] tracking-widest text-black/35 font-bold border border-black/5 px-2 py-0.5 rounded-sm">
+                          // SEC_02
                         </div>
                       </div>
 
-                      {/* Middle Title Area */}
-                      <div className="flex flex-col mb-4">
-                        <h3 className="font-display font-black text-lg sm:text-2xl tracking-tighter text-black uppercase leading-tight">
-                          {card.title}
-                        </h3>
-                        <p className="font-mono text-[8px] sm:text-[9px] tracking-wider text-black/40 uppercase mt-0.5">
-                          {card.subtitle}
-                        </p>
+                      <div className="space-y-4 font-mono text-[10.5px] text-black/70 bg-[#fcfcfd] border border-black/[0.04] p-4 rounded-sm">
+                        <div className="grid grid-cols-3 border-b border-black/[0.03] pb-2">
+                          <span className="text-black/40">PROGRAM:</span>
+                          <span className="col-span-2 text-black font-extrabold text-[9.5px] leading-tight">Bachelor of Technology (Information Technology)</span>
+                        </div>
+                        <div className="grid grid-cols-3 border-b border-black/[0.03] pb-2">
+                          <span className="text-black/40">COLLEGE:</span>
+                          <span className="col-span-2 text-black font-extrabold">MGM's College of Engineering</span>
+                        </div>
+                        <div className="grid grid-cols-3 border-b border-black/[0.03] pb-2">
+                          <span className="text-black/40">UNIVERSITY:</span>
+                          <span className="col-span-2 text-black font-extrabold">DBATU</span>
+                        </div>
+                        <div className="grid grid-cols-3 border-b border-black/[0.03] pb-2">
+                          <span className="text-black/40">SEMESTER:</span>
+                          <span className="col-span-2 text-[#FF3E6C] font-extrabold">Semester III</span>
+                        </div>
+                        <div className="grid grid-cols-3 border-b border-black/[0.03] pb-2">
+                          <span className="text-black/40">SGPA:</span>
+                          <span className="col-span-2 text-emerald-600 font-extrabold flex items-baseline gap-1.5">
+                            8.31 (Semester I)
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-3">
+                          <span className="text-black/40">GOAL:</span>
+                          <span className="col-span-2 text-black font-extrabold leading-tight text-[9.5px]">Consistent Academic Excellence and Practical Innovation</span>
+                        </div>
                       </div>
 
-                      {/* 3. CORE PLACEHOLDER CONTENTS (OS-Aesthetic Wireframes) */}
-                      <div className="w-full bg-[#fcfcfd] border border-black/[0.04] p-4 rounded-sm min-h-[140px] flex flex-col justify-center items-center relative overflow-hidden font-mono text-[10px] text-black/50">
-                        {/* Custom visual rendering based on Card Type */}
-                        
-                        {/* TYPE 1: WIREFRAME MATRIX PLACEHOLDER */}
-                        {card.type === 'wireframe' && (
-                          <div className="w-full flex flex-col gap-2.5">
-                            {/* Dotted grid dots */}
-                            <div className="grid grid-cols-6 gap-2 opacity-25">
-                              {Array.from({ length: 12 }).map((_, i) => (
-                                <div key={i} className="w-1 h-1 bg-black rounded-full" />
+                      {/* Academic timeline cards */}
+                      <div className="mt-6 space-y-3">
+                        <span className="font-mono text-[8.5px] text-black/40 font-bold uppercase block tracking-wider">
+                          // ACADEMIC_MILESTONES:
+                        </span>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          <div className="bg-[#fcfcfd] border border-black/5 p-3 rounded-sm text-left flex flex-col justify-between min-h-[110px]">
+                            <div>
+                              <span className="font-mono text-[8.5px] font-black text-[#FF3E6C] block uppercase tracking-wider">CBSE</span>
+                              <span className="font-sans text-[10.5px] font-bold text-black block mt-0.5">Oxford The Global School</span>
+                              <span className="font-sans text-[10px] text-black/60 leading-tight block mt-1">
+                                Foundation in Mathematics, Science, Communication Skills, and Technology.
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-[#fcfcfd] border border-black/5 p-3 rounded-sm text-left flex flex-col justify-between min-h-[110px]">
+                            <div>
+                              <span className="font-mono text-[8.5px] font-black text-emerald-600 block uppercase tracking-wider">HSC</span>
+                              <span className="font-sans text-[10.5px] font-bold text-black block mt-0.5">JNV Junior College</span>
+                              <span className="font-sans text-[10px] text-black/60 leading-tight block mt-1">
+                                Science Stream with focus on Physics, Chemistry, and Mathematics.
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="bg-[#fcfcfd] border border-black/5 p-3 rounded-sm text-left flex flex-col justify-between min-h-[110px]">
+                            <div>
+                              <span className="font-mono text-[8.5px] font-black text-blue-600 block uppercase tracking-wider">B.Tech IT</span>
+                              <span className="font-sans text-[10.5px] font-bold text-black block mt-0.5">MGM's College of Engineering</span>
+                              <span className="font-sans text-[10px] text-black/60 leading-tight block mt-1">
+                                Developing expertise in Software Development, Artificial Intelligence, Web Technologies, and Engineering Problem Solving.
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* SECTION 03: SKILL MATRIX */}
+                  <motion.div
+                    onMouseEnter={() => playClickTick(1500, 0.015)}
+                    className="profile-card bg-white/45 backdrop-blur-xl border border-black/10 rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_rgba(0,0,0,0.02)] hover:border-black transition-all duration-300 text-left flex flex-col justify-between"
+                    whileHover={{ y: -3, boxShadow: '0 12px 24px rgba(0,0,0,0.02), 4px 4px 0px rgba(0,0,0,0.9)' }}
+                  >
+                    <div>
+                      <div className="flex justify-between items-center w-full mb-5">
+                        <span className="font-mono text-[9px] text-[#00CC52] font-extrabold tracking-widest uppercase">
+                          SECTION 03 — SKILL MATRIX
+                        </span>
+                        <div className="font-mono text-[9px] tracking-widest text-black/35 font-bold border border-black/5 px-2 py-0.5 rounded-sm">
+                          // SEC_03
+                        </div>
+                      </div>
+
+                      {/* Skill Grid as System Scan Cards */}
+                      <div className="grid grid-cols-2 gap-4">
+                        {[
+                          { category: 'Frontend', skills: ['HTML', 'CSS', 'JavaScript', 'React', 'Tailwind CSS'] },
+                          { category: 'Backend', skills: ['Node.js', 'Firebase'] },
+                          { category: 'Programming', skills: ['Python', 'C', 'C++'] },
+                          { category: 'Tools', skills: ['Git', 'GitHub', 'VS Code', 'Figma'] }
+                        ].map((grp, idx) => (
+                          <div key={idx} className="bg-black/95 text-emerald-400 p-3.5 rounded-sm font-mono text-[9px] sm:text-[10px] shadow-[inset_0_1px_3px_rgba(0,0,0,0.7)] flex flex-col justify-between min-h-[120px] relative overflow-hidden group/scan">
+                            {/* Sweeping scan bar */}
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-emerald-500/80 shadow-[0_0_5px_#10B981] pointer-events-none group-hover/scan:animate-scanline" />
+                            
+                            <div className="flex items-center gap-1.5 font-bold text-red-500 border-b border-white/10 pb-1.5 mb-2 uppercase text-[8.5px] tracking-wider">
+                              <Code size={11} />
+                              {grp.category}
+                            </div>
+                            <div className="space-y-1 flex-1 text-left">
+                              {grp.skills.map((s) => (
+                                <div key={s} className="flex items-center gap-1.5 text-emerald-400/90 hover:text-emerald-300 font-bold transition-colors">
+                                  <ChevronRight size={8} className="text-red-500" />
+                                  <span>{s}</span>
+                                </div>
                               ))}
                             </div>
-                            {/* Fake kernel registry statements */}
-                            <div className="flex flex-col gap-1 text-[8px] sm:text-[9px] font-mono leading-none opacity-60">
-                              <div>&gt; STACK_POINTER: 0x7FFF3B82</div>
-                              <div>&gt; THREAD_0: STATUS_STANDBY</div>
-                              <div>&gt; SYSTEM_DECRYPT: OK [v3]</div>
-                            </div>
-                            {/* Small loading progression indicator */}
-                            <div className="w-full flex items-center gap-2 mt-1">
-                              <div className="flex-1 h-1 bg-black/5 border border-black/10 rounded-full overflow-hidden">
-                                <div className="h-full bg-black rounded-full" style={{ width: '45%' }} />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                  
+                </div>
+
+                {/* SECTION 04 & 05: FEATURED PROJECTS & EXPERIENCE LOG */}
+                <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                  
+                  {/* SECTION 04: FEATURED PROJECTS (8 columns on desktop) */}
+                  <div className="lg:col-span-8 bg-white/45 backdrop-blur-xl border border-black/10 rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-center w-full mb-6">
+                        <span className="font-mono text-[9px] text-[#00CC52] font-extrabold tracking-widest uppercase">
+                          SECTION 04 — FEATURED PROJECTS
+                        </span>
+                        <div className="font-mono text-[9px] tracking-widest text-black/35 font-bold border border-black/5 px-2 py-0.5 rounded-sm">
+                          // SEC_04
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {[
+                          {
+                            id: 'P01',
+                            title: 'CampusConnect',
+                            desc: 'Student networking and resource-sharing platform designed to connect juniors and seniors.',
+                            status: 'In Development',
+                            color: 'text-yellow-600 bg-yellow-400/10 border-yellow-500/20'
+                          },
+                          {
+                            id: 'P02',
+                            title: 'Portfolio OS',
+                            desc: 'Interactive futuristic portfolio experience inspired by operating systems.',
+                            status: 'Active',
+                            color: 'text-emerald-600 bg-emerald-400/10 border-emerald-500/20'
+                          },
+                          {
+                            id: 'P03',
+                            title: 'AI Research',
+                            desc: 'Exploring the impact of Artificial Intelligence on Human Intelligence.',
+                            status: 'Research Phase',
+                            color: 'text-purple-600 bg-purple-400/10 border-purple-500/20'
+                          }
+                        ].map((proj) => (
+                          <div 
+                            key={proj.id}
+                            className="bg-[#fcfcfd] border border-black/5 rounded-sm p-4 text-left flex flex-col justify-between min-h-[170px] hover:border-black transition-all duration-300 shadow-[2px_2px_0px_rgba(0,0,0,0.01)]"
+                          >
+                            <div>
+                              <div className="flex justify-between items-center mb-2">
+                                <span className="font-mono text-[8px] font-black text-black/40">{proj.id} // SEC_PR</span>
+                                <span className={`font-mono text-[7px] font-extrabold uppercase px-1.5 py-0.5 border rounded-sm ${proj.color}`}>
+                                  {proj.status}
+                                </span>
                               </div>
-                              <span className="text-[8px] opacity-40">45%</span>
+                              <h4 className="font-display font-black text-base uppercase tracking-tight text-black mb-2 leading-tight">
+                                {proj.title}
+                              </h4>
+                              <p className="font-sans text-[11px] text-black/60 leading-normal font-light">
+                                {proj.desc}
+                              </p>
+                            </div>
+                            <span className="font-mono text-[8px] text-[#00CC52] font-bold tracking-widest mt-4 block">
+                              METRICS: ARCHIVED
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* SECTION 05: EXPERIENCE LOG (4 columns on desktop) */}
+                  <div className="lg:col-span-4 bg-white/45 backdrop-blur-xl border border-black/10 rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_rgba(0,0,0,0.02)] flex flex-col justify-between text-left">
+                    <div className="h-full flex flex-col justify-between">
+                      <div className="flex justify-between items-center w-full mb-5">
+                        <span className="font-mono text-[9px] text-[#00CC52] font-extrabold tracking-widest uppercase">
+                          SECTION 05 — EXPERIENCE LOG
+                        </span>
+                        <div className="font-mono text-[9px] tracking-widest text-black/35 font-bold border border-black/5 px-2 py-0.5 rounded-sm">
+                          // SEC_05
+                        </div>
+                      </div>
+
+                      <div className="bg-black/95 text-emerald-400 p-4 rounded-sm font-mono text-[9.5px] sm:text-[10px] space-y-2.5 shadow-[inset_0_1px_3px_rgba(0,0,0,0.7)] flex-1 flex flex-col justify-center">
+                        <div className="text-red-500 font-bold border-b border-white/10 pb-1.5 mb-2 uppercase tracking-widest text-[8.5px] flex items-center gap-1.5">
+                          <Terminal size={11} />
+                          guest@parth_os:~$ experience --list
+                        </div>
+                        {[
+                          'Hackathon Participant',
+                          'Independent Project Developer',
+                          'Research Enthusiast',
+                          'Team Collaborator'
+                        ].map((log, idx) => (
+                          <div key={idx} className="flex items-center gap-2 font-bold hover:text-emerald-300 transition-colors">
+                            <ChevronRight size={10} className="text-red-500" />
+                            <span>• {log}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* SECTION 06 & 07: PERSONALITY MATRIX & TECH STACK VAULT */}
+                <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                  
+                  {/* SECTION 06: PERSONALITY MATRIX */}
+                  <motion.div
+                    onMouseEnter={() => playClickTick(1500, 0.015)}
+                    className="profile-card bg-white/45 backdrop-blur-xl border border-black/10 rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_rgba(0,0,0,0.02)] hover:border-black transition-all duration-300 text-left flex flex-col justify-between"
+                    whileHover={{ y: -3, boxShadow: '0 12px 24px rgba(0,0,0,0.02), 4px 4px 0px rgba(0,0,0,0.9)' }}
+                  >
+                    <div>
+                      <div className="flex justify-between items-center w-full mb-5">
+                        <span className="font-mono text-[9px] text-[#00CC52] font-extrabold tracking-widest uppercase">
+                          SECTION 06 — PERSONALITY MATRIX
+                        </span>
+                        <div className="font-mono text-[9px] tracking-widest text-black/35 font-bold border border-black/5 px-2 py-0.5 rounded-sm">
+                          // SEC_06
+                        </div>
+                      </div>
+
+                      <div className="w-full bg-[#fcfcfd] border border-black/[0.04] p-4 rounded-sm font-mono text-[9.5px] text-black/75 space-y-3.5 flex-1 flex flex-col justify-center">
+                        {[
+                          { name: 'Creative Thinking', val: 98 },
+                          { name: 'Problem Solving', val: 94 },
+                          { name: 'Leadership', val: 88 },
+                          { name: 'Communication', val: 92 },
+                          { name: 'Adaptability', val: 90 },
+                          { name: 'Continuous Learning', val: 100 }
+                        ].map((trait, idx) => (
+                          <div key={idx} className="space-y-1">
+                            <div className="flex justify-between text-[8.5px] font-bold">
+                              <span className="text-black/50">{trait.name}:</span>
+                              <span className="text-emerald-600 font-extrabold">{trait.val}%</span>
+                            </div>
+                            <div className="w-full h-1 bg-black/[0.03] border border-black/5 rounded-full overflow-hidden">
+                              <motion.div 
+                                className="h-full bg-emerald-500 rounded-full" 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${trait.val}%` }}
+                                transition={{ duration: 1, ease: 'easeOut', delay: 0.1 * idx }}
+                              />
                             </div>
                           </div>
-                        )}
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
 
-                        {/* TYPE 2: ROTATING HOLOGRAPHIC GEOM SVG */}
-                        {card.type === 'holographic' && (
-                          <div className="flex justify-center items-center relative h-28 w-28">
-                            {/* Rotating thin vector border circles */}
-                            <motion.svg 
-                              animate={{ rotate: 360 }}
-                              transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-                              className="absolute w-full h-full text-black/15 group-hover:text-[#FF3E6C]/30 transition-colors"
-                              viewBox="0 0 100 100"
-                            >
-                              <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="1" strokeDasharray="3, 3" fill="none" />
-                              <circle cx="50" cy="50" r="35" stroke="currentColor" strokeWidth="0.5" fill="none" />
-                            </motion.svg>
-                            <motion.svg 
-                              animate={{ rotate: -360 }}
-                              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                              className="absolute w-20 h-20 text-[#00FF66]/20"
-                              viewBox="0 0 100 100"
-                            >
-                              <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="1.5" strokeDasharray="10, 5" fill="none" />
-                            </motion.svg>
-                            <Cpu size={18} className="text-black/30 animate-pulse z-10" />
-                          </div>
-                        )}
+                  {/* SECTION 07: TECH STACK VAULT */}
+                  <motion.div
+                    onMouseEnter={() => playClickTick(1500, 0.015)}
+                    className="profile-card bg-white/45 backdrop-blur-xl border border-black/10 rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_rgba(0,0,0,0.02)] hover:border-black transition-all duration-300 text-left flex flex-col justify-between"
+                    whileHover={{ y: -3, boxShadow: '0 12px 24px rgba(0,0,0,0.02), 4px 4px 0px rgba(0,0,0,0.9)' }}
+                  >
+                    <div>
+                      <div className="flex justify-between items-center w-full mb-5">
+                        <span className="font-mono text-[9px] text-[#00CC52] font-extrabold tracking-widest uppercase">
+                          SECTION 07 — TECH STACK VAULT
+                        </span>
+                        <div className="font-mono text-[9px] tracking-widest text-black/35 font-bold border border-black/5 px-2 py-0.5 rounded-sm">
+                          // SEC_07
+                        </div>
+                      </div>
 
-                        {/* TYPE 3: LIVE METRIC TELEMETRY SCHEMATICS */}
-                        {card.type === 'telemetry' && (
-                          <div className="w-full flex flex-col gap-2.5">
-                            <div className="flex items-center gap-1.5 border-b border-black/5 pb-2 font-mono text-[9px] tracking-wider font-extrabold uppercase text-[#FF3E6C]/70">
-                              <HeartPulse size={11} className="animate-pulse" />
-                              LIVE_OS_STREAM
-                            </div>
-                            <div className="flex flex-col gap-1.5 font-mono text-[9px] text-black/60">
-                              <div className="flex justify-between">
-                                <span>CORE_TEMPERATURE:</span>
-                                <span className="font-extrabold text-black">{coreTemp}°C</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span>SYNAPSE_FREQ:</span>
-                                <span className="font-extrabold text-black">{synapseRate} Hz</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span>COGNITIVE_LOAD:</span>
-                                <span className="font-extrabold text-black flex items-center gap-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                                  NOMINAL
+                      <div className="w-full bg-[#fcfcfd] border border-black/[0.04] p-4 rounded-sm flex flex-wrap gap-2.5 flex-1 items-center justify-center min-h-[220px]">
+                        {[
+                          'React',
+                          'JavaScript',
+                          'Python',
+                          'Firebase',
+                          'Node.js',
+                          'Tailwind CSS',
+                          'Git',
+                          'GitHub',
+                          'Figma'
+                        ].map((tech, idx) => (
+                          <motion.span 
+                            key={tech} 
+                            className="px-3 py-2 bg-white border border-black/5 hover:border-[#FF3E6C] font-mono text-[9.5px] font-bold text-black/75 hover:text-black rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,0.01)] transition-all cursor-default flex items-center gap-1.5"
+                            whileHover={{ 
+                              y: -4, 
+                              scale: 1.05, 
+                              boxShadow: '2px 6px 12px rgba(0,0,0,0.05), 2px 2px 0px rgba(0,0,0,0.8)' 
+                            }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: idx * 0.04 }}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#FF3E6C]/65" />
+                            {tech}
+                          </motion.span>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                  
+                </div>
+
+                {/* SECTION 08 & 09: TIMELINE & SYSTEM STATS */}
+                <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                  
+                  {/* SECTION 08: TIMELINE (7 columns on desktop) */}
+                  <div className="lg:col-span-7 bg-white/45 backdrop-blur-xl border border-black/10 rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_rgba(0,0,0,0.02)] text-left flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-center w-full mb-6">
+                        <span className="font-mono text-[9px] text-[#00CC52] font-extrabold tracking-widest uppercase">
+                          SECTION 08 — TIMELINE
+                        </span>
+                        <div className="font-mono text-[9px] tracking-widest text-black/35 font-bold border border-black/5 px-2 py-0.5 rounded-sm">
+                          // SEC_08
+                        </div>
+                      </div>
+
+                      <div className="w-full bg-[#fcfcfd] border border-black/[0.04] p-5 rounded-sm font-mono text-[10px] text-black/70 flex-1">
+                        <div className="relative border-l border-black/10 pl-5 ml-2 space-y-4 py-1 text-left">
+                          {[
+                            { year: '2024', event: 'Started B.Tech Information Technology' },
+                            { year: '2025', event: 'Built Multiple Academic and Personal Projects' },
+                            { year: '2025', event: 'Participated in Hackathons' },
+                            { year: '2026', event: 'Developed Portfolio OS' },
+                            { year: '2026', event: 'Working on CampusConnect' },
+                            { year: 'Future', event: 'Build Impactful Technology Products', highlight: true }
+                          ].map((item, idx) => (
+                            <div key={idx} className="relative group/time">
+                              <div className={`absolute -left-[24.5px] top-1.5 w-2 h-2 rounded-full border bg-white transition-colors duration-300 ${
+                                item.highlight 
+                                  ? 'border-[#FF3E6C] bg-[#FF3E6C]/10 shadow-[0_0_6px_rgba(255,62,108,0.4)] animate-pulse' 
+                                  : 'border-black/30 group-hover/time:border-black'
+                              }`} />
+                              <div className="flex flex-col sm:flex-row sm:gap-2 leading-relaxed">
+                                <span className={`font-black uppercase text-[9.5px] ${item.highlight ? 'text-[#FF3E6C]' : 'text-black/50'}`}>
+                                  {item.year} →
+                                </span>
+                                <span className={`font-bold text-[10.5px] ${item.highlight ? 'text-[#FF3E6C]' : 'text-black/80'}`}>
+                                  {item.event}
                                 </span>
                               </div>
                             </div>
-                          </div>
-                        )}
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-                        {/* TYPE 4: SECURE LOCKED ARCHIVE */}
-                        {card.type === 'locked' && (
-                          <div className="flex flex-col items-center justify-center gap-3 w-full py-2">
-                            <div className="p-2.5 bg-black/5 border border-black/10 rounded-full text-black/40 group-hover:text-yellow-600 group-hover:border-yellow-500/20 group-hover:bg-yellow-500/5 transition-all duration-300">
-                              <Lock size={16} className="stroke-[2.5]" />
-                            </div>
-                            <div className="flex flex-col items-center gap-1">
-                              <span className="font-mono text-[8px] sm:text-[9px] tracking-widest text-black/30 font-bold uppercase">
-                                // AUTH_REQUIRED
-                              </span>
-                              <span className="font-mono text-[7px] text-yellow-600 font-extrabold uppercase tracking-wider bg-yellow-300/10 border border-yellow-500/20 px-1.5 py-0.5 rounded-sm">
-                                [ DECRYPTING: {authProgress}% ]
-                              </span>
-                            </div>
-                          </div>
-                        )}
+                  {/* SECTION 09: SYSTEM STATS (5 columns on desktop) */}
+                  <div className="lg:col-span-5 bg-white/45 backdrop-blur-xl border border-black/10 rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_rgba(0,0,0,0.02)] text-left flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-center w-full mb-6">
+                        <span className="font-mono text-[9px] text-[#00CC52] font-extrabold tracking-widest uppercase">
+                          SECTION 09 — SYSTEM STATS
+                        </span>
+                        <div className="font-mono text-[9px] tracking-widest text-black/35 font-bold border border-black/5 px-2 py-0.5 rounded-sm">
+                          // SEC_09
+                        </div>
+                      </div>
 
-                        {/* TYPE 5: BIOMETRIC IDENTITY SCANNERS */}
-                        {card.type === 'scan' && (
-                          <div className="w-full h-[100px] border border-black/5 rounded bg-black/[0.01] flex items-center justify-center relative overflow-hidden group">
-                            {/* Horizontal sweeping laser line */}
-                            <div className="absolute top-0 left-0 w-full h-[2px] bg-red-500 opacity-60 shadow-[0_0_8px_#EF4444] pointer-events-none animate-scanline" />
-                            {/* Visual face scanner wireframe contour lines */}
-                            <div className="absolute inset-0 opacity-[0.06] flex items-center justify-center">
-                              <svg className="w-14 h-14 text-black" viewBox="0 0 100 100">
-                                <path d="M10,25 C10,10 90,10 90,25" fill="none" stroke="currentColor" strokeWidth="2" />
-                                <path d="M10,75 C10,90 90,90 90,75" fill="none" stroke="currentColor" strokeWidth="2" />
-                                <circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3, 3" />
-                                <line x1="50" y1="20" x2="50" y2="80" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2, 2" />
-                              </svg>
-                            </div>
-                            <span className="font-mono text-[8px] tracking-[0.25em] text-red-500 font-bold uppercase z-10 opacity-60 group-hover:opacity-100 transition-opacity">
-                              SCANNING ID...
+                      {/* Animated counters grid */}
+                      <div className="grid grid-cols-2 gap-4">
+                        {[
+                          { title: 'Projects Completed', value: 15, suffix: '+' },
+                          { title: 'Technologies Learned', value: 20, suffix: '+' },
+                          { title: 'Hackathons Attended', value: 5, suffix: '+' },
+                          { title: 'Academic Achievements', value: 4, suffix: '' }
+                        ].map((stat, idx) => (
+                          <div 
+                            key={idx}
+                            className="bg-[#fcfcfd] border border-black/5 rounded-sm p-4 text-left flex flex-col justify-between h-[95px] shadow-[1px_1px_0px_rgba(0,0,0,0.01)]"
+                          >
+                            <span className="font-mono text-[8.5px] font-bold text-black/40 uppercase leading-none mb-2">
+                              {stat.title}
                             </span>
+                            <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                           </div>
-                        )}
-
+                        ))}
                       </div>
+                    </div>
+                  </div>
 
-                      {/* Bottom Row Tags */}
-                      <div className="flex flex-wrap gap-1.5 mt-4">
-                        <span className="font-mono text-[8px] sm:text-[9px] tracking-wider uppercase px-2 py-0.5 rounded-sm border border-black/5 text-black/40 bg-black/[0.01]">
-                          PLACEHOLDER
-                        </span>
-                        <span className="font-mono text-[8px] sm:text-[9px] tracking-wider uppercase px-2 py-0.5 rounded-sm border border-black/5 text-black/40 bg-black/[0.01]">
-                          SYSTEM_CORE
-                        </span>
-                      </div>
-                    </motion.div>
-                  );
-                })}
+                </div>
+
               </div>
+
             </motion.div>
           )}
 
@@ -492,11 +821,11 @@ export const ProfilePage = () => {
               {/* Status parameters */}
               <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-[10px] text-black/70 mb-6">
                 {[
-                  { title: 'HARDWARE_ACCEL', value: 'will-change LAYERS ACTIVE', status: 'GPU ENFORCED', color: 'text-emerald-600' },
-                  { title: 'EVENT_THROTTLE', value: '30% MOUSE EVENTS DEBOUNCED', status: ' NOMINAL', color: 'text-emerald-600' },
-                  { title: 'MOTION_OVERHEAD', value: 'NO BLUR OVERLAYS ACTIVATED', status: 'OPTIMIZED', color: 'text-emerald-600' },
+                  { title: 'HARDWARE_ACCEL', value: 'will-change LAYERS ACTIVE', status: 'GPU ENFORCED', color: 'text-[#00CC52]' },
+                  { title: 'EVENT_THROTTLE', value: '30% MOUSE EVENTS DEBOUNCED', status: 'NOMINAL', color: 'text-[#00CC52]' },
+                  { title: 'MOTION_OVERHEAD', value: 'NO BLUR OVERLAYS ACTIVATED', status: 'OPTIMIZED', color: 'text-[#00CC52]' },
                 ].map((stat, i) => (
-                  <div key={i} className="bg-white border border-black/10 p-4 rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,0.02)]">
+                  <div key={i} className="bg-white border border-black/10 p-4 rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,0.02)] text-left">
                     <div className="opacity-40 mb-1">// {stat.title}</div>
                     <div className="font-extrabold text-xs mb-2">{stat.value}</div>
                     <div className={`font-bold flex items-center gap-1.5 ${stat.color}`}>
@@ -511,20 +840,76 @@ export const ProfilePage = () => {
         </AnimatePresence>
       </div>
 
-      {/* 3. BOTTOM TERMINAL HUD */}
+      {/* 3. SECTION 10: BOTTOM TERMINAL LOGS */}
       <div className="w-full z-20 mt-auto border-t border-black/5 pt-4 pb-2">
         <div className="flex justify-between items-end w-full">
           {/* Monospace simulated terminal logs */}
-          <div className="text-left font-mono text-[8px] sm:text-[9px] tracking-wider text-black/50 leading-normal">
-            <div>{logs[0]}</div>
-            <div className="text-[#FF3E6C] font-semibold">{logs[1]}</div>
+          <div className="text-left font-mono text-[8.5px] sm:text-[9.5px] tracking-wider leading-relaxed">
+            {logs.map((log, index) => (
+              <div 
+                key={index} 
+                className={index === logs.length - 1 ? 'text-[#FF3E6C] font-semibold' : 'text-black/40'}
+              >
+                {log}
+              </div>
+            ))}
           </div>
 
-          <div className="text-right font-mono text-[8px] sm:text-[10px] tracking-widest text-black/30 font-bold uppercase sm:block hidden">
+          <div className="text-right font-mono text-[8px] sm:text-[10px] tracking-widest text-[#FF3E6C] font-bold uppercase sm:block hidden">
             OS_ID: IDENTITY_SCANNER_NODE_07
           </div>
         </div>
       </div>
+
+      {/* SECRET EASTER EGG MODAL */}
+      <AnimatePresence>
+        {showEasterEgg && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="w-full max-w-md bg-black border border-[#00FF66] rounded-sm p-6 text-left font-mono text-emerald-400 shadow-[0_0_25px_rgba(0,255,102,0.25)] relative"
+            >
+              <div className="flex justify-between items-center border-b border-[#00FF66]/20 pb-3 mb-4">
+                <span className="font-extrabold text-[#00FF66] text-[10px] tracking-widest uppercase">
+                  &gt; SYSTEM_DECRYPT: DEV_MODE
+                </span>
+                <button 
+                  onClick={() => {
+                    playClickTick(1600, 0.05);
+                    setShowEasterEgg(false);
+                  }}
+                  className="text-emerald-500 hover:text-emerald-300 font-extrabold text-[10px] tracking-wider uppercase border border-emerald-500/20 px-2 py-0.5 rounded bg-emerald-500/10 cursor-pointer"
+                >
+                  CLOSE
+                </button>
+              </div>
+
+              <div className="space-y-4 text-xs select-none">
+                <div className="text-[#00FF66] font-extrabold uppercase animate-pulse mb-3">
+                  DEVELOPER MODE ENABLED
+                </div>
+                
+                <div className="space-y-1">
+                  <div className="text-emerald-600 uppercase text-[9px] font-bold">MISSION:</div>
+                  <div className="text-[#00FF66]">Create technology that solves meaningful problems.</div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="text-emerald-600 uppercase text-[9px] font-bold">CURRENT OBJECTIVE:</div>
+                  <div className="text-[#00FF66]">CampusConnect Development</div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="text-emerald-600 uppercase text-[9px] font-bold">STATUS:</div>
+                  <div className="text-yellow-500 font-extrabold">Always Learning.</div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

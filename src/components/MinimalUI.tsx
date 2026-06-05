@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
-import { X, ArrowUpRight, Github, Linkedin, Mail, Twitter, ChevronRight, Activity, Instagram } from 'lucide-react';
+import { X } from 'lucide-react';
+import { NavigationalOSPortal } from './NavigationalOSPortal';
 
 // Dynamic synthesize audio click
 const playTick = (freq = 1500, dur = 0.035) => {
@@ -29,13 +30,11 @@ const playTick = (freq = 1500, dur = 0.035) => {
 };
 
 interface MinimalUIProps {
-  activeSection: 'hero' | 'projects' | 'experience' | 'footer' | 'profile' | 'connect';
+  activeSection: string;
 }
 
 export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [time, setTime] = useState('');
   const isProjectsActive = activeSection !== 'hero';
   const isFooterSection = activeSection === 'footer';
   const menuBtnRef = useRef<HTMLButtonElement>(null);
@@ -92,17 +91,6 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
     };
   }, []);
 
-  // Update clock telemetry inside dashboard
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setTime(now.toTimeString().split(' ')[0]);
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   useEffect(() => {
     const openNavigationMenu = () => {
       playTick(1800, 0.05);
@@ -113,44 +101,10 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
     return () => window.removeEventListener('open-navigation-menu', openNavigationMenu);
   }, []);
 
-
   const handleMenuClick = () => {
     playTick(isOpen ? 900 : 1800, 0.05);
     setIsOpen(!isOpen);
   };
-
-  const navLinks = [
-    { 
-      num: '01', 
-      name: 'PROJECTS', 
-      href: '#projects',
-      tags: ['CAMPUSCONNECT', 'AI IDEAS', 'HACKATHONS', 'UI CONCEPTS', 'WEB EXPERIMENTS', 'CREATIVE CODING']
-    },
-    { 
-      num: '02', 
-      name: 'EXPERIENCE', 
-      href: '#experience',
-      tags: ['GDG DESIGN LEAD', 'PYTHON INTERN', 'LINKEDIN HANDLER', 'HACKATHONS', 'COMMUNITY BUILDING', 'ACADEMICS']
-    },
-    { 
-      num: '03', 
-      name: 'SKILL STACK',
-      href: '#stack',
-      tags: ['PYTHON', 'REACT', 'THREE.JS', 'TYPESCRIPT', 'GSAP', 'PROMPT ENGINEERING']
-    },
-    { 
-      num: '04', 
-      name: 'PROFILE', 
-      href: '#about',
-      tags: ['ABOUT ME', 'PERSONALITY', 'CREATIVE MINDSET', 'DESIGN VIBE', 'MUSIC & GAMING', 'VISION & PHILOSOPHY']
-    },
-    { 
-      num: '05', 
-      name: 'CONNECT', 
-      href: '#contact',
-      tags: ['LINKEDIN', 'GITHUB', 'TWITTER / X', 'DIRECT EMAIL', 'RESUME', 'COLLAB PORTAL']
-    },
-  ];
 
   return (
     <>
@@ -192,7 +146,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
         <span>[ P / B ]</span>
       </div>
 
-      {/* TOP RIGHT: ME NU TOGGLE */}
+      {/* TOP RIGHT: MENU TOGGLE */}
       <div className={`fixed top-6 right-6 sm:top-10 sm:right-10 z-50 transition-opacity duration-300 ${
         isFooterSection && !isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
       }`}>
@@ -263,161 +217,17 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
             animate={{ y: 0 }}
             exit={{ y: "-100%" }}
             transition={{ type: "tween", ease: [0.76, 0, 0.24, 1], duration: 0.8 }}
-            className="fixed inset-0 w-screen h-screen bg-[#0a0a0b] text-white z-40 flex flex-col justify-between p-6 sm:p-12 lg:p-16 select-none overflow-hidden"
+            className="fixed inset-0 w-screen h-screen z-40 select-none overflow-hidden"
           >
-            {/* Animated organic grain overlay inside menu */}
-            <div className="grain-overlay opacity-[0.03]" />
-            <div className="absolute inset-0 opacity-[0.04] pointer-events-none custom-grid-lines" />
-
-            {/* Glowing moving background blobs */}
-            <div className="absolute top-[20%] left-[20%] w-[45vw] h-[45vw] bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none animate-pulse" style={{ animationDuration: '9s' }} />
-            <div className="absolute bottom-[20%] right-[15%] w-[50vw] h-[50vw] bg-purple-500/5 rounded-full blur-[160px] pointer-events-none animate-pulse" style={{ animationDuration: '13s' }} />
-
-            {/* Menu Header / Telemetry console */}
-            <div className="flex justify-between items-center z-10 w-full border-b border-white/5 pb-4">
-              <span className="font-mono text-[10px] tracking-widest text-emerald-400 font-bold uppercase flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
-                / NAVIGATIONAL_OS_PORTAL
-              </span>
-              <div className="font-mono text-[10px] tracking-widest text-white/40 hidden sm:flex gap-6">
-                <div>SYS_TIME: <span className="text-white font-bold">{time}</span></div>
-                <div>SEC_LOAD: <span className="text-emerald-400 font-bold">100% SUCCESS</span></div>
-              </div>
-            </div>
-
-            {/* Central content layout: 2-column flex */}
-            <div className="flex flex-col lg:flex-row gap-12 justify-between items-stretch my-auto z-10 w-full max-w-7xl mx-auto h-[60vh]">
-              
-              {/* Left Column: Massive links */}
-              <div className="flex flex-col gap-3 sm:gap-4 justify-center flex-1">
-                {navLinks.map((link, idx) => (
-                  <motion.a
-                    key={link.num}
-                    href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleMenuClick();
-                      window.history.pushState(null, '', '/');
-                      window.location.hash = link.href;
-                      window.dispatchEvent(new PopStateEvent('popstate'));
-                    }}
-                    onMouseEnter={() => {
-                      playTick(1100 + idx * 80, 0.02);
-                      setHoveredIndex(idx);
-                    }}
-                    onMouseLeave={() => setHoveredIndex(null)}
-                    className="group flex items-baseline gap-4 sm:gap-6 interactive-hover w-fit"
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 + idx * 0.06 }}
-                  >
-                    {/* Number block */}
-                    <span className="font-mono text-[10px] sm:text-xs text-emerald-400/60 font-semibold group-hover:text-emerald-400 transition-colors">
-                      {link.num}
-                    </span>
-                    
-                    {/* Oversized stacked title */}
-                    <span className="font-display font-extrabold text-[8vw] sm:text-[6vw] lg:text-[4.5vw] leading-none uppercase tracking-tighter transition-all duration-300 group-hover:text-[#00FF66] group-hover:translate-x-4 flex items-center gap-3 group-hover:drop-shadow-[0_0_15px_rgba(0,255,102,0.4)]">
-                      {link.name}
-                      <ArrowUpRight className="opacity-0 group-hover:opacity-100 transition-all duration-300 text-[#00FF66] translate-y-2 group-hover:translate-y-0" size={32} />
-                    </span>
-                  </motion.a>
-                ))}
-              </div>
-
-              {/* Right Column: Dynamic Preview Telemetry Dashboard */}
-              <div className="hidden lg:flex flex-col justify-center items-end w-[400px] text-right border-l border-white/5 pl-12 h-full relative">
-                <AnimatePresence mode="wait">
-                  {hoveredIndex !== null ? (
-                    <motion.div
-                      key={hoveredIndex}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.25, ease: "easeOut" }}
-                      className="flex flex-col gap-6 w-full text-left"
-                    >
-                      <div className="flex items-center gap-2 border-b border-white/10 pb-2">
-                        <Activity className="text-emerald-400 animate-pulse" size={14} />
-                        <span className="font-mono text-xs tracking-widest font-bold text-white/50">
-                          // SECTOR_PREVIEW_{navLinks[hoveredIndex].num}
-                        </span>
-                      </div>
-
-                      <div className="font-display font-extrabold text-2xl text-emerald-400 uppercase tracking-tight">
-                        {navLinks[hoveredIndex].name} DETECTOR
-                      </div>
-
-                      {/* Display Purposed tags inside a sleek glass container */}
-                      <div className="flex flex-col gap-3 font-mono text-xs text-white/80 bg-white/[0.02] border border-white/5 p-4 rounded-sm shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] backdrop-blur-md">
-                        {navLinks[hoveredIndex].tags.map((tag, i) => (
-                          <div key={i} className="flex items-center gap-2">
-                            <ChevronRight size={10} className="text-emerald-400" />
-                            <span className="tracking-wider uppercase">{tag}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="font-mono text-[9px] text-white/30 tracking-widest uppercase">
-                        TAP LINK TO DRIFT AND COMPILE
-                      </div>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="idle"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.4 }}
-                      exit={{ opacity: 0 }}
-                      className="flex flex-col gap-4 text-left w-full justify-center h-full select-none pointer-events-none"
-                    >
-                      <div className="font-mono text-xs text-emerald-400/40">// SYSTEM_IDLE</div>
-                      <div className="font-display font-extrabold text-3xl uppercase tracking-tighter text-white/20">
-                        PARTH_OS V2.26
-                      </div>
-                      <div className="font-mono text-[10px] text-white/20 leading-relaxed">
-                        HOVER OVER NAVIGATION SEGMENTS TO EXPAND PERSONALITY telemetry PANELS AND SCAN SYSTEM CHANNELS.
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-            </div>
-
-            {/* Menu Footer */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 sm:gap-0 z-10 w-full border-t border-white/5 pt-4">
-              <div className="font-mono text-[10px] sm:text-xs text-white/40 tracking-wider">
-                <div>© 2026 PARTH BULBULE</div>
-                <div className="mt-1 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
-                  ENGINEERED FOR PREMIUM SCALABILITY
-                </div>
-              </div>
-              
-              {/* Animated Social Channels */}
-              <div className="flex gap-3">
-                {[
-                  { icon: <Github size={15} />, href: 'https://github.com/Parthbo7' },
-                  { icon: <Linkedin size={15} />, href: 'https://www.linkedin.com/in/parth-bulbule/' },
-                  { icon: <Instagram size={15} />, href: 'https://www.instagram.com/parthb_o7' },
-                  { icon: <Twitter size={15} />, href: 'https://x.com/BulbuleParth' },
-                  { icon: <Mail size={15} />, href: 'mailto:contact@parth.dev' }
-                ].map((soc, i) => (
-                  <motion.a
-                    key={i}
-                    href={soc.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    onMouseEnter={() => playTick(1300, 0.015)}
-                    className="interactive-hover p-2.5 border border-white/10 rounded-full bg-white/[0.02] hover:border-emerald-400 hover:text-emerald-400 transition-colors duration-300"
-                    whileHover={{ scale: 1.15, rotate: 12 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {soc.icon}
-                  </motion.a>
-                ))}
-              </div>
-            </div>
+            <NavigationalOSPortal 
+              isOverlay={true} 
+              onNavigate={(href) => {
+                setIsOpen(false);
+                window.history.pushState(null, '', '/');
+                window.location.hash = href;
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }} 
+            />
           </motion.div>
         )}
       </AnimatePresence>

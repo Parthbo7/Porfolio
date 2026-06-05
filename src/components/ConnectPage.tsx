@@ -1,163 +1,174 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Github, Linkedin, Instagram, Mail, Twitter, Send, Check, Terminal, HeartPulse } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Github, Linkedin, Instagram, Mail, Send, Check, HeartPulse, ExternalLink, FileText } from 'lucide-react';
 import { playClickTick, playBeep, playUnlockSuccess } from '../utils/SoundManager';
 
-interface SocialNode {
-  id: string;
-  num: string;
-  name: string;
-  description: string;
-  icon: any;
-  status: string;
-  statusColor: string;
-  href: string;
-}
+// Zod Validation Schema
+const contactSchema = z.object({
+  name: z.string().min(2, { message: 'Sender identification required (min 2 chars).' }),
+  email: z.string().email({ message: 'Valid signal gateway address required.' }),
+  organization: z.string().min(2, { message: 'Organization / College name required.' }),
+  subject: z.string().min(3, { message: 'Subject payload minimum length is 3 chars.' }),
+  projectType: z.string().min(1, { message: 'Please select a project classification.' }),
+  message: z.string().min(10, { message: 'Message payload must be at least 10 chars.' })
+});
+
+type ContactFormValues = z.infer<typeof contactSchema>;
 
 export const ConnectPage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const terminalEndRef = useRef<HTMLDivElement>(null);
   
-  // Message Form States
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  // Terminal log animation states
+  const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
+  const [copied, setCopied] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const [showContactEgg, setShowContactEgg] = useState(false);
+  const contactClicksRef = useRef(0);
+
+  // EmailJS submission feedback states
   const [isTransmitting, setIsTransmitting] = useState(false);
-  const [transmissionSuccess, setTransmissionSuccess] = useState(false);
-  const [transmissionLogs, setTransmissionLogs] = useState<string[]>([]);
-  
-  // Terminal typing headers
-  const [terminalPrompt, setTerminalPrompt] = useState<string[]>([]);
+  const [transmissionStatus, setTransmissionStatus] = useState<'IDLE' | 'SUCCESS' | 'ERROR'>('IDLE');
 
-  // Simulated live signal telemetry values
-  const [latency, setLatency] = useState(24);
-  const [signalStrength, setSignalStrength] = useState(99);
+  // React Hook Form Configuration
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      organization: '',
+      subject: '',
+      projectType: 'General Inquiry',
+      message: ''
+    }
+  });
 
-  // Typewriter effect for terminal header on page load
+  // Typewriter boot sequence for Left Terminal Panel
   useEffect(() => {
-    const prompts = [
+    const lines = [
       '> INITIALIZING CONNECTION...',
-      '> PROTOCOL STACK ENABLED // SEC_ID: NOMINAL',
-      '> SIGNAL DETECTED AT FREQUENCY 14.8Hz...',
-      '> READY FOR COLLABORATION PORTAL.'
+      '> SIGNAL DETECTED...',
+      '> AUTHENTICATING COMMUNICATION CHANNEL...',
+      '> NETWORK VERIFIED...',
+      '> READY FOR INCOMING TRANSMISSIONS...'
     ];
     let index = 0;
+    setTerminalLogs([]);
     const interval = setInterval(() => {
-      if (index < prompts.length) {
-        setTerminalPrompt((prev) => [...prev, prompts[index]]);
-        playClickTick(1500 + index * 100, 0.02);
+      if (index < lines.length) {
+        setTerminalLogs((prev) => [...prev, lines[index]]);
+        playClickTick(1400 + index * 80, 0.02);
         index++;
       } else {
         clearInterval(interval);
       }
-    }, 450);
+    }, 500);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Fluctuating network telemetry parameters
+  // Cooldown countdown timer
   useEffect(() => {
-    const interval = setInterval(() => {
-      setLatency((prev) => Math.max(12, prev + Math.floor(Math.random() * 6 - 3)));
-      setSignalStrength((prev) => Math.min(100, Math.max(95, prev + Math.floor(Math.random() * 4 - 2))));
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
+    if (cooldown <= 0) return;
+    const timer = setInterval(() => {
+      setCooldown((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [cooldown]);
 
-  const socialNodes: SocialNode[] = [
-    {
-      id: 'soc-1',
-      num: '01',
-      name: 'LINKEDIN',
-      description: 'Professional network access node.',
-      icon: <Linkedin size={18} />,
-      status: 'RESPONSE READY',
-      statusColor: 'text-[#00FF66] border-[#00CC52]/20 bg-[#00FF66]/5',
-      href: 'https://www.linkedin.com/in/parth-bulbule/'
-    },
-    {
-      id: 'soc-2',
-      num: '02',
-      name: 'GITHUB',
-      description: 'Code archive and development systems.',
-      icon: <Github size={18} />,
-      status: 'CONNECTION VERIFIED',
-      statusColor: 'text-cyan-400 border-cyan-400/20 bg-cyan-500/[0.03]',
-      href: 'https://github.com/Parthbo7'
-    },
-    {
-      id: 'soc-3',
-      num: '03',
-      name: 'INSTAGRAM',
-      description: 'Creative visual layer and personality feed.',
-      icon: <Instagram size={18} />,
-      status: 'SIGNAL STABLE',
-      statusColor: 'text-pink-400 border-pink-400/20 bg-pink-500/[0.03]',
-      href: 'https://www.instagram.com/parthb_o7'
-    },
-    {
-      id: 'soc-4',
-      num: '04',
-      name: 'EMAIL',
-      description: 'Direct communication channel.',
-      icon: <Mail size={18} />,
-      status: 'STATUS: ACTIVE',
-      statusColor: 'text-emerald-400 border-emerald-400/20 bg-emerald-500/[0.03]',
-      href: 'mailto:contact@parth.dev'
-    },
-    {
-      id: 'soc-5',
-      num: '05',
-      name: 'TWITTER / X',
-      description: 'Thought streams and tech observations.',
-      icon: <Twitter size={18} />,
-      status: 'SIGNAL STABLE',
-      statusColor: 'text-sky-400 border-sky-400/20 bg-sky-500/[0.03]',
-      href: 'https://x.com/BulbuleParth'
-    },
-    {
-      id: 'soc-6',
-      num: '06',
-      name: 'DISCORD',
-      description: 'Real-time communication gateway.',
-      icon: <Terminal size={18} />,
-      status: 'STATUS: ACTIVE',
-      statusColor: 'text-yellow-400 border-yellow-400/20 bg-yellow-500/[0.03]',
-      href: 'https://discord.com'
+  // Terminal Auto-scroller
+  useEffect(() => {
+    if (terminalEndRef.current) {
+      terminalEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  ];
+  }, [terminalLogs]);
 
-  // Submit Handler for Futuristic Transmission Form
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !email || !message || isTransmitting) return;
+  // Form submit handler using native fetch to EmailJS REST API
+  const onSubmit = async (data: ContactFormValues) => {
+    if (isTransmitting || cooldown > 0) return;
 
     playBeep(880, 0.1);
     setIsTransmitting(true);
-    setTransmissionSuccess(false);
-    setTransmissionLogs(['> INITIALIZING UPLOAD VECTOR...', '> COMPILING PACKET SIGNATURES...']);
+    setTransmissionStatus('IDLE');
 
-    // Sequence logs
-    setTimeout(() => {
-      setTransmissionLogs((prev) => [...prev, '> RESOLVING SIGNAL HOST ADDRESS...', '> ESTABLISHING SECURE HANDSHAKE...']);
-      playClickTick(1600, 0.02);
-    }, 600);
+    // Append logs to terminal
+    setTerminalLogs((prev) => [
+      ...prev,
+      `> UPLOAD REQUEST SUBMITTED BY ${data.name.toUpperCase()}`,
+      `> COMPILE_LOAD: ${data.projectType.toUpperCase()}`,
+      `> BROADCASTING ENCRYPTED PACKETS...`
+    ]);
 
-    setTimeout(() => {
-      setTransmissionLogs((prev) => [...prev, `> ENCRYPTING TRANSMISSION payload...`, `> UPLOADING TO PARTH_OS MATRIX...`]);
-      playClickTick(1800, 0.02);
-    }, 1200);
+    try {
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_default';
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_default';
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'public_key_default';
 
-    setTimeout(() => {
-      setTransmissionLogs((prev) => [...prev, '> BROADCAST COMPLETE // Nom_100%', '> SIGNAL SUCCESSFULLY DELIVERED.']);
-      playUnlockSuccess();
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          service_id: serviceId,
+          template_id: templateId,
+          user_id: publicKey,
+          template_params: {
+            name: data.name,
+            email: data.email,
+            organization: data.organization,
+            projectType: data.projectType,
+            subject: data.subject,
+            message: data.message
+          }
+        })
+      });
+
+      if (response.ok) {
+        setTransmissionStatus('SUCCESS');
+        playUnlockSuccess();
+        setCooldown(30); // 30 seconds anti-spam cooldown
+        reset(); // Clear form fields
+        setTerminalLogs((prev) => [
+          ...prev,
+          `> CONNECTION ESTABLISHED WITH PARTH_OS`,
+          `> TRANSMISSION DELIVERED SECURELY.`
+        ]);
+      } else {
+        throw new Error('EmailJS transmission failed');
+      }
+    } catch (error) {
+      setTransmissionStatus('ERROR');
+      playBeep(440, 0.35);
+      setTerminalLogs((prev) => [
+        ...prev,
+        `> TRANSMISSION ERROR: PACKET LOSS 100%`,
+        `> BROADCAST ABORTED.`
+      ]);
+    } finally {
       setIsTransmitting(false);
-      setTransmissionSuccess(true);
-      
-      // Reset form fields
-      setName('');
-      setEmail('');
-      setMessage('');
-    }, 2000);
+    }
+  };
+
+  const handleCopyEmail = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigator.clipboard.writeText('parthbulbule123@gmail.com');
+    setCopied(true);
+    playUnlockSuccess();
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleTitleClick = () => {
+    playClickTick(1500, 0.04);
+    contactClicksRef.current += 1;
+    if (contactClicksRef.current >= 5) {
+      setShowContactEgg(true);
+      playUnlockSuccess();
+      contactClicksRef.current = 0;
+    }
   };
 
   return (
@@ -176,20 +187,19 @@ export const ConnectPage = () => {
         {/* Top Center Tabs */}
         <div className="flex items-center gap-6 sm:gap-8 font-mono text-[10px] sm:text-[11px] tracking-widest font-extrabold text-[#FF3E6C]">
           <button className="relative py-1 transition-all uppercase interactive-hover cursor-default">
-            connect
+            gateway
             <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#FF3E6C]" />
           </button>
-          <span className="opacity-30 uppercase">network</span>
+          <span className="opacity-30 uppercase">online</span>
           <span className="opacity-30 uppercase">signal</span>
         </div>
 
-        {/* Top Right Spacer to keep center elements centered */}
+        {/* Top Right Spacer */}
         <div className="w-[45px] sm:w-[60px] hidden sm:block" />
       </div>
 
       {/* DRAGGABLE OS STICKERS */}
       <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden">
-        {/* SIGNAL_ACTIVE Sticker */}
         <motion.div
           drag
           dragConstraints={containerRef}
@@ -202,7 +212,6 @@ export const ConnectPage = () => {
           SIGNAL_ACTIVE
         </motion.div>
 
-        {/* NETWORK_NODE Sticker */}
         <motion.div
           drag
           dragConstraints={containerRef}
@@ -215,7 +224,6 @@ export const ConnectPage = () => {
           NETWORK_NODE
         </motion.div>
 
-        {/* CONTACT_PROTOCOL Sticker */}
         <motion.div
           drag
           dragConstraints={containerRef}
@@ -225,10 +233,9 @@ export const ConnectPage = () => {
           onHoverStart={() => playClickTick(1500, 0.02)}
           style={{ transform: 'translate3d(0,0,0)' }}
         >
-          CONTACT_PROTOCOL
+          COMMS_PORTAL
         </motion.div>
 
-        {/* ACCESS_OPEN Sticker */}
         <motion.div
           drag
           dragConstraints={containerRef}
@@ -248,187 +255,414 @@ export const ConnectPage = () => {
         {/* OVERSZIED TITLE STACK */}
         <div className="w-full flex flex-col items-center mb-6 relative">
           <div className="absolute right-[5%] top-[-10px] font-mono text-[8px] sm:text-[10px] text-black/40 border border-black/10 px-2 py-0.5 rounded-sm">
-            COMMS_SYS_07
+            GATEWAY_SYS_V3
           </div>
 
-          <h1 className="font-display font-black text-[12vw] sm:text-[8vw] lg:text-[7vw] leading-[0.9] tracking-tighter text-black uppercase select-none mt-2">
-            CONNECT
+          {/* Clickable Header for Easter Egg */}
+          <h1 
+            onClick={handleTitleClick}
+            className="font-display font-black text-[12vw] sm:text-[8vw] lg:text-[7vw] leading-[0.9] tracking-tighter text-black uppercase cursor-pointer hover:text-[#FF3E6C] transition-colors select-none mt-2"
+          >
+            CONTACT
           </h1>
 
-          {/* Subtext description */}
           <div className="mt-4 px-6 py-2.5 bg-white border border-black/10 text-center font-sans text-[11px] sm:text-[13px] tracking-wide text-black/70 max-w-lg shadow-[4px_4px_0px_rgba(0,0,0,0.03)] rounded-sm uppercase font-semibold">
-            Communication systems, collaboration channels, and human-interface protocols.
+            Communication Gateway • Collaboration Network • Professional Inquiry Portal
+          </div>
+          
+          <div className="flex gap-4 mt-3 font-mono text-[8.5px] font-extrabold tracking-widest text-emerald-600">
+            <span>STATUS: ONLINE</span>
+            <span>SIGNAL STRENGTH: 100%</span>
+            <span>NETWORK: VERIFIED</span>
           </div>
         </div>
 
-        {/* 2-COLUMN OS TERMINAL GRID */}
-        <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-11 gap-8 px-4 py-6 relative min-h-[50vh] items-stretch">
+        {/* 3-COLUMN PREMIUM COMMAND CENTER GRID */}
+        <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 py-4 relative items-stretch">
           
-          {/* COLUMN 1: LEFT SIDE FORM TERMINAL (Col Span 5) */}
-          <div className="lg:col-span-5 bg-white border border-[#A8D3C8] rounded-sm p-6 sm:p-8 flex flex-col gap-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),3px_3px_0px_rgba(168,211,200,0.2)] hover:border-black transition-colors duration-300">
+          {/* COLUMN 1: LEFT SIDE (Terminal, Availability, Metrics) - Col Span 3 */}
+          <div className="lg:col-span-3 flex flex-col gap-5 text-left">
             
-            {/* Typing Connection Prompt Box */}
-            <div className="w-full bg-[#0a0a0c] border border-black/15 rounded p-4 min-h-[100px] flex flex-col gap-1 text-[8px] sm:text-[9.5px] font-mono text-[#00FF66]/70 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] relative">
-              {terminalPrompt.map((p, idx) => (
-                <div key={idx} className={idx === terminalPrompt.length - 1 ? 'text-[#00FF66] font-bold' : ''}>
-                  {p}
-                </div>
-              ))}
-              {/* Pulsing blinking cursor */}
-              {terminalPrompt.length < 4 && (
-                <div className="w-1.5 h-3 bg-[#00FF66] animate-pulse mt-0.5" />
-              )}
+            {/* Live Terminal Console */}
+            <div className="bg-black/95 text-emerald-400 border border-[#00CC52]/20 p-4 rounded-sm font-mono text-[8.5px] sm:text-[9px] shadow-[inset_0_1px_3px_rgba(0,0,0,0.8),0_0_15px_rgba(16,185,129,0.08)] flex flex-col justify-between h-[160px] relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-[1px] bg-emerald-500/30" />
+              
+              <div className="overflow-y-auto no-scrollbar flex-1 space-y-1.5 max-h-[120px]">
+                {terminalLogs.map((log, index) => (
+                  <div key={index} className="leading-tight">
+                    {log}
+                  </div>
+                ))}
+                <div ref={terminalEndRef} />
+              </div>
+              
+              <div className="flex items-center gap-1.5 border-t border-emerald-950/50 pt-1.5 mt-1">
+                <span className="w-1.5 h-1.5 bg-[#00FF66] rounded-full animate-ping" />
+                <span className="text-emerald-500/50">PARTH_OS@CONSOLE:~$</span>
+                <span className="w-1.5 h-3 bg-emerald-400 animate-pulse" />
+              </div>
             </div>
 
-            {/* MESSAGE TRANSMISSION FORM */}
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 font-mono text-[10px] sm:text-xs">
+            {/* Availability Card */}
+            <div className="bg-white/60 backdrop-blur-md border border-black/10 p-5 rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,0.02)]">
+              <span className="font-mono text-[8px] font-black text-[#FF3E6C] tracking-widest uppercase block mb-3">// AVAILABILITY</span>
+              <div className="space-y-3 font-mono text-[9px] sm:text-[10px] text-black/75">
+                <div>
+                  <span className="text-black/40 block">STATUS:</span>
+                  <span className="font-extrabold text-emerald-600 uppercase">AVAILABLE FOR OPPORTUNITIES</span>
+                </div>
+                <div>
+                  <span className="text-black/40 block">ROLE:</span>
+                  <span className="font-extrabold text-black uppercase">B.Tech Information Technology Student</span>
+                </div>
+                <div>
+                  <span className="text-black/40 block">LOCATION:</span>
+                  <span className="font-extrabold text-black">MAHARASHTRA, INDIA</span>
+                </div>
+                <div>
+                  <span className="text-black/40 block mb-1">OPEN FOR:</span>
+                  <div className="space-y-0.5 text-black font-extrabold">
+                    <div>• Internships</div>
+                    <div>• Collaborations</div>
+                    <div>• Hackathons</div>
+                    <div>• Startup Discussions</div>
+                    <div>• Development Projects</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Response Metrics Card */}
+            <div className="bg-white/60 backdrop-blur-md border border-black/10 p-5 rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,0.02)]">
+              <span className="font-mono text-[8px] font-black text-black/40 tracking-widest uppercase block mb-3">// SYSTEM_METRICS</span>
+              <div className="space-y-2.5 font-mono text-[10px] text-black/75">
+                <div className="flex justify-between border-b border-black/[0.03] pb-1.5">
+                  <span className="text-black/40 uppercase">AVG RESPONSE:</span>
+                  <span className="font-extrabold text-black">&lt; 24 Hours</span>
+                </div>
+                <div className="flex justify-between border-b border-black/[0.03] pb-1.5">
+                  <span className="text-black/40 uppercase">STATUS:</span>
+                  <span className="font-extrabold text-emerald-600">ACTIVE</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-black/40 uppercase">RELIABILITY:</span>
+                  <span className="font-extrabold text-black">99.9%</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* COLUMN 2: CENTER FORM PANEL (Col Span 5) */}
+          <div className="lg:col-span-5 bg-white/50 backdrop-blur-xl border border-[#A8D3C8] rounded-sm p-6 sm:p-8 flex flex-col justify-between shadow-[3px_3px_0px_rgba(168,211,200,0.2)] hover:border-black transition-colors duration-300">
+            <div>
+              <span className="font-mono text-[9px] text-[#00CC52] font-extrabold tracking-widest uppercase block mb-5">// SECURE_INCOMING_TRANSMISSION</span>
               
-              {/* Field 1: NAME */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-black/40 font-extrabold uppercase tracking-widest">// INPUT_NAME</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="IDENTIFY SENDER..."
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-black/[0.01] border border-black/10 hover:border-black/30 focus:border-[#FF3E6C] focus:bg-white focus:outline-none rounded transition-all tracking-wider uppercase font-semibold text-black"
-                />
-              </div>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 font-mono text-[9.5px] sm:text-[10px]">
+                
+                {/* Field 1: NAME */}
+                <div className="flex flex-col gap-1 text-left relative">
+                  <label className="text-black/40 font-extrabold uppercase tracking-wider">// FULL NAME</label>
+                  <input 
+                    type="text" 
+                    placeholder="ENTER YOUR IDENTIFICATION"
+                    {...register('name')}
+                    className={`w-full px-3 py-2.5 bg-white/70 border rounded transition-all focus:bg-white focus:outline-none uppercase font-semibold text-black ${
+                      errors.name ? 'border-red-500' : 'border-black/10 focus:border-[#FF3E6C] focus:shadow-[0_0_8px_rgba(255,62,108,0.15)]'
+                    }`}
+                  />
+                  {errors.name && <span className="text-red-500 text-[8.5px] mt-0.5 font-bold">// {errors.name.message}</span>}
+                </div>
 
-              {/* Field 2: SIGNAL_ID (EMAIL) */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-black/40 font-extrabold uppercase tracking-widest">// SIGNAL_ID [EMAIL]</label>
-                <input 
-                  type="email" 
-                  required
-                  placeholder="SENDER_GATEWAY@ADDRESS.COM"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-black/[0.01] border border-black/10 hover:border-black/30 focus:border-[#FF3E6C] focus:bg-white focus:outline-none rounded transition-all tracking-wider font-semibold text-black"
-                />
-              </div>
+                {/* Field 2: EMAIL */}
+                <div className="flex flex-col gap-1 text-left relative">
+                  <label className="text-black/40 font-extrabold uppercase tracking-wider">// EMAIL ADDRESS</label>
+                  <input 
+                    type="email" 
+                    placeholder="ENTER SENDER ADDRESS"
+                    {...register('email')}
+                    className={`w-full px-3 py-2.5 bg-white/70 border rounded transition-all focus:bg-white focus:outline-none font-semibold text-black ${
+                      errors.email ? 'border-red-500' : 'border-black/10 focus:border-[#FF3E6C] focus:shadow-[0_0_8px_rgba(255,62,108,0.15)]'
+                    }`}
+                  />
+                  {errors.email && <span className="text-red-500 text-[8.5px] mt-0.5 font-bold">// {errors.email.message}</span>}
+                </div>
 
-              {/* Field 3: MESSAGE */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-black/40 font-extrabold uppercase tracking-widest">// MESSAGE_TRANSMISSION</label>
-                <textarea 
-                  required
-                  rows={4}
-                  placeholder="COMPILE TRANSMISSION PAYLOAD HERE..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-black/[0.01] border border-black/10 hover:border-black/30 focus:border-[#FF3E6C] focus:bg-white focus:outline-none rounded transition-all tracking-wider uppercase font-semibold text-black resize-none"
-                />
-              </div>
+                {/* Grid for Organization & Subject */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Field 3: ORGANIZATION */}
+                  <div className="flex flex-col gap-1 text-left relative">
+                    <label className="text-black/40 font-extrabold uppercase tracking-wider">// ORGANIZATION / COLLEGE</label>
+                    <input 
+                      type="text" 
+                      placeholder="COLLEGE OR COMPANY"
+                      {...register('organization')}
+                      className={`w-full px-3 py-2.5 bg-white/70 border rounded transition-all focus:bg-white focus:outline-none uppercase font-semibold text-black ${
+                        errors.organization ? 'border-red-500' : 'border-black/10 focus:border-[#FF3E6C] focus:shadow-[0_0_8px_rgba(255,62,108,0.15)]'
+                      }`}
+                    />
+                    {errors.organization && <span className="text-red-500 text-[8.5px] mt-0.5 font-bold">// {errors.organization.message}</span>}
+                  </div>
 
-              {/* SUBMIT BUTTON */}
-              <button 
-                type="submit"
-                disabled={isTransmitting}
-                className="w-full py-3 bg-black text-white hover:bg-[#FF3E6C] active:translate-y-0.5 rounded transition-all duration-300 font-extrabold tracking-widest uppercase flex items-center justify-center gap-2 cursor-pointer shadow-[3px_3px_0px_rgba(255,62,108,0.25)] hover:shadow-none interactive-hover"
-              >
-                {isTransmitting ? 'TRANSMITTING SIGNAL...' : (
-                  <>
-                    TRANSMIT SIGNAL
-                    <Send size={12} className="stroke-[2.5]" />
-                  </>
-                )}
-              </button>
-
-            </form>
-
-            {/* Live Upload Log feedback overlay */}
-            <AnimatePresence>
-              {(isTransmitting || transmissionSuccess) && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="w-full border border-black/10 bg-black text-[#00FF66] rounded p-4 font-mono text-[9px] leading-relaxed flex flex-col gap-1"
-                >
-                  {transmissionLogs.map((log, logIdx) => (
-                    <div key={logIdx} className={logIdx === transmissionLogs.length - 1 ? 'text-[#00FF66] font-bold' : 'text-[#00FF66]/70'}>
-                      {log}
-                    </div>
-                  ))}
-                  {transmissionSuccess && (
-                    <div className="text-emerald-400 flex items-center gap-1.5 font-bold uppercase tracking-wider mt-2 border-t border-[#00FF66]/20 pt-2 text-[10px]">
-                      <Check size={13} className="stroke-[3]" />
-                      TRANSMISSION LOAD SUCCESSFUL.
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-          </div>
-
-          {/* COLUMN 2: CENTER ANIMATED NEON PULSES (Col Span 1) */}
-          <div className="hidden lg:flex lg:col-span-1 justify-center items-center relative py-6">
-            {/* SVG vertical line with animated pulsing node circles */}
-            <svg className="w-full h-full text-black/10" viewBox="0 0 20 400" preserveAspectRatio="none">
-              <line x1="10" y1="0" x2="10" y2="400" stroke="currentColor" strokeWidth="1" strokeDasharray="3, 3" />
-              {/* Concentric node rings */}
-              <circle cx="10" cy="150" r="4.5" fill="none" stroke="#00FF66" strokeWidth="1" />
-              <circle cx="10" cy="250" r="4.5" fill="none" stroke="#FF3E6C" strokeWidth="1" />
-            </svg>
-            <motion.div 
-              animate={{ y: [0, 400] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-              className="absolute left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#00FF66] shadow-[0_0_8px_#00FF66]"
-            />
-            <motion.div 
-              animate={{ y: [400, 0] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: 'linear' }}
-              className="absolute left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#FF3E6C] shadow-[0_0_8px_#FF3E6C]"
-            />
-          </div>
-
-          {/* COLUMN 3: RIGHT SIDE SOCIAL NODES GRID (Col Span 5) */}
-          <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
-            {socialNodes.map((node) => (
-              <motion.a
-                key={node.id}
-                href={node.href}
-                target="_blank"
-                rel="noreferrer"
-                onMouseEnter={() => playClickTick(1500, 0.02)}
-                className="group p-5 bg-white border border-[#A8D3C8] rounded-sm flex flex-col justify-between gap-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),2px_2px_0px_rgba(168,211,200,0.15)] hover:border-black transition-all duration-300 cursor-pointer interactive-hover will-change-transform"
-                whileHover={{ 
-                  y: -5,
-                  scale: 1.02,
-                  boxShadow: '0 12px 24px rgba(0,0,0,0.03), 4px 4px 0px rgba(0,0,0,0.8)' 
-                }}
-                style={{ transform: 'translate3d(0,0,0)' }}
-              >
-                {/* Node Top Row */}
-                <div className="flex justify-between items-center w-full">
-                  <span className="font-mono text-[9px] tracking-widest text-[#00CC52] font-extrabold uppercase">
-                    // NODE_{node.num}
-                  </span>
-                  <div className="p-2 bg-black/5 rounded-full text-black/50 group-hover:bg-black group-hover:text-white transition-all duration-300">
-                    {node.icon}
+                  {/* Field 4: SUBJECT */}
+                  <div className="flex flex-col gap-1 text-left relative">
+                    <label className="text-black/40 font-extrabold uppercase tracking-wider">// SUBJECT</label>
+                    <input 
+                      type="text" 
+                      placeholder="TRANSMISSION TOPIC"
+                      {...register('subject')}
+                      className={`w-full px-3 py-2.5 bg-white/70 border rounded transition-all focus:bg-white focus:outline-none uppercase font-semibold text-black ${
+                        errors.subject ? 'border-red-500' : 'border-black/10 focus:border-[#FF3E6C] focus:shadow-[0_0_8px_rgba(255,62,108,0.15)]'
+                      }`}
+                    />
+                    {errors.subject && <span className="text-red-500 text-[8.5px] mt-0.5 font-bold">// {errors.subject.message}</span>}
                   </div>
                 </div>
 
-                {/* Node Title & Description */}
-                <div className="flex flex-col gap-1.5 select-none">
-                  <h4 className="font-display font-black text-base sm:text-lg tracking-tighter text-black uppercase leading-none">
-                    {node.name}
-                  </h4>
-                  <p className="font-mono text-[8px] sm:text-[9px] text-black/40 leading-normal normal-case">
-                    {node.description}
-                  </p>
+                {/* Field 5: PROJECT TYPE */}
+                <div className="flex flex-col gap-1 text-left relative">
+                  <label className="text-black/40 font-extrabold uppercase tracking-wider">// PROJECT TYPE</label>
+                  <select 
+                    {...register('projectType')}
+                    className="w-full px-3 py-2.5 bg-white/70 border border-black/10 rounded transition-all focus:bg-white focus:outline-none font-semibold text-black uppercase cursor-pointer"
+                  >
+                    <option value="Collaboration">Collaboration</option>
+                    <option value="Internship Opportunity">Internship Opportunity</option>
+                    <option value="Freelance Work">Freelance Work</option>
+                    <option value="Startup Discussion">Startup Discussion</option>
+                    <option value="Hackathon Team">Hackathon Team</option>
+                    <option value="Research Collaboration">Research Collaboration</option>
+                    <option value="General Inquiry">General Inquiry</option>
+                  </select>
                 </div>
 
-                {/* Node Bottom Telemetry Status Tag */}
-                <div className={`w-full text-center py-1 font-mono text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest border rounded-sm transition-all duration-300 ${node.statusColor}`}>
-                  {node.status}
+                {/* Field 6: MESSAGE */}
+                <div className="flex flex-col gap-1 text-left relative">
+                  <label className="text-black/40 font-extrabold uppercase tracking-wider">// MESSAGE</label>
+                  <textarea 
+                    rows={4}
+                    placeholder="COMPILE TRANSMISSION PAYLOAD..."
+                    {...register('message')}
+                    className={`w-full px-3 py-2.5 bg-white/70 border rounded transition-all focus:bg-white focus:outline-none uppercase font-semibold text-black resize-none ${
+                      errors.message ? 'border-red-500' : 'border-black/10 focus:border-[#FF3E6C] focus:shadow-[0_0_8px_rgba(255,62,108,0.15)]'
+                    }`}
+                  />
+                  {errors.message && <span className="text-red-500 text-[8.5px] mt-0.5 font-bold">// {errors.message.message}</span>}
                 </div>
 
-              </motion.a>
-            ))}
+                {/* SUBMIT BUTTON WITH COOLDOWN */}
+                <button 
+                  type="submit"
+                  disabled={isTransmitting || cooldown > 0}
+                  className={`w-full py-3 bg-black text-white hover:bg-[#FF3E6C] hover:text-white rounded transition-all duration-300 font-extrabold tracking-widest uppercase flex items-center justify-center gap-2 cursor-pointer shadow-[3px_3px_0px_rgba(0,0,0,0.15)] hover:shadow-none interactive-hover ${
+                    (isTransmitting || cooldown > 0) ? 'opacity-55 cursor-not-allowed' : ''
+                  }`}
+                >
+                  {isTransmitting ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      TRANSMITTING MESSAGE...
+                    </span>
+                  ) : cooldown > 0 ? (
+                    <span>COOLDOWN ACTIVE: {cooldown}S</span>
+                  ) : (
+                    <>
+                      TRANSMIT MESSAGE
+                      <Send size={12} className="stroke-[2.5]" />
+                    </>
+                  )}
+                </button>
+
+              </form>
+            </div>
+
+            {/* Transmission Feedback Alerts */}
+            <div className="mt-5 text-left font-mono">
+              <AnimatePresence mode="wait">
+                {transmissionStatus === 'SUCCESS' && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="border border-[#00CC52]/40 bg-[#00FF66]/10 text-emerald-800 p-4 rounded-sm flex flex-col gap-1.5 shadow-[2px_2px_0px_rgba(16,185,129,0.15)]"
+                  >
+                    <span className="font-black text-xs uppercase flex items-center gap-1.5 text-emerald-600">
+                      <Check size={14} className="stroke-[3]" />
+                      CONNECTION ESTABLISHED
+                    </span>
+                    <p className="text-[10px] leading-tight">
+                      Your transmission has been delivered successfully. I will respond as soon as possible.
+                    </p>
+                    <div className="text-[8px] opacity-65 border-t border-[#00CC52]/10 pt-1.5 mt-1.5">
+                      Recipient: parthbulbule123@gmail.com <br />
+                      Expected Response: Within 24 Hours
+                    </div>
+                  </motion.div>
+                )}
+
+                {transmissionStatus === 'ERROR' && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="border border-red-500/40 bg-red-500/[0.08] text-red-800 p-4 rounded-sm flex flex-col gap-1"
+                  >
+                    <span className="font-black text-xs uppercase flex items-center gap-1.5 text-red-500">
+                      <ShieldAlert size={14} className="stroke-[2.5]" />
+                      TRANSMISSION FAILED
+                    </span>
+                    <p className="text-[10px] leading-tight">
+                      Please try again later or contact directly at parthbulbule123@gmail.com.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+          </div>
+
+          {/* COLUMN 3: RIGHT SIDE NODES (Col Span 4) */}
+          <div className="lg:col-span-4 flex flex-col gap-4 text-left justify-between">
+            {[
+              {
+                num: '01',
+                name: 'LinkedIn',
+                description: 'Professional Network',
+                icon: <Linkedin size={16} />,
+                href: 'https://linkedin.com'
+              },
+              {
+                num: '02',
+                name: 'GitHub',
+                description: 'Code Repository',
+                icon: <Github size={16} />,
+                href: 'https://github.com/Parthbo7'
+              },
+              {
+                num: '03',
+                name: 'Instagram',
+                description: 'Creative Feed',
+                icon: <Instagram size={16} />,
+                href: 'https://instagram.com'
+              },
+              {
+                num: '04',
+                name: 'Email',
+                description: 'Primary communication channel for professional inquiries, collaborations, internships, hackathons, and project discussions.',
+                email: 'parthbulbule123@gmail.com',
+                icon: <Mail size={16} />,
+                isEmail: true
+              },
+              {
+                num: '05',
+                name: 'Resume',
+                description: 'Download CV',
+                icon: <FileText size={16} />,
+                href: '#resume'
+              }
+            ].map((node) => {
+              if (node.isEmail) {
+                return (
+                  <motion.div
+                    key={node.num}
+                    onMouseEnter={() => playClickTick(1500, 0.015)}
+                    className="p-4 bg-white border border-[#A8D3C8] rounded-sm flex flex-col justify-between gap-4 shadow-[2px_2px_0px_rgba(168,211,200,0.15)] hover:border-black transition-all duration-300 relative select-none"
+                    whileHover={{ 
+                      y: -4,
+                      boxShadow: '0 10px 20px rgba(0,0,0,0.02), 4px 4px 0px rgba(0,0,0,0.8)' 
+                    }}
+                  >
+                    <div className="flex justify-between items-center w-full">
+                      <span className="font-mono text-[9px] tracking-widest text-[#00CC52] font-extrabold uppercase">
+                        // NODE_{node.num}
+                      </span>
+                      <div className="p-2 bg-black/5 rounded-full text-black/50">
+                        {node.icon}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <h4 className="font-display font-black text-sm tracking-tighter text-black uppercase leading-none">
+                        {node.name.toUpperCase()}
+                      </h4>
+                      <p className="font-sans text-[10px] text-black/60 leading-normal">
+                        {node.description}
+                      </p>
+                      <span className="font-mono text-[10px] font-black text-[#FF3E6C] mt-1 break-all select-text">
+                        {node.email}
+                      </span>
+                    </div>
+
+                    {/* Copy Alert */}
+                    <AnimatePresence>
+                      {copied && (
+                        <motion.span 
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          className="absolute right-4 bottom-14 bg-emerald-500 text-white font-mono text-[8.5px] px-2 py-1 rounded shadow-md z-30"
+                        >
+                          Copied to Clipboard!
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+
+                    {/* Action buttons inside Card */}
+                    <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-black/5 font-mono text-[8px] font-extrabold tracking-widest">
+                      <a 
+                        href={`mailto:${node.email}`}
+                        className="py-1.5 border border-black/10 hover:border-black rounded-sm text-center flex items-center justify-center gap-1 bg-white hover:bg-black hover:text-white transition-colors duration-300"
+                      >
+                        [ EMAIL ME ]
+                      </a>
+                      <button 
+                        onClick={handleCopyEmail}
+                        className="py-1.5 border border-black/10 hover:border-black rounded-sm text-center flex items-center justify-center gap-1 bg-white hover:bg-black hover:text-white transition-colors duration-300 cursor-pointer"
+                      >
+                        [ COPY EMAIL ]
+                      </button>
+                    </div>
+
+                  </motion.div>
+                );
+              }
+
+              return (
+                <motion.a
+                  key={node.num}
+                  href={node.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  onMouseEnter={() => playClickTick(1500, 0.015)}
+                  className="p-4 bg-white border border-[#A8D3C8] rounded-sm flex flex-col justify-between gap-4 shadow-[2px_2px_0px_rgba(168,211,200,0.15)] hover:border-black transition-all duration-300 cursor-pointer interactive-hover select-none"
+                  whileHover={{ 
+                    y: -4,
+                    boxShadow: '0 10px 20px rgba(0,0,0,0.02), 4px 4px 0px rgba(0,0,0,0.8)' 
+                  }}
+                >
+                  <div className="flex justify-between items-center w-full">
+                    <span className="font-mono text-[9px] tracking-widest text-[#00CC52] font-extrabold uppercase">
+                      // NODE_{node.num}
+                    </span>
+                    <div className="p-2 bg-black/5 rounded-full text-black/50 group-hover:bg-black group-hover:text-white transition-all duration-300">
+                      {node.icon}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-end">
+                    <div className="flex flex-col gap-1">
+                      <h4 className="font-display font-black text-sm tracking-tighter text-black uppercase leading-none">
+                        {node.name.toUpperCase()}
+                      </h4>
+                      <p className="font-mono text-[8px] text-black/40 leading-normal">
+                        {node.description}
+                      </p>
+                    </div>
+                    <ExternalLink size={10} className="text-black/35 group-hover:text-[#FF3E6C] transition-colors mb-0.5" />
+                  </div>
+                </motion.a>
+              );
+            })}
           </div>
 
         </div>
@@ -443,10 +677,83 @@ export const ConnectPage = () => {
             COMMUNICATION CHANNELS ACTIVE...
           </span>
           <span className="font-mono text-[7px] tracking-widest text-black/40 uppercase">
-            SIGNAL: {signalStrength}% // LATENCY: {latency}MS // NETWORK STATUS: VERIFIED
+            SIGNAL: 100% // LATENCY: 21MS // NETWORK STATUS: VERIFIED
           </span>
         </div>
       </div>
+
+      {/* EASTER EGG POPUP MODAL */}
+      <AnimatePresence>
+        {showContactEgg && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="w-full max-w-md bg-black border border-[#00FF66] rounded-sm p-6 text-left font-mono text-emerald-400 shadow-[0_0_25px_rgba(0,255,102,0.25)] relative"
+            >
+              <div className="flex justify-between items-center border-b border-[#00FF66]/20 pb-3 mb-4">
+                <span className="font-extrabold text-[#00FF66] text-[10px] tracking-widest uppercase">
+                  &gt; SIGNAL_DECRYPT: CHANNEL_UNLOCKED
+                </span>
+                <button 
+                  onClick={() => {
+                    playClickTick(1600, 0.05);
+                    setShowContactEgg(false);
+                  }}
+                  className="text-emerald-500 hover:text-emerald-300 font-extrabold text-[10px] tracking-wider uppercase border border-emerald-500/20 px-2 py-0.5 rounded bg-emerald-500/10 cursor-pointer"
+                >
+                  CLOSE
+                </button>
+              </div>
+
+              <div className="space-y-4 text-xs select-none">
+                <div className="text-[#00FF66] font-extrabold uppercase animate-pulse mb-3">
+                  DEVELOPER CHANNEL UNLOCKED
+                </div>
+                
+                <div className="space-y-1">
+                  <div className="text-emerald-600 uppercase text-[9px] font-bold">CURRENT FOCUS:</div>
+                  <div className="space-y-0.5 text-[#00FF66]">
+                    <div>• CampusConnect</div>
+                    <div>• AI Research</div>
+                    <div>• Portfolio OS</div>
+                    <div>• Future Startup Ideas</div>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="text-emerald-600 uppercase text-[9px] font-bold">STATUS:</div>
+                  <div className="text-yellow-500 font-extrabold">ALWAYS BUILDING</div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };
+
+// Custom loader/error icon to resolve missing Lucide references
+function ShieldAlert(props: any) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+  );
+}

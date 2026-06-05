@@ -4,7 +4,7 @@ import { playClickTick, playBeep } from '../utils/SoundManager';
 
 interface TransitionOverlayProps {
   isVisible: boolean;
-  destination: 'hero' | 'projects' | 'experience' | 'footer' | 'profile' | 'vault' | 'connect';
+  destination: string;
 }
 
 export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayProps) => {
@@ -21,6 +21,11 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
     profile: 'LOADING HUMAN ARCHIVE',
     vault: 'VAULT AUTHENTICATION IN PROGRESS',
     connect: 'INITIALIZING COMMUNICATION SYSTEM',
+    education: 'COMPILING EDUCATION REGISTRY',
+    certifications: 'VERIFYING CREDENTIAL MATRIX',
+    research: 'RETRIEVING RESEARCH PAPERS',
+    campusconnect: 'SPOTLIGHTING CAMPUSCONNECT',
+    gallery: 'COMPILING MEDIA FRAME GRID'
   };
 
   const logsPool = {
@@ -72,8 +77,49 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
       '> DETECTING SIGNAL_ID GATEWAY...',
       '> ENCRYPTING TRANSMISSION PORT...',
       '> COMMUNICATION INTERFACE ONLINE // NOMINAL_V3.'
+    ],
+    education: [
+      '> ACCESSING ACADEMIC RECORDS...',
+      '> DECRYPTING INSTITUTION KEYS...',
+      '> RETRIEVING COURSE TELEMETRY...',
+      '> PRE-RENDERING MILESTONES...',
+      '> REGISTRY LOADED SUCCESSFULLY.'
+    ],
+    certifications: [
+      '> SCANNING SECURITY SHA-256 KEYS...',
+      '> CONFIRMING ISSUER REGISTRY...',
+      '> PARSING CERTIFICATE DATASETS...',
+      '> ESTABLISHING TRUST ROOT NODE...',
+      '> CREDENTIAL MATRIX ACTIVE.'
+    ],
+    research: [
+      '> DECRYPTING RESEARCH DRAFTS...',
+      '> COMPILING NLP SEMANTIC MATRIX...',
+      '> VECTOR GRAPH INITIATION STANDBY...',
+      '> COMPILING SCIENTIFIC WEIGHTS...',
+      '> RESEARCH NODES DECLASSIFIED.'
+    ],
+    campusconnect: [
+      '> RESOLVING CAMPUSCONNECT REPO...',
+      '> SYNCING FIREBASE STORAGE NODES...',
+      '> SCANNING COLLABORATION GRAPH...',
+      '> INITIALIZING INTERACTIVE SHOWCASE...',
+      '> SPOTLIGHT NOMINAL // 100% READY.'
+    ],
+    gallery: [
+      '> LOADING GDG CAMPAIGN IMAGES...',
+      '> SYNCING VISOTECH SETUP PHOTOS...',
+      '> RENDERING HIGH-FIDELITY GRID...',
+      '> SHADERS COMPILED FOR MEDIA CORES...',
+      '> GALLERIES LOADED // ACTIVE.'
     ]
   };
+
+  const targetKey = (
+    destination === 'skills' ? 'footer' : 
+    destination === 'contact' ? 'connect' : 
+    destination
+  ) as keyof typeof logsPool;
 
   // Dot bouncing animation
   useEffect(() => {
@@ -96,7 +142,7 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
     playBeep(980, 0.12);
     setTimeout(() => playBeep(1480, 0.08), 80);
 
-    const activeLogs = logsPool[destination];
+    const activeLogs = logsPool[targetKey] || logsPool['hero'];
     let logIndex = 0;
     
     // Add logs step-by-step
@@ -167,7 +213,7 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
                 // CRITICAL LOAD SEQUENCE
               </div>
               <h2 className="font-display font-black text-xl sm:text-3xl lg:text-4xl tracking-tighter text-[#00FF66] uppercase leading-none drop-shadow-[0_0_8px_rgba(0,255,102,0.3)]">
-                {loadingTexts[destination]}{dots}
+                {(loadingTexts[targetKey] || 'LOADING ARCHIVE PROTOCOL')}{dots}
               </h2>
             </div>
 
@@ -186,7 +232,7 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
               ))}
               
               {/* Flashing terminal cursor at the end */}
-              {bootLogs.length < activeLogsLength(destination) && (
+              {bootLogs.length < activeLogsLength(targetKey) && (
                 <div className="w-2 h-4 bg-[#00FF66] animate-pulse mt-0.5" />
               )}
             </div>
@@ -219,6 +265,6 @@ export const TransitionOverlay = ({ isVisible, destination }: TransitionOverlayP
 };
 
 // Simple helper to count logs based on destination
-const activeLogsLength = (_destination: 'hero' | 'projects' | 'experience' | 'footer' | 'profile' | 'vault' | 'connect') => {
+const activeLogsLength = (_destination: string) => {
   return 5;
 };
