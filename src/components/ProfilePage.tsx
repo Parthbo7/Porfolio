@@ -234,7 +234,10 @@ export const ProfilePage = ({ onBack }: ProfilePageProps) => {
                   PORTAL_V3
                 </div>
 
-                <h1 className="font-display font-black text-[12vw] sm:text-[8vw] lg:text-[7vw] leading-[0.9] tracking-tighter text-black uppercase select-none mt-2">
+                <h1 
+                  className="font-display font-black leading-[0.9] tracking-tighter text-black uppercase select-none mt-2"
+                  style={{ fontSize: 'clamp(3rem, 10vw, 7rem)' }}
+                >
                   PROFILE
                 </h1>
 
@@ -408,7 +411,7 @@ export const ProfilePage = ({ onBack }: ProfilePageProps) => {
                         <span className="font-mono text-[8.5px] text-black/40 font-bold uppercase block tracking-wider">
                           // ACADEMIC_MILESTONES:
                         </span>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                           <div className="bg-[#fcfcfd] border border-black/5 p-3 rounded-sm text-left flex flex-col justify-between min-h-[110px]">
                             <div>
                               <span className="font-mono text-[8.5px] font-black text-[#FF3E6C] block uppercase tracking-wider">CBSE</span>
@@ -463,7 +466,7 @@ export const ProfilePage = ({ onBack }: ProfilePageProps) => {
                       </div>
 
                       {/* Skill Grid as System Scan Cards */}
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {[
                           { category: 'Frontend', skills: ['HTML', 'CSS', 'JavaScript', 'React', 'Tailwind CSS'] },
                           { category: 'Backend', skills: ['Node.js', 'Firebase'] },

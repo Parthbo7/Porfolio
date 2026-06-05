@@ -261,7 +261,8 @@ export const ConnectPage = () => {
           {/* Clickable Header for Easter Egg */}
           <h1 
             onClick={handleTitleClick}
-            className="font-display font-black text-[12vw] sm:text-[8vw] lg:text-[7vw] leading-[0.9] tracking-tighter text-black uppercase cursor-pointer hover:text-[#FF3E6C] transition-colors select-none mt-2"
+            className="font-display font-black leading-[0.9] tracking-tighter text-black uppercase cursor-pointer hover:text-[#FF3E6C] transition-colors select-none mt-2"
+            style={{ fontSize: 'clamp(3rem, 10vw, 7rem)' }}
           >
             CONTACT
           </h1>
@@ -281,7 +282,7 @@ export const ConnectPage = () => {
         <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 py-4 relative items-stretch">
           
           {/* COLUMN 1: LEFT SIDE (Terminal, Availability, Metrics) - Col Span 3 */}
-          <div className="lg:col-span-3 flex flex-col gap-5 text-left">
+          <div className="lg:col-span-3 flex flex-col gap-5 text-left order-3 lg:order-1">
             
             {/* Live Terminal Console */}
             <div className="bg-black/95 text-emerald-400 border border-[#00CC52]/20 p-4 rounded-sm font-mono text-[8.5px] sm:text-[9px] shadow-[inset_0_1px_3px_rgba(0,0,0,0.8),0_0_15px_rgba(16,185,129,0.08)] flex flex-col justify-between h-[160px] relative overflow-hidden">
@@ -354,7 +355,7 @@ export const ConnectPage = () => {
           </div>
 
           {/* COLUMN 2: CENTER FORM PANEL (Col Span 5) */}
-          <div className="lg:col-span-5 bg-white/50 backdrop-blur-xl border border-[#A8D3C8] rounded-sm p-6 sm:p-8 flex flex-col justify-between shadow-[3px_3px_0px_rgba(168,211,200,0.2)] hover:border-black transition-colors duration-300">
+          <div className="lg:col-span-5 bg-white/50 backdrop-blur-xl border border-[#A8D3C8] rounded-sm p-6 sm:p-8 flex flex-col justify-between shadow-[3px_3px_0px_rgba(168,211,200,0.2)] hover:border-black transition-colors duration-300 order-1 lg:order-2">
             <div>
               <span className="font-mono text-[9px] text-[#00CC52] font-extrabold tracking-widest uppercase block mb-5">// SECURE_INCOMING_TRANSMISSION</span>
               
@@ -522,7 +523,7 @@ export const ConnectPage = () => {
           </div>
 
           {/* COLUMN 3: RIGHT SIDE NODES (Col Span 4) */}
-          <div className="lg:col-span-4 flex flex-col gap-4 text-left justify-between">
+          <div className="lg:col-span-4 flex flex-col gap-4 text-left justify-between order-2 lg:order-3">
             {[
               {
                 num: '01',

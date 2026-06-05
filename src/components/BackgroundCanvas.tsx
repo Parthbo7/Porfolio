@@ -35,6 +35,13 @@ export const BackgroundCanvas = () => {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
+    // Disable heavy animation loop on mobile to preserve 60fps performance
+    if (window.innerWidth < 768) {
+      ctx.fillStyle = '#EFE5E0';
+      ctx.fillRect(0, 0, width, height);
+      return;
+    }
+
     // Track resizing
     const handleResize = () => {
       width = canvas.width = window.innerWidth;

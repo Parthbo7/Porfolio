@@ -63,8 +63,19 @@ interface NavigationalOSPortalProps {
 export const NavigationalOSPortal = ({ onNavigate, isOverlay = false }: NavigationalOSPortalProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return; // Skip mouse events on mobile
     const container = containerRef.current;
     if (!container) return;
 
@@ -79,7 +90,7 @@ export const NavigationalOSPortal = ({ onNavigate, isOverlay = false }: Navigati
 
     container.addEventListener('mousemove', onMouseMove);
     return () => container.removeEventListener('mousemove', onMouseMove);
-  }, []);
+  }, [isMobile]);
 
   const handleLinkClick = (href: string) => {
     playUnlockSuccess();
@@ -281,6 +292,65 @@ export const NavigationalOSPortal = ({ onNavigate, isOverlay = false }: Navigati
         return null;
     }
   };
+
+  if (isMobile) {
+    return (
+      <section
+        id="navigational-os-portal-mobile"
+        className={`w-full h-full min-h-screen relative flex flex-col justify-between overflow-hidden bg-[#050506] text-white px-6 py-12 ${
+          isOverlay ? 'inset-0 fixed z-40' : 'border-t border-white/5'
+        }`}
+      >
+        <div className="absolute inset-0 pointer-events-none custom-grid-lines opacity-[0.02]" />
+        
+        {/* Simplified clean header */}
+        <header className="flex justify-between items-center w-full border-b border-white/10 pb-3 z-10">
+          <span className="font-mono text-[9px] tracking-widest text-[#00FF66] font-bold uppercase">
+            / MOBILE_NAV_GATEWAY
+          </span>
+          <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">
+            SYSTEM_OS_V3 // ONLINE
+          </span>
+        </header>
+
+        {/* Clean 4 items vertical list with huge typography */}
+        <div className="flex flex-col gap-5 my-auto text-left justify-center py-6 z-10">
+          {[
+            { num: '01', name: 'Projects', href: '#projects' },
+            { num: '02', name: 'Profile', href: '#profile' },
+            { num: '03', name: 'Skills', href: '#stack' },
+            { num: '04', name: 'Connect', href: '#contact' }
+          ].map((item) => (
+            <div key={item.num} className="flex flex-col">
+              <a
+                href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLinkClick(item.href);
+                }}
+                className="group flex items-baseline gap-4 py-3 border-b border-white/[0.03] active:text-[#00FF66] transition-colors"
+              >
+                <span className="font-mono text-[10px] text-[#00FF66]/50">
+                  {item.num}
+                </span>
+                <span className="font-display font-black text-[9vw] uppercase tracking-tighter leading-none">
+                  {item.name}
+                </span>
+              </a>
+            </div>
+          ))}
+        </div>
+
+        {/* Simplified footer without any heavy rendering */}
+        <footer className="flex flex-col gap-2 border-t border-white/10 pt-4 font-mono text-[8px] text-white/30 tracking-wider z-10">
+          <div className="flex justify-between items-center w-full">
+            <span>&copy; 2026 PARTH BULBULE</span>
+            <span className="text-[#00FF66] font-bold">PORTAL NOMINAL</span>
+          </div>
+        </footer>
+      </section>
+    );
+  }
 
   return (
     <section
