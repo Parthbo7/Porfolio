@@ -23,9 +23,9 @@ import {
   playAccessDenied,
   startVaultAmbientAudio,
   stopVaultAmbientAudio,
-  muteVaultAmbientAudio,
-  unmuteVaultAmbientAudio
-} from '../utils/SoundManager';
+  isAudioOn,
+  toggleAudio
+} from '../../utils/SoundManager';
 
 interface VaultPortalProps {
   isOpen: boolean;
@@ -53,7 +53,15 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
   
   // Secret letter state
   const [letterOpen, setLetterOpen] = useState(false);
-  const [isAudioMuted, setIsAudioMuted] = useState(false);
+  const [isAudioOnGlobal, setIsAudioOnGlobal] = useState(isAudioOn());
+
+  useEffect(() => {
+    const handleAudioChange = () => {
+      setIsAudioOnGlobal(isAudioOn());
+    };
+    window.addEventListener('audio-state-changed', handleAudioChange);
+    return () => window.removeEventListener('audio-state-changed', handleAudioChange);
+  }, []);
   
   const visualizerCanvasRef = useRef<HTMLCanvasElement>(null);
   const terminalBottomRef = useRef<HTMLDivElement>(null);
@@ -77,7 +85,7 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
     }, 3000);
 
     // Initial audio start on portal enter
-    if (!isAudioMuted) {
+    if (isAudioOnGlobal) {
       startAmbientHum();
       startVaultAmbientAudio();
     }
@@ -87,7 +95,7 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
       stopAmbientHum();
       stopVaultAmbientAudio();
     };
-  }, [isOpen, isAudioMuted]);
+  }, [isOpen, isAudioOnGlobal]);
 
   // Terminal logs auto-scroll
   useEffect(() => {
@@ -358,14 +366,7 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
   };
 
   const toggleMute = () => {
-    if (isAudioMuted) {
-      startAmbientHum();
-      unmuteVaultAmbientAudio();
-    } else {
-      stopAmbientHum();
-      muteVaultAmbientAudio();
-    }
-    setIsAudioMuted(!isAudioMuted);
+    toggleAudio();
     playClickTick(1400, 0.025);
   };
 
@@ -420,7 +421,7 @@ export const VaultPortal = ({ isOpen, onClose }: VaultPortalProps) => {
             onClick={toggleMute}
             className="p-1.5 rounded-full border border-white/10 bg-white/[0.02] hover:border-yellow-400 hover:text-yellow-400 transition-colors text-white/50 cursor-pointer pointer-events-auto"
           >
-            {isAudioMuted ? <VolumeX size={12} /> : <Volume2 size={12} />}
+            {!isAudioOnGlobal ? <VolumeX size={12} /> : <Volume2 size={12} />}
           </button>
         </div>
       </div>

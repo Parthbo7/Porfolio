@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight, ArrowLeft } from 'lucide-react';
-import { playClickTick } from '../utils/SoundManager';
-import { MRFreshers } from './freshers/MRFreshers';
-import { GDGExperience } from './gdg/GDGExperience';
-import { StartupBootcamp } from './bootcamp/StartupBootcamp';
-import { TPOCoordinator } from './tpo/TPOCoordinator';
-import { MechanicsTopper } from './mechanics/MechanicsTopper';
+import { playClickTick } from '../../utils/SoundManager';
+import { MRFreshers } from '../freshers/MRFreshers';
+import { GDGExperience } from '../gdg/GDGExperience';
+import { StartupBootcamp } from '../bootcamp/StartupBootcamp';
+import { TPOCoordinator } from '../tpo/TPOCoordinator';
+import { MechanicsTopper } from '../mechanics/MechanicsTopper';
 
 // ─── Ambient floating dot ────────────────────────────────────────────────────
 const AmbientDot = ({ x, y, size, delay }: { x: string; y: string; size: number; delay: number }) => (

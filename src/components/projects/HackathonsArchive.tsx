@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Cpu, Users, Database, Terminal, Check, AlertTriangle, ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, Cpu, Users, Database, Terminal, Check, AlertTriangle, ArrowUpRight, Github, Globe, ExternalLink } from 'lucide-react';
 import { playClickTick } from '../../utils/SoundManager';
 
 // Import image assets with exact extensions
@@ -883,6 +883,57 @@ export const HackathonsArchive = ({ onBack }: HackathonsArchiveProps) => {
                       </motion.div>
                     );
                   })}
+                </div>
+              </section>
+
+              {/* SECTION: LINKS & REPOSITORY */}
+              <section className="w-full max-w-5xl mx-auto mb-24 relative z-10">
+                <div className="relative border border-[#00CC52]/30 rounded-sm p-8 sm:p-12 overflow-hidden bg-white/90 shadow-[10px_10px_0px_rgba(0,255,82,0.05)] text-left flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                  <div className="absolute top-0 right-0 font-mono text-[6px] text-black/30 uppercase tracking-[0.25em] px-2 py-0.5 bg-white border-l border-b border-black/10">
+                    PROJECT_LINKS
+                  </div>
+
+                  <div>
+                    <span className="font-mono text-[10px] text-[#00CC52] font-bold tracking-[0.3em] uppercase block mb-1">
+                      SOURCE & DEPLOYMENT
+                    </span>
+                    <h3 className="font-display font-black text-2xl uppercase tracking-tighter text-black leading-none mb-4 pt-1">
+                      DOPARKING SOURCE ARCHIVES
+                    </h3>
+                    <p className="font-sans text-[13.5px] text-neutral-700 leading-relaxed font-light max-w-xl">
+                      Explore the live smart parking application dashboard or review the repository codebase for automation scripts, slot allocation matrices, and styling guidelines.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto shrink-0">
+                    <motion.a
+                      href="https://github.com/Parthbo7/dopark.git"
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => playClickTick(1600, 0.08)}
+                      className="bg-black text-white hover:bg-[#00CC52] hover:text-black font-mono text-[10px] font-extrabold tracking-widest uppercase px-6 py-3 border border-black rounded-sm shadow-[3px_3px_0px_rgba(0,255,82,0.15)] flex items-center gap-2 cursor-pointer transition-colors duration-300 justify-center shrink-0 interactive-hover"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Github size={14} />
+                      <span>EXPLORE_REPOS</span>
+                      <ExternalLink size={10} className="stroke-[3]" />
+                    </motion.a>
+
+                    <motion.a
+                      href="https://dopark.vercel.app/"
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => playClickTick(1600, 0.08)}
+                      className="bg-white text-black hover:bg-[#00CC52] hover:text-black font-mono text-[10px] font-extrabold tracking-widest uppercase px-6 py-3 border border-black rounded-sm shadow-[3px_3px_0px_rgba(0,0,0,0.15)] flex items-center gap-2 cursor-pointer transition-colors duration-300 justify-center shrink-0 interactive-hover"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Globe size={14} />
+                      <span>LIVE_DASHBOARD</span>
+                      <ExternalLink size={10} className="stroke-[3]" />
+                    </motion.a>
+                  </div>
                 </div>
               </section>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { playClickTick, playBeep } from '../utils/SoundManager';
+import { playClickTick, playBeep } from '../../utils/SoundManager';
 
 interface TransitionOverlayProps {
   isVisible: boolean;

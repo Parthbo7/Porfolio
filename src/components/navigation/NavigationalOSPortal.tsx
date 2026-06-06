@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { playClickTick, playUnlockSuccess } from '../utils/SoundManager';
+import { playClickTick, playUnlockSuccess } from '../../utils/SoundManager';
+import { navigateWithTransition } from '../../utils/SystemNavigator';
 import { ArrowUpRight, ChevronRight, Cpu, Activity, Zap, GraduationCap, Mail, Github, Linkedin, Instagram, FileText } from 'lucide-react';
 
 interface PortalItem {
@@ -16,7 +17,7 @@ const portalItems: PortalItem[] = [
   { 
     num: '01', 
     name: 'PROJECTS', 
-    href: '#projects',
+    href: '/projects',
     title: 'PROJECT DATABASE',
     icon: Cpu,
     subtopics: ['CampusConnect', 'Portfolio OS', 'AI Projects', 'Research Projects', 'Hackathon Projects']
@@ -24,7 +25,7 @@ const portalItems: PortalItem[] = [
   { 
     num: '02', 
     name: 'EXPERIENCE', 
-    href: '#experience',
+    href: '/experience',
     title: 'EXPERIENCE TIMELINE',
     icon: Activity,
     subtopics: ['Hackathons', 'Leadership', 'Development Journey', 'Achievements']
@@ -32,7 +33,7 @@ const portalItems: PortalItem[] = [
   { 
     num: '03', 
     name: 'SKILL STACK', 
-    href: '#stack',
+    href: '/skills',
     title: 'SYSTEM CAPABILITIES',
     icon: Zap,
     subtopics: ['Frontend', 'Backend', 'Programming Languages', 'Tools', 'AI & ML']
@@ -40,7 +41,7 @@ const portalItems: PortalItem[] = [
   { 
     num: '04', 
     name: 'PROFILE', 
-    href: '#profile',
+    href: '/profile',
     title: 'IDENTITY ARCHIVE',
     icon: GraduationCap,
     subtopics: ['About Me', 'Academic Archive', 'Personality Matrix', 'Mission Control', 'Timeline']
@@ -48,7 +49,7 @@ const portalItems: PortalItem[] = [
   { 
     num: '05', 
     name: 'CONNECT', 
-    href: '#contact',
+    href: '/contact',
     title: 'COMMUNICATION HUB',
     icon: Mail,
     subtopics: ['GitHub', 'LinkedIn', 'Instagram', 'Email', 'Resume', 'Contact Form']
@@ -97,9 +98,7 @@ export const NavigationalOSPortal = ({ onNavigate, isOverlay = false }: Navigati
     if (onNavigate) {
       onNavigate(href);
     } else {
-      window.history.pushState(null, '', '/');
-      window.location.hash = href;
-      window.dispatchEvent(new PopStateEvent('popstate'));
+      navigateWithTransition(href);
     }
   };
 
@@ -316,10 +315,10 @@ export const NavigationalOSPortal = ({ onNavigate, isOverlay = false }: Navigati
         {/* Clean 4 items vertical list with huge typography */}
         <div className="flex flex-col gap-5 my-auto text-left justify-center py-6 z-10">
           {[
-            { num: '01', name: 'Projects', href: '#projects' },
-            { num: '02', name: 'Profile', href: '#profile' },
-            { num: '03', name: 'Skills', href: '#stack' },
-            { num: '04', name: 'Connect', href: '#contact' }
+            { num: '01', name: 'Projects', href: '/projects' },
+            { num: '02', name: 'Profile', href: '/profile' },
+            { num: '03', name: 'Skills', href: '/skills' },
+            { num: '04', name: 'Connect', href: '/contact' }
           ].map((item) => (
             <div key={item.num} className="flex flex-col">
               <a

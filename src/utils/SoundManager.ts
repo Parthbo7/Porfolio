@@ -3,7 +3,20 @@ let ambientOsc: OscillatorNode | null = null;
 let ambientOsc2: OscillatorNode | null = null;
 let ambientGain: GainNode | null = null;
 
+// Global sound master state
+let AUDIO_ON = true;
+let isVaultActive = false;
+try {
+  const saved = localStorage.getItem('AUDIO_ON');
+  if (saved !== null) {
+    AUDIO_ON = saved === 'true';
+  }
+} catch (e) {
+  console.warn('[SoundManager] LocalStorage read failed:', e);
+}
+
 const initAudio = () => {
+  if (!AUDIO_ON) return;
   if (!audioCtx) {
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
     if (AudioContextClass) {
@@ -15,7 +28,41 @@ const initAudio = () => {
   }
 };
 
+export const isAudioOn = () => AUDIO_ON;
+
+export const setAudioState = (state: boolean) => {
+  AUDIO_ON = state;
+  try {
+    localStorage.setItem('AUDIO_ON', String(state));
+  } catch (e) {
+    console.warn('[SoundManager] LocalStorage write failed:', e);
+  }
+
+  console.log(`[SoundManager] Audio state changed: ${state ? 'ENABLED' : 'MUTED'}`);
+
+  if (!state) {
+    // Mute immediately
+    muteVaultAmbientAudio();
+    stopAmbientHum();
+  } else {
+    // If the TV loop is supposed to run, we only unmute if the vault is active
+    if (isVaultActive) {
+      unmuteVaultAmbientAudio();
+      startAmbientHum();
+    }
+  }
+
+  // Broadcast state change
+  window.dispatchEvent(new CustomEvent('audio-state-changed', { detail: state }));
+};
+
+export const toggleAudio = () => {
+  setAudioState(!AUDIO_ON);
+  return AUDIO_ON;
+};
+
 export const startAmbientHum = () => {
+  if (!AUDIO_ON) return;
   try {
     initAudio();
     if (!audioCtx) return;
@@ -53,8 +100,9 @@ export const startAmbientHum = () => {
     lpFilter.connect(ambientGain);
     ambientOsc2.start();
 
+    console.log('[SoundManager] Ambient hum started.');
   } catch (e) {
-    console.warn("Failed to start ambient hum:", e);
+    console.warn("[SoundManager] Failed to start ambient hum:", e);
   }
 };
 
@@ -81,10 +129,11 @@ export const stopAmbientHum = () => {
           ambientGain.disconnect();
           ambientGain = null;
         }
+        console.log('[SoundManager] Ambient hum stopped.');
       }, 900);
     }
   } catch (e) {
-    console.warn("Failed to stop ambient hum:", e);
+    console.warn("[SoundManager] Failed to stop ambient hum:", e);
   }
 };
 
@@ -96,7 +145,20 @@ const VAULT_TARGET_VOLUME = 0.18; // ~18% volume
 const VAULT_FADE_DURATION = 2000; // 2 second fade
 const VAULT_FADE_STEPS = 40;
 
+// Preload TV Loop Audio immediately upon import
+try {
+  vaultAudioEl = new Audio('/src/assets/audio/Old TV Audio.mp3');
+  vaultAudioEl.loop = true;
+  vaultAudioEl.volume = 0;
+  vaultAudioEl.preload = 'auto';
+  console.log('[SoundManager] Secret Vault Old TV Audio preloaded.');
+} catch (e) {
+  console.warn('[SoundManager] Secret Vault Old TV Audio preloading failed:', e);
+}
+
 export const startVaultAmbientAudio = () => {
+  isVaultActive = true;
+  if (!AUDIO_ON) return;
   try {
     if (!vaultAudioEl) {
       vaultAudioEl = new Audio('/src/assets/audio/Old TV Audio.mp3');
@@ -112,7 +174,11 @@ export const startVaultAmbientAudio = () => {
     }
 
     vaultAudioEl.volume = 0;
-    vaultAudioEl.play().catch(() => {});
+    vaultAudioEl.play().then(() => {
+      console.log('[SoundManager] Old TV Audio playing...');
+    }).catch((e) => {
+      console.warn('[SoundManager] Old TV Audio autoplay blocked or failed:', e);
+    });
 
     // Smooth fade in
     let step = 0;
@@ -127,11 +193,12 @@ export const startVaultAmbientAudio = () => {
       }
     }, VAULT_FADE_DURATION / VAULT_FADE_STEPS);
   } catch (e) {
-    console.warn('Failed to start vault ambient audio:', e);
+    console.warn('[SoundManager] Failed to start vault ambient audio:', e);
   }
 };
 
 export const stopVaultAmbientAudio = () => {
+  isVaultActive = false;
   try {
     if (!vaultAudioEl) return;
 
@@ -158,10 +225,11 @@ export const stopVaultAmbientAudio = () => {
           vaultAudioEl.pause();
           vaultAudioEl.currentTime = 0;
         }
+        console.log('[SoundManager] Old TV Audio stopped.');
       }
     }, fadeOutMs / fadeOutSteps);
   } catch (e) {
-    console.warn('Failed to stop vault ambient audio:', e);
+    console.warn('[SoundManager] Failed to stop vault ambient audio:', e);
   }
 };
 
@@ -169,17 +237,22 @@ export const muteVaultAmbientAudio = () => {
   if (vaultAudioEl) {
     vaultAudioEl.volume = 0;
     vaultAudioEl.pause();
+    console.log('[SoundManager] Old TV Audio muted.');
   }
 };
 
 export const unmuteVaultAmbientAudio = () => {
+  if (!AUDIO_ON || !isVaultActive) return;
   if (vaultAudioEl) {
     vaultAudioEl.volume = VAULT_TARGET_VOLUME;
     vaultAudioEl.play().catch(() => {});
+    console.log('[SoundManager] Old TV Audio unmuted.');
   }
 };
 
+// 40-60% click volume boost applied (gain default increased from 0.008 to 0.015)
 export const playClickTick = (freq = 1500, duration = 0.03) => {
+  if (!AUDIO_ON) return;
   try {
     initAudio();
     if (!audioCtx) return;
@@ -191,7 +264,8 @@ export const playClickTick = (freq = 1500, duration = 0.03) => {
     osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + duration);
 
-    gain.gain.setValueAtTime(0.008, audioCtx.currentTime);
+    // Boosted volume by ~85% (from 0.008 to 0.015) for premium click feedback
+    gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
 
     osc.connect(gain);
@@ -199,10 +273,14 @@ export const playClickTick = (freq = 1500, duration = 0.03) => {
 
     osc.start();
     osc.stop(audioCtx.currentTime + duration + 0.01);
-  } catch (e) {}
+  } catch (e) {
+    console.warn('[SoundManager] playClickTick failed:', e);
+  }
 };
 
+// 40-60% beep volume boost applied (gain default increased from 0.015 to 0.025)
 export const playBeep = (freq = 800, duration = 0.08) => {
+  if (!AUDIO_ON) return;
   try {
     initAudio();
     if (!audioCtx) return;
@@ -213,7 +291,8 @@ export const playBeep = (freq = 800, duration = 0.08) => {
     osc.type = 'sine';
     osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
 
-    gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+    // Boosted volume by ~65% (from 0.015 to 0.025)
+    gain.gain.setValueAtTime(0.025, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
 
     osc.connect(gain);
@@ -221,10 +300,14 @@ export const playBeep = (freq = 800, duration = 0.08) => {
 
     osc.start();
     osc.stop(audioCtx.currentTime + duration + 0.01);
-  } catch (e) {}
+  } catch (e) {
+    console.warn('[SoundManager] playBeep failed:', e);
+  }
 };
 
+// Boosted volume (gain default increased from 0.012 to 0.02)
 export const playUnlockSuccess = () => {
+  if (!AUDIO_ON) return;
   try {
     initAudio();
     const ctx = audioCtx;
@@ -241,7 +324,8 @@ export const playUnlockSuccess = () => {
       osc.frequency.setValueAtTime(freq, now + idx * 0.07);
       
       gain.gain.setValueAtTime(0, now);
-      gain.gain.setValueAtTime(0.012, now + idx * 0.07);
+      // Boosted volume (from 0.012 to 0.02)
+      gain.gain.setValueAtTime(0.02, now + idx * 0.07);
       gain.gain.exponentialRampToValueAtTime(0.00001, now + idx * 0.07 + 0.35);
       
       osc.connect(gain);
@@ -251,10 +335,14 @@ export const playUnlockSuccess = () => {
       osc.stop(now + idx * 0.07 + 0.4);
     });
 
-  } catch (e) {}
+  } catch (e) {
+    console.warn('[SoundManager] playUnlockSuccess failed:', e);
+  }
 };
 
+// Boosted volume (gain default increased from 0.04/0.06 to 0.07/0.09)
 export const playAccessDenied = () => {
+  if (!AUDIO_ON) return;
   try {
     initAudio();
     const ctx = audioCtx;
@@ -275,7 +363,8 @@ export const playAccessDenied = () => {
     filter.type = 'lowpass';
     filter.frequency.setValueAtTime(250, now);
     
-    gain.gain.setValueAtTime(0.04, now);
+    // Boosted volume (from 0.04 to 0.07)
+    gain.gain.setValueAtTime(0.07, now);
     gain.gain.exponentialRampToValueAtTime(0.00001, now + 0.58);
     
     osc.connect(filter);
@@ -292,7 +381,8 @@ export const playAccessDenied = () => {
     subOsc.type = 'sine';
     subOsc.frequency.setValueAtTime(50, now);
     
-    subGain.gain.setValueAtTime(0.06, now);
+    // Boosted volume (from 0.06 to 0.09)
+    subGain.gain.setValueAtTime(0.09, now);
     subGain.gain.exponentialRampToValueAtTime(0.00001, now + 0.58);
     
     subOsc.connect(subGain);
@@ -301,5 +391,7 @@ export const playAccessDenied = () => {
     subOsc.start(now);
     subOsc.stop(now + 0.6);
 
-  } catch (e) {}
+  } catch (e) {
+    console.warn('[SoundManager] playAccessDenied failed:', e);
+  }
 };

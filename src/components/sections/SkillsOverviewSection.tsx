@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { playClickTick } from '../utils/SoundManager';
+import { playClickTick } from '../../utils/SoundManager';
 import { Activity, ShieldAlert, Check } from 'lucide-react';
 
 const coreSkills = [

@@ -1,33 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
-import { X } from 'lucide-react';
+import { X, Volume2, VolumeX } from 'lucide-react';
 import { NavigationalOSPortal } from './NavigationalOSPortal';
-
-// Dynamic synthesize audio click
-const playTick = (freq = 1500, dur = 0.035) => {
-  try {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioContextClass) return;
-    
-    const audioCtx = new AudioContextClass();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + dur);
-    
-    gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + dur);
-    
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    
-    osc.start();
-    osc.stop(audioCtx.currentTime + dur + 0.01);
-  } catch (e) {}
-};
+import { navigateWithTransition } from '../../utils/SystemNavigator';
+import { playClickTick, isAudioOn, toggleAudio } from '../../utils/SoundManager';
 
 interface MinimalUIProps {
   activeSection: string;
@@ -35,9 +12,32 @@ interface MinimalUIProps {
 
 export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAudioOnGlobal, setIsAudioOnGlobal] = useState(isAudioOn());
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  
   const isProjectsActive = activeSection !== 'hero';
   const isFooterSection = activeSection === 'footer';
   const menuBtnRef = useRef<HTMLButtonElement>(null);
+
+  // Sync state and show notifications
+  useEffect(() => {
+    const handleAudioChange = (e: Event) => {
+      const isOn = (e as CustomEvent).detail;
+      setIsAudioOnGlobal(isOn);
+      setToastMessage(isOn ? '[AUDIO] SYSTEM ENABLED' : '[AUDIO] SYSTEM MUTED');
+    };
+    window.addEventListener('audio-state-changed', handleAudioChange);
+    return () => window.removeEventListener('audio-state-changed', handleAudioChange);
+  }, []);
+
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => {
+        setToastMessage(null);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
 
   // Magnetic Button Effect for Menu button
   useEffect(() => {
@@ -93,7 +93,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
 
   useEffect(() => {
     const openNavigationMenu = () => {
-      playTick(1800, 0.05);
+      playClickTick(1800, 0.05);
       setIsOpen(true);
     };
 
@@ -102,12 +102,41 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
   }, []);
 
   const handleMenuClick = () => {
-    playTick(isOpen ? 900 : 1800, 0.05);
+    playClickTick(isOpen ? 900 : 1800, 0.05);
     setIsOpen(!isOpen);
+  };
+
+  const handleAudioToggle = () => {
+    // Perform toggle
+    const nextState = toggleAudio();
+    if (nextState) {
+      playClickTick(1600, 0.04);
+    }
   };
 
   return (
     <>
+      {/* Visual Audio System Notification Toast */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            className="fixed top-20 sm:top-24 left-1/2 transform -translate-x-1/2 z-[150] font-mono text-[9px] sm:text-xs font-bold tracking-[0.22em] text-white border px-4 py-2 bg-black rounded-full uppercase flex items-center gap-2 select-none shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+            style={{
+              borderColor: isAudioOnGlobal ? 'rgba(0, 255, 102, 0.4)' : 'rgba(255, 255, 255, 0.15)',
+              boxShadow: isAudioOnGlobal 
+                ? '0 8px 32px rgba(0, 255, 102, 0.1), 0 0 15px rgba(0, 255, 102, 0.15)' 
+                : '0 8px 32px rgba(0, 0, 0, 0.5)'
+            }}
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${isAudioOnGlobal ? 'bg-[#00FF66] animate-ping' : 'bg-zinc-500'}`} />
+            {toastMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* FRAME CONTROLS */}
       {/* TOP LEFT: TITLE OR NAVIGATION NODE */}
       <AnimatePresence mode="wait">
@@ -119,7 +148,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-6 left-6 sm:top-10 sm:left-10 text-left font-mono text-[9px] sm:text-xs tracking-widest z-30 select-none pointer-events-none uppercase text-black/60"
+            className="fixed top-6 left-6 sm:top-10 sm:left-10 text-left font-mono text-[9px] sm:text-xs tracking-widest z-35 select-none pointer-events-none uppercase text-black/60"
           >
             <div>CREATIVE DEVELOPER</div>
             <div className="flex items-center gap-1.5 mt-0.5 text-emerald-600 font-bold">
@@ -133,10 +162,10 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
       {/* TOP CENTER: MONOGRAM SECURE NODE STATUS (HIDDEN VAULT LAUNCHER) */}
       <div 
         onClick={() => {
-          playTick(2000, 0.08);
+          playClickTick(2000, 0.08);
           window.dispatchEvent(new Event('trigger-vault-decryption'));
         }}
-        onMouseEnter={() => playTick(1500, 0.01)}
+        onMouseEnter={() => playClickTick(1500, 0.01)}
         className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 font-mono text-[8px] sm:text-[10px] tracking-widest text-black/40 flex items-center gap-2 border border-black/10 px-3 py-1 rounded-full bg-black/[0.01] hover:bg-black/[0.04] hover:text-black hover:border-black/30 transition-all duration-300 cursor-pointer interactive-hover ${
           isProjectsActive ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
@@ -146,10 +175,32 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
         <span>[ P / B ]</span>
       </div>
 
-      {/* TOP RIGHT: MENU TOGGLE */}
-      <div className={`fixed top-6 right-6 sm:top-10 sm:right-10 z-50 transition-opacity duration-300 ${
+      {/* TOP RIGHT: MENU & AUDIO MASTER SWITCH */}
+      <div className={`fixed top-6 right-6 sm:top-10 sm:right-10 z-50 transition-opacity duration-300 flex items-center gap-3 ${
         isFooterSection && !isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
       }`}>
+        
+        {/* AUDIO MASTER SWITCH */}
+        <button
+          onClick={handleAudioToggle}
+          onMouseEnter={() => playClickTick(1500, 0.015)}
+          className="interactive-hover flex items-center justify-center p-2 rounded-full border bg-black/80 backdrop-blur-md transition-all duration-300 w-9 h-9 sm:w-10 sm:h-10 cursor-pointer pointer-events-auto"
+          style={{
+            borderColor: isAudioOnGlobal ? '#00FF66' : 'rgba(255, 255, 255, 0.15)',
+            boxShadow: isAudioOnGlobal 
+              ? '0 0 12px rgba(0, 255, 102, 0.25), 0 0 4px rgba(0, 255, 102, 0.15)' 
+              : 'none'
+          }}
+          title={isAudioOnGlobal ? "Mute All Sounds" : "Unmute All Sounds"}
+        >
+          {isAudioOnGlobal ? (
+            <Volume2 size={13} className="text-[#00FF66]" />
+          ) : (
+            <VolumeX size={13} className="text-zinc-500" />
+          )}
+        </button>
+
+        {/* MENU TOGGLE */}
         <button
           ref={menuBtnRef}
           onClick={handleMenuClick}
@@ -201,7 +252,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed bottom-6 right-6 sm:bottom-10 sm:left-10 text-right font-mono text-[9px] sm:text-xs tracking-widest text-black/50 z-30 select-none pointer-events-none uppercase"
+              className="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 text-right font-mono text-[9px] sm:text-xs tracking-widest text-black/50 z-30 select-none pointer-events-none uppercase"
             >
               BASED IN INDIA
             </motion.div>
@@ -223,9 +274,7 @@ export const MinimalUI = ({ activeSection }: MinimalUIProps) => {
               isOverlay={true} 
               onNavigate={(href) => {
                 setIsOpen(false);
-                window.history.pushState(null, '', '/');
-                window.location.hash = href;
-                window.dispatchEvent(new PopStateEvent('popstate'));
+                navigateWithTransition(href);
               }} 
             />
           </motion.div>

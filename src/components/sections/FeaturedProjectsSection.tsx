@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { playClickTick } from '../utils/SoundManager';
+import { playClickTick } from '../../utils/SoundManager';
 import { Cpu, ShieldCheck, Code, ExternalLink, Calendar, RefreshCw } from 'lucide-react';
 
 const featuredProjects = [

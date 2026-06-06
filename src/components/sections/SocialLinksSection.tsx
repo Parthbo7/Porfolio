@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { playClickTick, playUnlockSuccess } from '../utils/SoundManager';
+import { playClickTick, playUnlockSuccess } from '../../utils/SoundManager';
 import { Github, Linkedin, Instagram, Mail, FileText } from 'lucide-react';
 import gsap from 'gsap';
 import { type MouseEvent as ReactMouseEvent } from 'react';
