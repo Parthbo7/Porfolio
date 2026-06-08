@@ -392,7 +392,7 @@ export const ProfilePage = ({ onBack }: ProfilePageProps) => {
                         </div>
                         <div className="grid grid-cols-3 border-b border-black/[0.03] pb-2">
                           <span className="text-black/40">CURRENT SEMESTER:</span>
-                          <span className="col-span-2 text-[#FF3E6C] font-extrabold">Semester III</span>
+                          <span className="col-span-2 text-[#FF3E6C] font-extrabold">Semester IV</span>
                         </div>
                         <div className="grid grid-cols-3 border-b border-black/[0.03] pb-2">
                           <span className="text-black/40">SGPA:</span>
