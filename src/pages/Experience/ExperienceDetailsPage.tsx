@@ -107,6 +107,21 @@ export const ExperienceDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Automatically redirect moved experience nodes to their dedicated page routes
+  useEffect(() => {
+    if (id === 'gdg' || id === 'exp-gdg') {
+      navigate('/experience/gdg', { replace: true });
+    } else if (id === 'bootcamp' || id === 'startup' || id === 'exp-startup') {
+      navigate('/experience/bootcamp', { replace: true });
+    } else if (id === 'freshers' || id === 'exp-freshers') {
+      navigate('/experience/freshers', { replace: true });
+    } else if (id === 'mechanics' || id === 'exp-mechanics') {
+      navigate('/experience/mechanics', { replace: true });
+    } else if (id === 'tpo' || id === 'exp-tpo') {
+      navigate('/experience/tpo', { replace: true });
+    }
+  }, [id, navigate]);
   
   const [logs, setLogs] = useState<string[]>([
     '> ARCHIVE DATABASE ACCESS NOMINAL...',

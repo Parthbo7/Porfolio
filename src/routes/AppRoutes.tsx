@@ -25,6 +25,7 @@ import { ResearchPage } from '../pages/Research/ResearchPage';
 import { CertificationsPage } from '../pages/Certifications/CertificationsPage';
 import { GalleryPage } from '../pages/Gallery/GalleryPage';
 import { ContactPage } from '../pages/Contact/ContactPage';
+import { NotFoundPage } from '../pages/NotFound/NotFoundPage';
 
 export const AppRoutes = () => {
   const location = useLocation();
@@ -60,6 +61,9 @@ export const AppRoutes = () => {
         <Route path="/projects/hackfusion" element={<HackfusionPage />} />
         <Route path="/projects/hackspectra" element={<HackspectraPage />} />
         <Route path="/projects/list" element={<ProjectsDatabasePage />} />
+
+        {/* Wildcard 404 Fallback */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AnimatePresence>
   );
