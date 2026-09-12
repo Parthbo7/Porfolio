@@ -114,7 +114,7 @@ export const FreshersPage = () => {
         {/* Draggable Badges */}
         <ExperienceMetadata badges={badges} containerRef={containerRef} />
 
-        <div className="max-w-6xl mx-auto px-6 pt-32 w-full relative z-10">
+        <div className="w-full px-6 sm:px-8 lg:px-12 pt-28 lg:pt-32 relative z-10">
           {/* HERO */}
           <ExperienceHero
             onBack={handleBack}
@@ -137,7 +137,7 @@ export const FreshersPage = () => {
           />
 
           {/* ROUNDS SUMMARY */}
-          <section className="w-full max-w-5xl mx-auto mb-20 text-left relative z-10">
+          <section className="w-full mb-24 text-left relative z-10">
             <div className="inline-flex items-center gap-3 mb-8 opacity-45">
               <div className="h-[1.5px] w-8 bg-[#00CC52]" />
               <span className="font-mono text-[8px] text-black tracking-[0.25em] uppercase font-bold">COMPETITION_STAGES</span>
@@ -199,3 +199,4 @@ export const FreshersPage = () => {
 };
 
 export default FreshersPage;
+

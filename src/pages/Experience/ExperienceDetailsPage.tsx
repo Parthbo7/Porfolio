@@ -259,7 +259,7 @@ export const ExperienceDetailsPage = () => {
         {/* Draggable Badges */}
         <ExperienceMetadata badges={badges} containerRef={containerRef} />
 
-        <div className="max-w-6xl mx-auto px-6 pt-32 w-full relative z-10">
+        <div className="w-full px-6 sm:px-8 lg:px-12 pt-28 lg:pt-32 relative z-10">
           {/* HERO */}
           <ExperienceHero
             onBack={handleBack}
@@ -284,7 +284,7 @@ export const ExperienceDetailsPage = () => {
           {/* VISOTECH CUSTOM SPECIFIC SECTIONS */}
           {isVisotech && (
             <div className="flex flex-col gap-20 w-full mb-20">
-              <section className="w-full max-w-5xl mx-auto relative z-10 flex flex-col lg:flex-row gap-12 items-center text-left">
+              <section className="w-full relative z-10 flex flex-col lg:flex-row gap-12 items-center text-left">
                 <div className="w-full lg:w-7/12 relative flex justify-center">
                   <div className="absolute top-4 left-4 -right-4 -bottom-4 bg-gradient-to-br from-[#00CC52]/5 to-transparent border border-black/5 rounded-[18px] pointer-events-none -z-10" />
                   <motion.div
@@ -326,7 +326,7 @@ export const ExperienceDetailsPage = () => {
                 </div>
               </section>
 
-              <section className="w-full max-w-5xl mx-auto relative z-10 flex flex-col lg:flex-row-reverse gap-12 items-center text-left">
+              <section className="w-full relative z-10 flex flex-col lg:flex-row-reverse gap-12 items-center text-left">
                 <div className="w-full lg:w-7/12 relative flex justify-center">
                   <div className="absolute top-4 left-4 -right-4 -bottom-4 bg-gradient-to-br from-[#00CC52]/5 to-transparent border border-black/5 rounded-[18px] pointer-events-none -z-10" />
                   <motion.div
@@ -392,3 +392,4 @@ export const ExperienceDetailsPage = () => {
 };
 
 export default ExperienceDetailsPage;
+

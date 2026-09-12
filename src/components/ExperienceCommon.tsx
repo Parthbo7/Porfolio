@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Terminal, Check, ArrowRight, Github, ExternalLink } from 'lucide-react';
 import { playClickTick } from '../utils/SoundManager';
+import type { StickerBadge } from '../types/portfolio';
 
 interface ExperienceHeroProps {
   onBack?: () => void;
@@ -12,7 +13,7 @@ interface ExperienceHeroProps {
 
 export function ExperienceHero({ onBack, protocolLabel, title, subtitle, infoLabel }: ExperienceHeroProps) {
   return (
-    <header className="mb-20 flex flex-col items-center text-center relative z-10">
+    <header className="mb-24 grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-8 lg:gap-12 items-end text-left relative z-10 w-full">
       {/* FIXED CLOSE HUD BUTTON */}
       {onBack && (
         <div className="fixed top-8 left-8 sm:top-12 sm:left-12 z-[110]">
@@ -32,51 +33,62 @@ export function ExperienceHero({ onBack, protocolLabel, title, subtitle, infoLab
         </div>
       )}
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-6 opacity-85"
-      >
-        <div className="h-[1px] w-8 bg-[#00CC52]/40" />
-        <span className="font-mono text-[9px] tracking-[0.45em] uppercase text-[#00CC52] font-extrabold">{protocolLabel}</span>
-        <div className="h-[1px] w-8 bg-[#00CC52]/40" />
-      </motion.div>
+      <div className="flex flex-col gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center gap-4 opacity-85"
+        >
+          <div className="h-[1px] w-8 bg-[#00CC52]/40" />
+          <span className="font-mono text-[9px] tracking-[0.45em] uppercase text-[#00CC52] font-extrabold">{protocolLabel}</span>
+          <div className="h-[1px] w-8 bg-[#00CC52]/40" />
+        </motion.div>
 
-      <h1 className="font-display font-black text-4xl sm:text-6xl lg:text-7xl leading-[0.9] uppercase mb-4 tracking-tighter text-black max-w-4xl select-none">
-        {Array.isArray(title) ? (
-          title.map((line, i) => (
-            <span key={i} className="block">
-              {line}
-            </span>
-          ))
-        ) : (
-          title
-        )}
-      </h1>
-      <p className="font-sans text-sm sm:text-base tracking-wide leading-relaxed max-w-2xl text-neutral-700 mb-8 px-4 font-normal">
-        {subtitle}
-      </p>
+        <h1 className="font-display font-black text-4xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[0.9] uppercase tracking-tighter text-black select-none max-w-4xl">
+          {Array.isArray(title) ? (
+            title.map((line, i) => (
+              <span key={i} className="block">
+                {line}
+              </span>
+            ))
+          ) : (
+            title
+          )}
+        </h1>
 
-      <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs text-[#00CC52] font-bold tracking-widest uppercase bg-white/70 border border-black/10 px-4 py-2 rounded-sm shadow-[3px_3px_0px_rgba(0,255,82,0.1)]">
-        <Calendar size={12} className="align-middle mr-1" />
-        {infoLabel}
+        <p className="font-sans text-sm sm:text-base tracking-wide leading-relaxed max-w-2xl text-neutral-700 font-normal">
+          {subtitle}
+        </p>
+
+        <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs text-[#00CC52] font-bold tracking-widest uppercase bg-white/70 border border-black/10 px-4 py-2 rounded-sm shadow-[3px_3px_0px_rgba(0,255,82,0.1)] w-fit">
+          <Calendar size={12} className="align-middle mr-1" />
+          {infoLabel}
+        </div>
+      </div>
+
+      <div className="relative hidden lg:block">
+        <div className="absolute inset-0 rounded-[24px] border border-black/10 bg-white/55 backdrop-blur-md shadow-[10px_10px_0px_rgba(168,211,200,0.08)]" />
+        <div className="relative p-8 xl:p-10 min-h-[240px] flex flex-col justify-between">
+          <div className="flex items-center justify-between gap-4">
+            <span className="font-mono text-[8px] tracking-[0.3em] uppercase text-black/35">MEMORY_VAULT</span>
+            <span className="font-mono text-[8px] tracking-[0.3em] uppercase text-[#00CC52]">ARCHIVE READY</span>
+          </div>
+          <div className="font-display font-black text-2xl xl:text-3xl uppercase tracking-tighter text-black/80 leading-none">
+            ENTERING <br /> FUTURISTIC MEMORY SPACE
+          </div>
+          <div className="flex items-center gap-2 font-mono text-[8px] tracking-[0.28em] uppercase text-black/45">
+            <div className="w-2 h-2 rounded-full bg-[#00CC52] animate-pulse" />
+            SCROLL TO UNFOLD THE ARCHIVE
+          </div>
+        </div>
       </div>
     </header>
   );
 }
 
 interface ExperienceMetadataProps {
-  badges: Array<{
-    label: string;
-    top?: string;
-    bottom?: string;
-    left?: string;
-    right?: string;
-    rotate: number;
-    delay: number;
-    style?: string;
-  }>;
+  badges: StickerBadge[];
   containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -138,44 +150,49 @@ export function ExperienceOverview({
   sidebarItems,
 }: ExperienceOverviewProps) {
   return (
-    <section className="w-full max-w-5xl mx-auto mb-20 text-left relative z-10">
-      <div className="relative backdrop-blur-md border border-black/10 rounded-sm p-8 sm:p-12 bg-white/80 shadow-[10px_10px_0px_rgba(168,211,200,0.12)] hover:border-black transition-all duration-500">
-        <div className="absolute left-6 top-6 font-mono text-[8px] uppercase tracking-[0.25em] text-black/35">
-          {ledgerLabel || 'LEDGER_NODE // CORE_OBJECTIVE'}
-        </div>
+    <section className="w-full mb-24 text-left relative z-10">
+      <div className="relative backdrop-blur-md border border-black/10 rounded-sm p-8 sm:p-10 lg:p-12 bg-white/80 shadow-[10px_10px_0px_rgba(168,211,200,0.12)] hover:border-black transition-all duration-500">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-12">
+          <div>
+            <div className="absolute left-6 top-6 font-mono text-[8px] uppercase tracking-[0.25em] text-black/35">
+              {ledgerLabel || 'LEDGER_NODE // CORE_OBJECTIVE'}
+            </div>
 
-        <div className="mb-8 pt-4">
-          <span className="font-mono text-[10px] text-[#00CC52] font-bold tracking-[0.3em] uppercase block mb-1">
-            {identityLabel}
-          </span>
-          <h3 className="font-display font-black text-xl sm:text-2xl uppercase tracking-tighter leading-tight text-black max-w-3xl">
-            {headline}
-          </h3>
-        </div>
+            <div className="mb-8 pt-4">
+              <span className="font-mono text-[10px] text-[#00CC52] font-bold tracking-[0.3em] uppercase block mb-1">
+                {identityLabel}
+              </span>
+              <h3 className="font-display font-black text-xl sm:text-2xl lg:text-3xl uppercase tracking-tighter leading-tight text-black max-w-3xl">
+                {headline}
+              </h3>
+            </div>
 
-        <div className="h-[1px] w-full bg-black/5 mb-8" />
+            <div className="h-[1px] w-full bg-black/5 mb-8" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Objective list */}
-          <div className="lg:col-span-8 flex flex-col gap-5 text-left">
             {pointsTitle && (
-              <span className="font-mono text-[9px] text-black/40 uppercase tracking-widest block">
+              <span className="font-mono text-[9px] text-black/40 uppercase tracking-widest block mb-4">
                 {pointsTitle}
               </span>
             )}
             <div className="flex flex-col gap-4 font-sans text-[14.5px] leading-relaxed font-light text-neutral-700">
               {points.map((point, i) => (
-                <div key={i} className="flex items-start gap-3">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -14, filter: 'blur(8px)' }}
+                  whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 0.6, delay: i * 0.07 }}
+                  className="flex items-start gap-3"
+                >
                   <Check size={14} className="text-[#00CC52] mt-1 shrink-0" />
                   <span>{point}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
 
-          {/* Sidebar */}
           {sidebarItems && sidebarItems.length > 0 && (
-            <div className="lg:col-span-4 flex flex-col gap-6">
+            <div className="flex flex-col gap-6 lg:pt-12">
               <div className="border border-black/10 bg-white/60 p-6 rounded-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 font-mono text-[6px] text-black/30 uppercase tracking-[0.25em] px-2 py-0.5">
                   {sidebarLabel || 'STACK_SPEC'}
@@ -188,14 +205,20 @@ export function ExperienceOverview({
 
                 <div className="flex flex-wrap gap-2">
                   {sidebarItems.map((item) => (
-                    <span
+                    <motion.span
                       key={item}
+                      whileHover={{ y: -2, scale: 1.03 }}
                       className="font-mono text-[9px] text-black/60 border border-black/10 bg-white/80 px-2.5 py-1 rounded-full hover:border-[#00CC52] hover:shadow-[0_0_8px_rgba(0,255,82,0.1)] transition-all duration-300 select-none cursor-default"
                     >
                       {item}
-                    </span>
+                    </motion.span>
                   ))}
                 </div>
+              </div>
+
+              <div className="border border-black/10 bg-white/50 p-5 rounded-sm">
+                <div className="font-mono text-[8px] uppercase tracking-[0.25em] text-black/35 mb-4">ARCHIVE_SIGNAL</div>
+                <div className="h-20 rounded-sm bg-[radial-gradient(circle_at_20%_20%,rgba(0,204,82,0.12),transparent_24%),radial-gradient(circle_at_80%_30%,rgba(212,175,55,0.11),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.8),rgba(255,255,255,0.55))] border border-black/5" />
               </div>
             </div>
           )}
@@ -218,7 +241,7 @@ interface ExperienceGalleryProps {
 
 export function ExperienceGallery({ images, title, label }: ExperienceGalleryProps) {
   return (
-    <section className="w-full max-w-5xl mx-auto mb-20 px-2 text-center relative z-10">
+    <section className="w-full mb-24 px-0 text-left relative z-10">
       <div className="inline-flex items-center gap-3 mb-8 opacity-45">
         <div className="h-[1.5px] w-8 bg-[#00CC52]" />
         <span className="font-mono text-[8px] text-black tracking-[0.25em] uppercase font-bold">
@@ -229,16 +252,21 @@ export function ExperienceGallery({ images, title, label }: ExperienceGalleryPro
         {title || 'SHOWCASE ARCHIVES'}
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
         {images.map((slide, idx) => {
           const defaultRotate = idx % 2 === 0 ? -1.5 : 1.5;
           const finalRotate = slide.rotate !== undefined ? slide.rotate : defaultRotate;
+          const spanClass = idx === 0 ? 'lg:col-span-7' : idx === 1 ? 'lg:col-span-5' : idx % 2 === 0 ? 'lg:col-span-6' : 'lg:col-span-6';
 
           return (
             <motion.div
               key={idx}
+              initial={{ opacity: 0, y: 24, rotate: finalRotate * 0.6, filter: 'blur(8px)' }}
+              whileInView={{ opacity: 1, y: 0, rotate: 0, filter: 'blur(0px)' }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ duration: 0.85, delay: idx * 0.08 }}
               whileHover={{ y: -8, rotate: finalRotate * 0.5 }}
-              className="flex flex-col gap-3 group"
+              className={`flex flex-col gap-3 group ${spanClass}`}
             >
               <div
                 className="p-[10px] rounded-[18px] border border-black/10 hover:border-black bg-white/80 overflow-hidden flex items-center justify-center transition-all duration-500 backdrop-blur-md relative shadow-[10px_10px_0px_rgba(168,211,200,0.12)]"
@@ -271,7 +299,7 @@ interface ExperienceTagsProps {
 
 export function ExperienceTags({ tags, title, label }: ExperienceTagsProps) {
   return (
-    <section className="w-full max-w-5xl mx-auto mb-20 text-left relative z-10">
+    <section className="w-full mb-24 text-left relative z-10">
       <div className="border border-black/10 bg-white/80 backdrop-blur-md rounded-sm p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 shadow-[4px_4px_0px_rgba(0,0,0,0.02)]">
         <div className="text-left">
           <span className="font-mono text-[9px] text-[#00CC52] font-black tracking-widest block uppercase mb-1">
@@ -282,7 +310,7 @@ export function ExperienceTags({ tags, title, label }: ExperienceTagsProps) {
           </h4>
         </div>
 
-        <div className="flex flex-wrap gap-2 max-w-xl">
+        <div className="flex flex-wrap gap-2 max-w-xl justify-start sm:justify-end">
           {tags.map((item) => (
             <span
               key={item}
@@ -320,7 +348,7 @@ export function ExperienceFooter({
     <div className="w-full flex flex-col gap-20">
       {/* GITHUB SOURCE CODE ARCHIVE SECTION */}
       {gitUrl && (
-        <section className="w-full max-w-5xl mx-auto mb-4 relative z-10 text-left">
+        <section className="w-full mb-4 relative z-10 text-left">
           <div className="relative border border-[#00CC52]/30 rounded-sm p-8 sm:p-12 overflow-hidden bg-white/90 shadow-[10px_10px_0px_rgba(0,255,82,0.05)] flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             <div className="absolute top-0 right-0 font-mono text-[6px] text-black/30 uppercase tracking-[0.25em] px-2 py-0.5 bg-white border-l border-b border-black/10">
               GIT_REPOSITORY
@@ -357,7 +385,7 @@ export function ExperienceFooter({
 
       {/* FINAL CONCLUSION SECTION */}
       {conclusionText && (
-        <section className="w-full max-w-5xl mx-auto text-left relative z-10">
+        <section className="w-full text-left relative z-10">
           <div className="relative border border-black/10 rounded-sm p-8 sm:p-12 overflow-hidden bg-white/80 shadow-[10px_10px_0px_rgba(168,211,200,0.12)] hover:border-black transition-all duration-500">
             <span className="font-mono text-[10px] text-[#00CC52] font-bold tracking-[0.3em] uppercase block mb-1">
               SUMMARY & COMPLETION
@@ -400,7 +428,7 @@ export function ExperienceFooter({
       </footer>
 
       {/* BOTTOM TELEMETRY BAR */}
-      <section className="w-full max-w-5xl mx-auto px-2 relative z-10">
+      <section className="w-full px-2 relative z-10">
         <div className="border border-black/10 bg-white/60 backdrop-blur-md rounded-md p-5 font-mono text-[9px] sm:text-xs text-black/60 shadow-[4px_4px_0px_rgba(0,0,0,0.02)] relative overflow-hidden flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="absolute top-0 right-0 font-mono text-[6px] text-black/20 uppercase tracking-[0.25em] px-2 py-0.5">
             SYS_TELEMETRY

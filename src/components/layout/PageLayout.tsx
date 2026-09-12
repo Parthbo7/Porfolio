@@ -69,9 +69,25 @@ export const PageLayout = ({
         navigate(onBack);
       }
     } else {
-      navigate(-1);
+      if (window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate('/');
+      }
     }
   };
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || (e.altKey && e.key === 'ArrowLeft')) {
+        e.preventDefault();
+        handleBackClick();
+      }
+    };
+
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   return (
     <div
@@ -96,11 +112,15 @@ export const PageLayout = ({
         </div>
 
         {/* FIXED CLOSE HUD BUTTON */}
-        <div className="fixed top-8 left-8 sm:top-12 sm:left-12 z-[110]">
+        <div className="fixed top-8 left-8 sm:top-12 sm:left-12 z-[9999]">
           <motion.button
+            type="button"
+            role="button"
+            aria-label={backLabel}
             onClick={handleBackClick}
             onMouseEnter={() => playClickTick(1600, 0.02)}
-            className="flex items-center gap-3 interactive-hover group backdrop-blur-2xl border border-black/10 bg-white/70 px-5 py-2.5 rounded-sm transition-all duration-300 text-black/60 hover:text-black hover:border-black/30 cursor-pointer"
+            className="flex items-center gap-3 interactive-hover group backdrop-blur-2xl border border-black/10 bg-white/70 px-5 py-2.5 rounded-sm transition-all duration-300 text-black/60 hover:text-black hover:border-black/30 pointer-events-auto cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-black/50 focus-visible:ring-offset-2 relative z-[9999]"
+            style={{ position: 'relative', zIndex: 9999, pointerEvents: 'auto', cursor: 'pointer' }}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >

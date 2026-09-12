@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { playClickTick } from '../../utils/SoundManager';
 import { Terminal, Shield, Cpu, Activity } from 'lucide-react';
+import pbo7Img from '../../assets/Images/pbo7.jpeg';
 
 export const AboutMeSection = () => {
   return (
@@ -52,7 +53,7 @@ export const AboutMeSection = () => {
             {/* Image Container with scanner blur */}
             <div className="w-full h-full bg-[#f3f3f3] relative overflow-hidden flex items-center justify-center">
               <img 
-                src="/assets/og/parth.jpg" 
+                src={pbo7Img} 
                 alt="Parth Bulbule" 
                 className="w-full h-full object-cover grayscale contrast-[1.1] brightness-[0.95] group-hover:grayscale-0 transition-all duration-700 select-none pointer-events-none"
               />

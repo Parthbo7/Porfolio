@@ -4,19 +4,7 @@ import { ArrowLeft, ArrowUpRight, Lock, Terminal, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { playClickTick } from '../../utils/SoundManager';
 
-interface CardData {
-  id: string;
-  year: string;
-  title: string;
-  subtitle: string;
-  description?: string;
-  tags: string[];
-  link?: string;
-  isLocked?: boolean;
-  highlightTag?: { name: string; style: string };
-  alignment: 'left' | 'right';
-  gridArea: string; // positioning class
-}
+import type { Project } from '../../types/portfolio';
 
 export const ProjectsDatabasePage = () => {
   const navigate = useNavigate();
@@ -30,7 +18,7 @@ export const ProjectsDatabasePage = () => {
   // Glitch effect on Secret Vault title
   useEffect(() => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
-    let interval: any;
+    let interval: ReturnType<typeof setInterval> | undefined;
     
     const startGlitch = () => {
       let iterations = 0;
@@ -86,7 +74,7 @@ export const ProjectsDatabasePage = () => {
     return () => clearInterval(logInterval);
   }, []);
 
-  const cards: CardData[] = [
+  const cards: Project[] = [
     {
       id: 'exp-1',
       year: '2025 - PRESENT',
@@ -142,7 +130,7 @@ export const ProjectsDatabasePage = () => {
     }
   ];
 
-  const handleCardClick = (card: CardData) => {
+  const handleCardClick = (card: Project) => {
     playClickTick(1600, 0.08);
     if (card.isLocked) {
       window.dispatchEvent(new Event('trigger-vault-decryption'));

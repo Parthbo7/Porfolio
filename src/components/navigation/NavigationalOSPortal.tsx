@@ -4,14 +4,7 @@ import { playClickTick, playUnlockSuccess } from '../../utils/SoundManager';
 import { navigateWithTransition } from '../../utils/SystemNavigator';
 import { ArrowUpRight, ChevronRight, Cpu, Activity, Zap, GraduationCap, Mail, Github, Linkedin, Instagram, FileText } from 'lucide-react';
 
-interface PortalItem {
-  num: string;
-  name: string;
-  href: string;
-  title: string;
-  icon: any;
-  subtopics: string[];
-}
+import type { PortalItem } from '../../types/portfolio';
 
 const portalItems: PortalItem[] = [
   { 

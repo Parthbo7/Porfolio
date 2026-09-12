@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { Terminal, ShieldAlert, HeartPulse, ArrowLeft, Code, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { playClickTick } from '../../utils/SoundManager';
 import { useNavigate } from 'react-router-dom';
+import pbo7Img from '../../assets/Images/pbo7.jpeg';
 
 // Custom Animated Counter component for System Stats
 const AnimatedCounter = ({ value, suffix = '', duration = 1.2 }: { value: number; suffix?: string; duration?: number }) => {
@@ -42,7 +43,42 @@ export const ProfilePage = () => {
   const [activeFilter, setActiveFilter] = useState<'profile' | 'identity' | 'system'>('profile');
   const [logs, setLogs] = useState<string[]>([]);
   const [showEasterEgg, setShowEasterEgg] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
   const clicksRef = useRef(0);
+  const isExitingRef = useRef(isExiting);
+
+  useEffect(() => {
+    isExitingRef.current = isExiting;
+  }, [isExiting]);
+
+  const closeArchive = useCallback(() => {
+    if (isExitingRef.current) return;
+    playClickTick(1600, 0.05);
+    setIsExiting(true);
+    setTimeout(() => {
+      if (window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate('/');
+      }
+    }, 300);
+  }, [navigate]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeArchive();
+      }
+      if (e.altKey && e.key === 'ArrowLeft') {
+        e.preventDefault();
+        closeArchive();
+      }
+    };
+
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [closeArchive]);
 
   // Live fluctuating mock telemetry stats for stats panel
   const [synapseRate, setSynapseRate] = useState(88);
@@ -93,23 +129,24 @@ export const ProfilePage = () => {
     }
   };
 
-  const handleBack = () => {
-    playClickTick(1600, 0.05);
-    navigate('/');
-  };
-
   return (
     <div 
       ref={containerRef}
-      className="w-full h-full min-h-screen flex flex-col justify-between select-none relative p-6 sm:p-12 lg:p-16"
+      className={`w-full h-full min-h-screen flex flex-col justify-between select-none relative p-6 sm:p-12 lg:p-16 transition-all duration-300 ease-out ${
+        isExiting ? 'opacity-0 blur-sm pointer-events-none' : 'opacity-100 blur-none'
+      }`}
     >
       {/* 1. TOP HEADER LOCAL OVERLAY */}
-      <div className="flex justify-between items-center w-full z-30 pt-2 border-b border-black/5 pb-4">
+      <div className="flex justify-between items-center w-full z-50 pt-2 border-b border-black/5 pb-4 relative">
         {/* Top Left Title */}
         <motion.button
-          onClick={handleBack}
+          type="button"
+          role="button"
+          aria-label="Close Archive"
+          onClick={closeArchive}
           onMouseEnter={() => playClickTick(1600, 0.02)}
-          className="flex items-center gap-3 interactive-hover group backdrop-blur-2xl border border-black/10 bg-white/70 px-5 py-2 rounded-sm transition-all duration-300 text-black/60 hover:text-black hover:border-black/30 pointer-events-auto cursor-pointer"
+          className="flex items-center gap-3 interactive-hover group backdrop-blur-2xl border border-black/10 bg-white/70 px-5 py-2 rounded-sm transition-all duration-300 text-black/60 hover:text-black hover:border-black/30 pointer-events-auto cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-black/50 focus-visible:ring-offset-2 relative z-[9999]"
+          style={{ position: 'relative', zIndex: 9999, pointerEvents: 'auto', cursor: 'pointer' }}
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
         >
@@ -145,7 +182,7 @@ export const ProfilePage = () => {
       </div>
 
       {/* DRAGGABLE FLOATING STICKERS */}
-      <div className="absolute inset-0 pointer-events-none z-35 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none z-20 overflow-hidden">
         {/* PROFILE_NODE Sticker */}
         <motion.div
           drag
@@ -262,7 +299,7 @@ export const ProfilePage = () => {
 
                     <div className="w-full h-full max-w-[280px] max-h-[340px] aspect-[3/4] border border-black/10 rounded-sm overflow-hidden relative shadow-[4px_4px_0px_rgba(0,0,0,0.08)] bg-white p-1">
                       <img 
-                        src="/assets/og/parth.jpg" 
+                        src={pbo7Img} 
                         alt="Parth Pandurang Bulbule Portrait"
                         className="w-full h-full object-cover grayscale contrast-105 group-hover:grayscale-0 transition-all duration-700 select-none pointer-events-none"
                       />

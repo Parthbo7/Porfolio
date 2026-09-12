@@ -4,33 +4,7 @@ import { ArrowUpRight, Check, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { playClickTick } from '../../utils/SoundManager';
 
-interface ExperienceCardData {
-  id: string;
-  year: string;
-  title: string;
-  subtitle: string;
-  description?: string;
-  tags: string[];
-  isExpandable?: boolean;
-  metaLabels?: string[];
-}
-
-interface ExperienceNodeLayout {
-  align: 'left' | 'right';
-  widthPercent: number;
-  translateXPercent: number;
-  desktopTop: number;
-  desktopParallaxShift: number;
-  mobileSpacingClass: string;
-  minHeightClass: string;
-  baseRotate: number;
-  revealRotate: number;
-  floatShift: number;
-  nodeLabel: string;
-  coordinateLabel: string;
-  shellLabel: string;
-  accentClass: string;
-}
+import type { Experience, ExperienceNodeLayout } from '../../types/portfolio';
 
 export const ExperiencePage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -66,7 +40,7 @@ export const ExperiencePage = () => {
     return () => clearInterval(logInterval);
   }, []);
 
-  const experienceCards: ExperienceCardData[] = [
+  const experienceCards: Experience[] = [
     {
       id: 'exp-gdg',
       year: '2025 — PRESENT',
