@@ -3,11 +3,11 @@ import { playClickTick } from '../../utils/SoundManager';
 import { Activity, ShieldAlert, Check } from 'lucide-react';
 
 const coreSkills = [
-  { name: 'React', percentage: 92, status: 'EXPERT', color: 'from-emerald-400 to-emerald-500' },
-  { name: 'Next.js', percentage: 88, status: 'ADVANCED', color: 'from-cyan-400 to-cyan-500' },
-  { name: 'Python', percentage: 90, status: 'EXPERT', color: 'from-yellow-400 to-yellow-500' },
-  { name: 'AI/ML & Prompt Eng.', percentage: 85, status: 'ADVANCED', color: 'from-purple-400 to-purple-500' },
-  { name: 'UI/UX & Creative Code', percentage: 95, status: 'EXPERT', color: 'from-red-400 to-red-500' }
+  { name: 'Python & Data', percentage: 90, status: 'EXPERT', color: 'from-emerald-400 to-emerald-500', check: '// DATA PIPELINE CHECK: NOMINAL' },
+  { name: 'React & Next.js', percentage: 88, status: 'ADVANCED', color: 'from-cyan-400 to-cyan-500', check: '// FRONTEND STACK CHECK: NOMINAL' },
+  { name: 'Backend & APIs', percentage: 84, status: 'ADVANCED', color: 'from-yellow-400 to-yellow-500', check: '// API PIPELINE CHECK: NOMINAL' },
+  { name: 'Databases & Cloud', percentage: 86, status: 'ADVANCED', color: 'from-purple-400 to-purple-500', check: '// DATA LAYER CHECK: NOMINAL' },
+  { name: 'AI/ML & GenAI', percentage: 82, status: 'ADVANCED', color: 'from-red-400 to-red-500', check: '// INTELLIGENCE LAYER CHECK: NOMINAL' }
 ];
 
 export const SkillsOverviewSection = () => {
@@ -80,7 +80,7 @@ export const SkillsOverviewSection = () => {
 
             {/* Sub-label details overlay */}
             <div className="flex justify-between items-center text-[7px] tracking-widest text-white/30 uppercase mt-1">
-              <span>// PIPELINE INTEGRITY CHECK: NOMINAL</span>
+              <span>{skill.check}</span>
               <span className="flex items-center gap-1 text-emerald-400/70">
                 <Check size={9} />
                 VERIFIED

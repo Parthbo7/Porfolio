@@ -1,51 +1,68 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 export const HeroTypography = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
+  // useLayoutEffect runs before the browser paints, so the hidden initial state
+  // is in place on the very first frame (prevents the finished hero from flashing).
+  useLayoutEffect(() => {
+    const root = containerRef.current;
+    if (!root) return;
 
-    const firstRowLetters = containerRef.current.querySelectorAll('.row-1 .letter');
-    const secondRowLetters = containerRef.current.querySelectorAll('.row-2 .letter');
-    const scriptLetters = containerRef.current.querySelectorAll('.script-char');
-    const bgDepthText = containerRef.current.querySelector('.bg-depth-text');
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const tl = gsap.timeline({ defaults: { ease: "power4.out", duration: 1.6 } });
+    // gsap.context scopes the tweens and lets ctx.revert() fully clean up on
+    // unmount / StrictMode double-invoke (no stacked, competing timelines).
+    const ctx = gsap.context(() => {
+      const firstRowLetters = root.querySelectorAll('.row-1 .letter');
+      const secondRowLetters = root.querySelectorAll('.row-2 .letter');
+      const scriptLetters = root.querySelectorAll('.script-char');
+      const bgDepthText = root.querySelector('.bg-depth-text');
 
-    // Initial state
-    gsap.set([firstRowLetters, secondRowLetters], { y: "110%", rotateX: 20 });
-    gsap.set(scriptLetters, { scale: 0, opacity: 0, rotate: -40 });
-    gsap.set(bgDepthText, { opacity: 0, scale: 0.96 });
+      if (prefersReduced) {
+        // Jump straight to the final state — no motion.
+        gsap.set([firstRowLetters, secondRowLetters], { y: '0%', rotateX: 0 });
+        gsap.set(scriptLetters, { scale: 1, opacity: 1, rotate: (i) => (i === 0 ? 12 : -10) });
+        gsap.set(bgDepthText, { opacity: 1, scale: 1 });
+        return;
+      }
 
-    // Reveal stagger timeline
-    tl.to(bgDepthText, {
-      opacity: 1,
-      scale: 1,
-      duration: 1.8,
-      ease: "power3.out",
-      delay: 0.6
-    })
-    .to(firstRowLetters, {
-      y: "0%",
-      rotateX: 0,
-      stagger: 0.08
-    }, "-=1.4")
-    .to(secondRowLetters, {
-      y: "0%",
-      rotateX: 0,
-      stagger: 0.08
-    }, "-=1.2")
-    .to(scriptLetters, {
-      scale: 1,
-      opacity: 1,
-      rotate: (i) => i === 0 ? 12 : -10,
-      duration: 1.3,
-      stagger: 0.15,
-      ease: "elastic.out(1, 0.4)"
-    }, "-=0.6");
+      // Deterministic hidden initial state
+      gsap.set([firstRowLetters, secondRowLetters], { y: "110%", rotateX: 20 });
+      gsap.set(scriptLetters, { scale: 0, opacity: 0, rotate: -40 });
+      gsap.set(bgDepthText, { opacity: 0, scale: 0.96 });
 
+      // Reveal stagger timeline
+      const tl = gsap.timeline({ defaults: { ease: "power4.out", duration: 1.6 } });
+      tl.to(bgDepthText, {
+        opacity: 1,
+        scale: 1,
+        duration: 1.8,
+        ease: "power3.out",
+        delay: 0.6
+      })
+      .to(firstRowLetters, {
+        y: "0%",
+        rotateX: 0,
+        stagger: 0.08
+      }, "-=1.4")
+      .to(secondRowLetters, {
+        y: "0%",
+        rotateX: 0,
+        stagger: 0.08
+      }, "-=1.2")
+      .to(scriptLetters, {
+        scale: 1,
+        opacity: 1,
+        rotate: (i) => i === 0 ? 12 : -10,
+        duration: 1.3,
+        stagger: 0.15,
+        ease: "elastic.out(1, 0.4)"
+      }, "-=0.6");
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (

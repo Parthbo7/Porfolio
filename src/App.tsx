@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -42,14 +42,25 @@ function App() {
     }, 2300);
   };
 
-  useEffect(() => {
-    // Reveal main interface smoothly on load
-    if (containerRef.current) {
-      gsap.fromTo(containerRef.current, 
-        { opacity: 0 }, 
-        { opacity: 1, duration: 1.2, ease: "power2.out" }
-      );
-    }
+  // Reveal main interface smoothly on load. useLayoutEffect sets opacity:0 before
+  // the first paint so the viewport does not flash at full opacity, and
+  // gsap.context + revert keeps StrictMode's double-invoke from stacking tweens.
+  useLayoutEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const ctx = gsap.context(() => {
+      if (prefersReduced) {
+        gsap.set(el, { opacity: 1 });
+        return;
+      }
+      gsap.set(el, { opacity: 0 });
+      gsap.to(el, { opacity: 1, duration: 1.2, ease: "power2.out" });
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
 
   // Set up mysterious keyboard key sequence listener & custom window event listener

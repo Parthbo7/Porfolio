@@ -127,6 +127,28 @@ export const ProjectsDatabasePage = () => {
       link: 'https://github.com/Parthbo7/creative-dev-lab',
       alignment: 'left',
       gridArea: 'lg:col-start-2 lg:col-span-4 lg:row-start-5'
+    },
+    {
+      id: 'exp-6',
+      year: '2026',
+      title: 'MOMENTUM AI',
+      subtitle: 'AI PLANNING WORKSPACE',
+      tags: ['REACT', 'FIREBASE', 'GEMINI'],
+      highlightTag: { name: 'GEMINI', style: 'bg-[#6D5DF6] text-white border-[#6D5DF6] font-extrabold' },
+      link: 'https://momentum-ai-79vb.vercel.app/dashboard',
+      alignment: 'right',
+      gridArea: 'lg:col-start-6 lg:col-span-4 lg:row-start-6'
+    },
+    {
+      id: 'exp-7',
+      year: '2026',
+      title: 'SHELF OS',
+      subtitle: 'KIRANA RETAIL OS & SMART POS',
+      tags: ['REACT', 'SUPABASE', 'OPENAI'],
+      highlightTag: { name: 'OPENAI', style: 'bg-[#FF6A00] text-white border-[#FF6A00] font-extrabold' },
+      link: 'https://shelf-os-ochre.vercel.app/',
+      alignment: 'left',
+      gridArea: 'lg:col-start-2 lg:col-span-4 lg:row-start-7'
     }
   ];
 
@@ -145,9 +167,10 @@ export const ProjectsDatabasePage = () => {
   };
 
   return (
-    <div 
+    <div className="w-full h-full overflow-y-auto overflow-x-hidden no-scrollbar relative flex flex-col bg-transparent text-black z-10">
+    <div
       ref={containerRef}
-      className="w-full min-h-screen relative overflow-x-hidden flex flex-col font-sans pb-32 bg-transparent text-black select-none p-6 sm:p-12 lg:p-16"
+      className="w-full min-h-screen relative flex flex-col font-sans pb-32 select-none p-6 sm:p-12 lg:p-16"
     >
       {/* Background grid pattern */}
       <div className="absolute inset-0 pointer-events-none z-0 custom-beige-grid opacity-35" />
@@ -318,6 +341,7 @@ export const ProjectsDatabasePage = () => {
         </section>
 
       </div>
+    </div>
     </div>
   );
 };

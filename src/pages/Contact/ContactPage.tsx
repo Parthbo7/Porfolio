@@ -468,7 +468,7 @@ export const ContactPage = () => {
                 name: 'LinkedIn',
                 description: 'Professional Network',
                 icon: <Linkedin size={16} />,
-                href: 'https://linkedin.com'
+                href: 'https://www.linkedin.com/in/parth-bulbule/'
               },
               {
                 num: '02',
@@ -482,7 +482,7 @@ export const ContactPage = () => {
                 name: 'Instagram',
                 description: 'Creative Feed',
                 icon: <Instagram size={16} />,
-                href: 'https://instagram.com'
+                href: 'https://www.instagram.com/parthb_o7'
               },
               {
                 num: '04',
@@ -497,7 +497,7 @@ export const ContactPage = () => {
                 name: 'Resume',
                 description: 'Download CV',
                 icon: <FileText size={16} />,
-                href: '#resume'
+                href: '/resume.pdf'
               }
             ].map((node) => {
               if (node.isEmail) {

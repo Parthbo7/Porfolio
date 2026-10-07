@@ -1,37 +1,50 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 export const GridOverlay = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
-    
-    const vLines = containerRef.current.querySelectorAll('.v-line');
-    const hLines = containerRef.current.querySelectorAll('.h-line');
+  // useLayoutEffect applies the collapsed initial state before first paint so the
+  // grid never flashes at full scale; gsap.context cleans up StrictMode re-runs.
+  useLayoutEffect(() => {
+    const root = containerRef.current;
+    if (!root) return;
 
-    const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 1.5 } });
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Initial state
-    gsap.set(vLines, { scaleY: 0, transformOrigin: "top" });
-    gsap.set(hLines, { scaleX: 0, transformOrigin: "left" });
+    const ctx = gsap.context(() => {
+      const vLines = root.querySelectorAll('.v-line');
+      const hLines = root.querySelectorAll('.h-line');
 
-    // Animate lines
-    tl.to(vLines, { 
-      scaleY: 1, 
-      stagger: {
-        amount: 0.8,
-        from: "center"
+      if (prefersReduced) {
+        gsap.set(vLines, { scaleY: 1 });
+        gsap.set(hLines, { scaleX: 1 });
+        return;
       }
-    })
-    .to(hLines, { 
-      scaleX: 1, 
-      stagger: {
-        amount: 0.6,
-        from: "center"
-      }
-    }, "-=1.2");
 
+      // Initial state
+      gsap.set(vLines, { scaleY: 0, transformOrigin: "top" });
+      gsap.set(hLines, { scaleX: 0, transformOrigin: "left" });
+
+      // Animate lines
+      const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 1.5 } });
+      tl.to(vLines, {
+        scaleY: 1,
+        stagger: {
+          amount: 0.8,
+          from: "center"
+        }
+      })
+      .to(hLines, {
+        scaleX: 1,
+        stagger: {
+          amount: 0.6,
+          from: "center"
+        }
+      }, "-=1.2");
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (

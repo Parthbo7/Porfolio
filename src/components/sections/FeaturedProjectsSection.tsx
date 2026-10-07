@@ -1,9 +1,39 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { playClickTick } from '../../utils/SoundManager';
-import { Cpu, ShieldCheck, Code, ExternalLink, Calendar, RefreshCw } from 'lucide-react';
+import { Cpu, ShieldCheck, Code, ExternalLink, Calendar, RefreshCw, Brain, Store } from 'lucide-react';
 
 const featuredProjects = [
+  {
+    id: 'feat-momentum-ai',
+    title: 'Momentum AI',
+    category: 'AI PLANNING WORKSPACE',
+    status: 'LIVE',
+    deploymentStatus: 'DEPLOYED',
+    lastUpdated: 'OCT 2026',
+    accentClass: 'hover:border-[#6D5DF6] lg:hover:shadow-[0_0_20px_rgba(109,93,246,0.15),8px_8px_0px_rgba(109,93,246,0.9)] max-md:shadow-none',
+    accentColor: '#6D5DF6',
+    tech: ['React', 'TypeScript', 'Firebase', 'Gemini', 'Framer Motion', 'Vite'],
+    description: 'An AI-first planning workspace that acts as an active accountability partner — analyzing commitments, forecasting deadline risk, and auto-scheduling time-blocked focus sessions with a gamified Momentum Score.',
+    github: 'https://github.com/Parthbo7',
+    live: 'https://momentum-ai-79vb.vercel.app/dashboard',
+    icon: Brain
+  },
+  {
+    id: 'feat-shelf-os',
+    title: 'Shelf OS',
+    category: 'KIRANA RETAIL OS & SMART POS',
+    status: 'LIVE',
+    deploymentStatus: 'DEPLOYED',
+    lastUpdated: 'OCT 2026',
+    accentClass: 'hover:border-[#FF6A00] lg:hover:shadow-[0_0_20px_rgba(255,106,0,0.15),8px_8px_0px_rgba(255,106,0,0.9)] max-md:shadow-none',
+    accentColor: '#FF6A00',
+    tech: ['React', 'TypeScript', 'Supabase', 'OpenAI API', 'PostgreSQL', 'Vite'],
+    description: 'A live digital-twin operating system for Kirana stores combining a smart POS, real-time inventory, demand forecasting, an AI recommendation feed, and a digital khata ledger.',
+    github: 'https://github.com/Parthbo7',
+    live: 'https://shelf-os-ochre.vercel.app/',
+    icon: Store
+  },
   {
     id: 'feat-it-2',
     title: 'InsightTube 2.0',

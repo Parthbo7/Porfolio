@@ -495,19 +495,19 @@ export const NavigationalOSPortal = ({ onNavigate, isOverlay = false }: Navigati
             >
               <Github size={16} />
             </a>
-            <a 
-              href="https://linkedin.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href="https://www.linkedin.com/in/parth-bulbule/"
+              target="_blank"
+              rel="noopener noreferrer"
               onMouseEnter={() => playClickTick(1500, 0.01)}
               className="hover:text-[#00FF66] transition-colors"
             >
               <Linkedin size={16} />
             </a>
-            <a 
-              href="https://instagram.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href="https://www.instagram.com/parthb_o7"
+              target="_blank"
+              rel="noopener noreferrer"
               onMouseEnter={() => playClickTick(1500, 0.01)}
               className="hover:text-[#00FF66] transition-colors"
             >
@@ -520,8 +520,10 @@ export const NavigationalOSPortal = ({ onNavigate, isOverlay = false }: Navigati
             >
               <Mail size={16} />
             </a>
-            <a 
-              href="#resume" 
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               onMouseEnter={() => playClickTick(1500, 0.01)}
               className="hover:text-[#00FF66] transition-colors"
             >
